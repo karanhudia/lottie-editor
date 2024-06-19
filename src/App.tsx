@@ -1,13 +1,13 @@
 import React from 'react';
 import './App.css';
 import '@fontsource/inter';
-import {CssVarsProvider, Sheet} from "@mui/joy";
+import { CssVarsProvider, Sheet } from '@mui/joy';
 
 function App() {
   return (
-    <div className="App">
+    <div className='App'>
       <CssVarsProvider>
-        <Sheet variant="outlined">Welcome!</Sheet>
+        <Sheet variant='outlined'>Welcome!</Sheet>
       </CssVarsProvider>
     </div>
   );
