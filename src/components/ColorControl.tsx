@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { SharedProps } from '../context/SharedPropsContext';
 import { extractColorsFromAnimation, extractColorsFromLayer } from '../utils/extractColors';
-import { Box, Button, Input } from '@mui/joy';
+import { Box } from '@mui/joy';
 import { ColorPicker, useColor } from 'react-color-palette';
 import 'react-color-palette/css';
 import { ColorBox } from './ColorBox';

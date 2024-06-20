@@ -31,7 +31,7 @@ export const Editor = () => {
   useEffect(() => {
     console.log('HER', lottie);
     setLottieJSON(lottie);
-  }, [lottie]);
+  }, [lottie, setLottieJSON]);
 
   return (
     <>
