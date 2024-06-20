@@ -4,7 +4,7 @@ import '@fontsource/inter';
 import { CssVarsProvider } from '@mui/joy';
 import { SharedPropsContext } from './context/SharedPropsContext';
 import { socket } from './socket';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createHashRouter, RouterProvider } from 'react-router-dom';
 import { Home } from './pages/Home';
 import { Editor, loader as lottieLoader } from './pages/Editor';
 import { Error } from './pages/Error';
@@ -30,7 +30,7 @@ function App() {
     };
   }, []);
 
-  const router = createBrowserRouter([
+  const router = createHashRouter([
     {
       path: '/',
       element: <Home />,
