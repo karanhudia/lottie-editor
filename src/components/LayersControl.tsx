@@ -1,97 +1,62 @@
 import React, { useContext } from 'react';
 import { SharedProps } from '../context/SharedPropsContext';
-import { Box, Button, FormLabel, Radio, RadioGroup, Sheet } from '@mui/joy';
-import { useSocket } from '../hooks/useSocket';
-import { useParams } from 'react-router-dom';
+import { Box, List, ListItem, ListItemButton, ListItemContent, Typography } from '@mui/joy';
+import { getLottieDPArray, LayerInfo } from '../utils/lottie';
 
 export const LayersControl = () => {
-  const { lottieJSON, selectedLayer, setSelectedLayer } = useContext(SharedProps);
-  const { updateJSON } = useSocket();
-  const foo = useParams<{ editId: string }>();
+  const { lottieJSON, selectedLayer, updateLayer } = useContext(SharedProps);
+  const lottieDp = getLottieDPArray(lottieJSON);
+
+  const handleLayerSelect = (layerInfo: LayerInfo) => {
+    updateLayer(layerInfo);
+  };
 
   return (
-    <Box sx={{ width: 300 }}>
-      <FormLabel
-        id='storage-label'
-        sx={{
-          padding: 2,
-          fontWeight: 'xl',
-          textTransform: 'uppercase',
-          fontSize: 'xs',
-          letterSpacing: '0.15rem',
-          justifyContent: 'center',
-          flexDirection: 'row',
-        }}
-      >
+    <Box sx={{ py: 2, pr: 2, width: 320, padding: 3 }}>
+      <Typography textAlign='start' level='h4'>
         Layers
-      </FormLabel>
-      <Button
-        onClick={() => {
-          if (!foo.editId || !lottieJSON) {
-            return;
+      </Typography>
+      <List
+        aria-label='Sidebar'
+        sx={
+          {
+            // '--ListItem-paddingLeft': '0px',
+            // '--ListItemDecorator-size': '64px',
+            // '--ListItem-minHeight': '32px',
+            // '--List-nestedInsetStart': '13px',
+            // [`& .${listItemDecoratorClasses.root}`]: {
+            //   justifyContent: 'flex-end',
+            //   pr: '18px',
+            // },
+            // '& [role="button"]': {
+            //   borderRadius: '0 20px 20px 0',
+            // },
           }
-
-          updateJSON(foo.editId, {
-            ...lottieJSON,
-            nm: 'Useless',
-          });
-        }}
+        }
       >
-        Change name
-      </Button>
-      <RadioGroup
-        aria-labelledby='storage-label'
-        // defaultValue='512GB'
-        // size='sm'
-        sx={{ gap: 1 }}
-      >
-        {lottieJSON?.layers.map((layer) => (
-          <Sheet
-            // key={value}
-            sx={{
-              p: 1,
-              borderRadius: 'md',
-              boxShadow: 'sm',
-            }}
-          >
-            <Radio
-              label={layer.nm}
-              overlay
-              disableIcon
-              value={layer.nm}
-              onChange={(event) => {
-                console.log(event.target.value);
-                if (selectedLayer === layer) {
-                  setSelectedLayer(null);
-                } else {
-                  setSelectedLayer(layer);
-                }
+        {lottieDp.map((layerInfo) => {
+          return (
+            <ListItem
+              sx={{
+                border: '1px solid var(--joy-palette-neutral-400)',
               }}
-              {...(selectedLayer === layer && { variant: 'solid' })}
-              slotProps={{
-                label: ({ checked }) => ({
-                  sx: {
-                    // fontWeight: 'lg',
-                    fontSize: 'xs',
-                    color: checked ? 'white' : 'black',
-                  },
-                }),
-                action: ({ checked }) => ({
-                  sx: (theme) => ({
-                    ...(checked && {
-                      // '--variant-borderWidth': '2px',
-                      '&&': {
-                        // && to increase the specificity to win the base :hover styles
-                        // borderColor: theme.vars.palette.primary[500],
-                      },
-                    }),
-                  }),
-                }),
-              }}
-            />
-          </Sheet>
-        ))}
-      </RadioGroup>
+            >
+              <ListItemButton
+                selected={layerInfo.layerName === selectedLayer?.layerName}
+                color={layerInfo.layerName === selectedLayer?.layerName ? 'primary' : undefined}
+                onClick={() => {
+                  handleLayerSelect(layerInfo);
+                }}
+              >
+                <ListItemContent>{layerInfo.layerName}</ListItemContent>
+                {/*<ListItemDecorator>*/}
+                {/*  <SvgIcon />*/}
+                {/*</ListItemDecorator>*/}
+              </ListItemButton>
+            </ListItem>
+          );
+        })}
+      </List>
     </Box>
   );
 };
