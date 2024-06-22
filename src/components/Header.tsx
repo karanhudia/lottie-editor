@@ -1,28 +1,21 @@
-import React, { useContext } from 'react';
-import { Box, Button, Sheet } from '@mui/joy';
-import { socket } from '../socket';
-import { SharedProps } from '../context/SharedPropsContext';
+import React from 'react';
+import { Box, Typography } from '@mui/joy';
 
 export const Header = () => {
-  const { lottieJSON } = useContext(SharedProps);
   return (
     <Box
       component='header'
       sx={{
         height: '55px', // 55px is the height of the NavBar
         display: 'grid',
+        backgroundColor: 'var(--joy-palette-background-level1)',
+        borderBottom: '1px solid var(--joy-palette-neutral-400)',
+        alignItems: 'center',
       }}
     >
-      <Sheet variant='outlined'>
-        <Button
-          onClick={() => {
-            console.log(socket);
-            socket.emit('details', lottieJSON);
-          }}
-        >
-          Connect
-        </Button>
-      </Sheet>
+      <Typography color='neutral' level='h3'>
+        Lottie Editor
+      </Typography>
     </Box>
   );
 };
