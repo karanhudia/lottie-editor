@@ -59,7 +59,7 @@ type Easing = {
   y: number[];
 };
 
-type Shape = {
+export type Shape = {
   ty: string;
   it?: ShapeItem[];
   nm: string;
@@ -77,7 +77,7 @@ type Color = {
   ix: number;
 };
 
-type ShapeItem = {
+export type ShapeItem = {
   ind: number;
   ty: string;
   ix: number;
@@ -103,7 +103,7 @@ type ShapeKeyframe = {
 
 export type LottieAnimation = {
   v: string;
-  fr: number;
+  fr: number; // Frame Rate
   ip: number;
   op: number;
   w: number;
