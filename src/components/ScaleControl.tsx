@@ -14,7 +14,9 @@ export const ScaleControl = () => {
 
   return (
     <ScaleControlWrapper>
-      <Typography level='h4'>Scale</Typography>
+      <Typography color='neutral' level='h4'>
+        Scale
+      </Typography>
       <Slider
         aria-label='Always visible'
         defaultValue={1}

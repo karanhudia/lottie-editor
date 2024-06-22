@@ -12,27 +12,28 @@ export const LayersControl = () => {
   };
 
   return (
-    <Box sx={{ py: 2, pr: 2, width: 320, padding: 3 }}>
-      <Typography textAlign='start' level='h4'>
+    <Box sx={{ py: 2, pr: 2, padding: 3 }}>
+      <Typography color='neutral' textAlign='start' level='h4'>
         Layers
       </Typography>
       <List
         aria-label='Sidebar'
-        sx={
-          {
-            // '--ListItem-paddingLeft': '0px',
-            // '--ListItemDecorator-size': '64px',
-            // '--ListItem-minHeight': '32px',
-            // '--List-nestedInsetStart': '13px',
-            // [`& .${listItemDecoratorClasses.root}`]: {
-            //   justifyContent: 'flex-end',
-            //   pr: '18px',
-            // },
-            // '& [role="button"]': {
-            //   borderRadius: '0 20px 20px 0',
-            // },
-          }
-        }
+        sx={{
+          backgroundColor: 'white',
+          padding: 0,
+          marginTop: 2,
+          // '--ListItem-paddingLeft': '0px',
+          // '--ListItemDecorator-size': '64px',
+          // '--ListItem-minHeight': '32px',
+          // '--List-nestedInsetStart': '13px',
+          // [`& .${listItemDecoratorClasses.root}`]: {
+          //   justifyContent: 'flex-end',
+          //   pr: '18px',
+          // },
+          // '& [role="button"]': {
+          //   borderRadius: '0 20px 20px 0',
+          // },
+        }}
       >
         {lottieDp.map((layerInfo) => {
           return (

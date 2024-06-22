@@ -29,13 +29,13 @@ export const Editor = () => {
   const { setLottieJSON } = useContext(SharedProps);
 
   useEffect(() => {
-    console.log('HER', lottie);
+    console.info('Fetched Lottie', lottie);
     setLottieJSON(lottie);
   }, [lottie, setLottieJSON]);
 
   return (
     <>
-      <Header></Header>
+      <Header />
       <Content />
     </>
   );
