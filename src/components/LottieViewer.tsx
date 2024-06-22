@@ -1,23 +1,36 @@
 import React, { useContext } from 'react';
-import { DotLottie, DotLottieReact } from '@lottiefiles/dotlottie-react';
 import { SharedProps } from '../context/SharedPropsContext';
 import { Stack } from '@mui/joy';
+import { Controls, Player } from '@lottiefiles/react-lottie-player';
+import { AnimationItem } from 'lottie-web';
 
 export const LottieViewer = () => {
-  const { setDotLottie, lottieJSON } = useContext(SharedProps);
+  const { setLottiePlayerRef, lottieJSON } = useContext(SharedProps);
 
-  const dotLottieRefCallback = (dotLottie: DotLottie) => {
-    setDotLottie(dotLottie);
+  const handleLottieRefCallback = (dotLottie: AnimationItem) => {
+    setLottiePlayerRef(dotLottie);
   };
+
+  if (!lottieJSON) {
+    return <div>Loading Lottie...</div>;
+  }
 
   return (
     <Stack spacing={2} sx={{ px: { xs: 2, md: 4 }, pt: 2, minHeight: 0 }}>
-      <DotLottieReact
-        data={JSON.stringify(lottieJSON)}
-        loop
+      <Player
         autoplay
-        dotLottieRefCallback={dotLottieRefCallback}
-      />
+        loop
+        src={lottieJSON}
+        lottieRef={handleLottieRefCallback}
+        onStateChange={(data) => {
+          console.log('Animation updated', data);
+        }}
+        controls
+        keepLastFrame
+        style={{ height: '100%' }}
+      >
+        <Controls visible={true} buttons={['play', 'repeat', 'frame', 'debug']} />
+      </Player>
     </Stack>
   );
 };
