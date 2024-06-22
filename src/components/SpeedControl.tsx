@@ -1,5 +1,6 @@
 import React from 'react';
 import { Slider, styled, Typography } from '@mui/joy';
+import { useLottieAnimation } from '../hooks/useLottieAnimation';
 
 const SpeedControlWrapper = styled('div')`
   display: flex;
@@ -8,13 +9,19 @@ const SpeedControlWrapper = styled('div')`
 `;
 
 export const SpeedControl = () => {
+  const { updateSpeed } = useLottieAnimation();
+
   const handleSpeedChange = (_e: Event, value: number | number[]) => {
-    console.log(value);
+    if (typeof value === 'number') {
+      updateSpeed(value);
+    }
   };
 
   return (
     <SpeedControlWrapper>
-      <Typography level='h4'>Speed</Typography>
+      <Typography color='neutral' level='h4'>
+        Speed
+      </Typography>
       <Slider
         aria-label='Always visible'
         defaultValue={1}
