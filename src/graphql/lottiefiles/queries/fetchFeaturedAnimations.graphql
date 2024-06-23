@@ -1,0 +1,11 @@
+query FetchFeaturedAnimations {
+    featuredPublicAnimations {
+        edges {
+            node {
+                jsonUrl
+                gifUrl
+                id
+            }
+        }
+    }
+}

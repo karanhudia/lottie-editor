@@ -1,5 +1,7 @@
 // @ts-nocheck
 import { gql } from '@apollo/client';
+import * as Apollo from '@apollo/client';
+import * as ApolloReactHoc from '@apollo/client/react/hoc';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -11,6 +13,7 @@ export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> =
 export type Incremental<T> =
   | T
   | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+const defaultOptions = {} as const;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string; output: string };
@@ -5641,4 +5644,134 @@ export type _ZipFileCreateInput = {
   entries: Array<_ZipEntryInput>;
   /** Type of variation to download */
   entryType?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type FetchFeaturedAnimationsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type FetchFeaturedAnimationsQuery = {
+  __typename?: 'Query';
+  featuredPublicAnimations: {
+    __typename?: 'PublicAnimationConnection';
+    edges: Array<{
+      __typename?: 'PublicAnimationEdge';
+      node: {
+        __typename?: 'PublicAnimation';
+        jsonUrl?: string | null;
+        gifUrl?: string | null;
+        id: number;
+      };
+    }>;
+  };
+};
+
+export const FetchFeaturedAnimationsDocument = gql`
+  query FetchFeaturedAnimations {
+    featuredPublicAnimations {
+      edges {
+        node {
+          jsonUrl
+          gifUrl
+          id
+        }
+      }
+    }
+  }
+`;
+export type FetchFeaturedAnimationsProps<TChildProps = {}, TDataName extends string = 'data'> = {
+  [key in TDataName]: ApolloReactHoc.DataValue<
+    FetchFeaturedAnimationsQuery,
+    FetchFeaturedAnimationsQueryVariables
+  >;
+} & TChildProps;
+export function withFetchFeaturedAnimations<
+  TProps,
+  TChildProps = {},
+  TDataName extends string = 'data',
+>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    FetchFeaturedAnimationsQuery,
+    FetchFeaturedAnimationsQueryVariables,
+    FetchFeaturedAnimationsProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withQuery<
+    TProps,
+    FetchFeaturedAnimationsQuery,
+    FetchFeaturedAnimationsQueryVariables,
+    FetchFeaturedAnimationsProps<TChildProps, TDataName>
+  >(FetchFeaturedAnimationsDocument, {
+    alias: 'fetchFeaturedAnimations',
+    ...operationOptions,
+  });
+}
+
+/**
+ * __useFetchFeaturedAnimationsQuery__
+ *
+ * To run a query within a React component, call `useFetchFeaturedAnimationsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFetchFeaturedAnimationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFetchFeaturedAnimationsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useFetchFeaturedAnimationsQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    FetchFeaturedAnimationsQuery,
+    FetchFeaturedAnimationsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<FetchFeaturedAnimationsQuery, FetchFeaturedAnimationsQueryVariables>(
+    FetchFeaturedAnimationsDocument,
+    options,
+  );
+}
+export function useFetchFeaturedAnimationsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    FetchFeaturedAnimationsQuery,
+    FetchFeaturedAnimationsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<FetchFeaturedAnimationsQuery, FetchFeaturedAnimationsQueryVariables>(
+    FetchFeaturedAnimationsDocument,
+    options,
+  );
+}
+export function useFetchFeaturedAnimationsSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    FetchFeaturedAnimationsQuery,
+    FetchFeaturedAnimationsQueryVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    FetchFeaturedAnimationsQuery,
+    FetchFeaturedAnimationsQueryVariables
+  >(FetchFeaturedAnimationsDocument, options);
+}
+export type FetchFeaturedAnimationsQueryHookResult = ReturnType<
+  typeof useFetchFeaturedAnimationsQuery
+>;
+export type FetchFeaturedAnimationsLazyQueryHookResult = ReturnType<
+  typeof useFetchFeaturedAnimationsLazyQuery
+>;
+export type FetchFeaturedAnimationsSuspenseQueryHookResult = ReturnType<
+  typeof useFetchFeaturedAnimationsSuspenseQuery
+>;
+export type FetchFeaturedAnimationsQueryResult = Apollo.QueryResult<
+  FetchFeaturedAnimationsQuery,
+  FetchFeaturedAnimationsQueryVariables
+>;
+export const namedOperations = {
+  Query: {
+    FetchFeaturedAnimations: 'FetchFeaturedAnimations',
+  },
 };
