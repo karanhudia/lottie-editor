@@ -4,8 +4,9 @@ import { lottieColorToRgba } from '../utils/color';
 import { Box, RadioGroup, Typography } from '@mui/joy';
 import { SelectableColorItem } from './SelectableColorItem';
 import { RgbaColor, RgbaColorPicker } from 'react-colorful';
-import { getAnimationLayersInfo, ShapeInfo } from '../utils/lottie';
+import { getAnimationLayersInfo } from '../utils/lottie';
 import { useLottieAnimation } from '../hooks/useLottieAnimation';
+import { ShapeInfo } from '../types/shared';
 
 export const ColorsControl = () => {
   const { updateColor } = useLottieAnimation();
