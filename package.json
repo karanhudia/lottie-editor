@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@apollo/client": "^3.10.6",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@fontsource/inter": "^5.0.18",
@@ -17,13 +18,14 @@
     "@types/react-dom": "^18.0.0",
     "@types/uuid": "^9.0.8",
     "eslint-config-react-app": "^7.0.1",
+    "graphql": "^16.9.0",
     "react": "^18.3.1",
     "react-colorful": "^5.6.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.23.1",
     "react-scripts": "5.0.1",
     "socket.io-client": "^4.7.5",
-    "typescript": "^5.4.5",
+    "typescript": "^5.5.2",
     "uuid": "^10.0.0",
     "web-vitals": "^4.1.1"
   },
@@ -33,7 +35,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d build",
+    "codegen": "graphql-codegen --config codegen.ts"
   },
   "eslintConfig": {
     "extends": [
@@ -55,6 +58,11 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.5.0",
+    "@graphql-codegen/add": "^5.0.3",
+    "@graphql-codegen/cli": "5.0.2",
+    "@graphql-codegen/named-operations-object": "^3.0.0",
+    "@graphql-codegen/typescript-react-apollo": "^4.3.0",
+    "@graphql-eslint/eslint-plugin": "^3.20.1",
     "@types/eslint__js": "^8.42.3",
     "eslint": "^9.5.0",
     "gh-pages": "^6.1.1",
