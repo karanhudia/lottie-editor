@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Button, styled, SvgIcon } from '@mui/joy';
 import { useSocket } from '../hooks/useSocket';
-import { LottieAnimation } from '../types/LottieAnimation';
+import { LottieAnimation } from '../graphql/generated/graphql';
 
 const VisuallyHiddenInput = styled('input')`
   clip: rect(0 0 0 0);
@@ -18,19 +18,26 @@ const VisuallyHiddenInput = styled('input')`
 export const FileUpload = () => {
   const { createJSON } = useSocket();
 
-  const onReaderLoad = (event: ProgressEvent<FileReader>): void => {
-    // TODO: Add type guard
-    const obj = JSON.parse(event.target?.result as string) as LottieAnimation;
-    createJSON(obj);
-  };
+  const onReaderLoad = useCallback(
+    (event: ProgressEvent<FileReader>): void => {
+      // TODO: Add type guard
+      const obj = JSON.parse(event.target?.result as string) as LottieAnimation;
 
-  const onChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    const reader = new FileReader();
-    reader.onload = onReaderLoad;
-    if (event.target.files?.[0]) {
-      reader.readAsText(event.target.files[0]);
-    }
-  };
+      void createJSON(obj);
+    },
+    [createJSON],
+  );
+
+  const onChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>): void => {
+      const reader = new FileReader();
+      reader.onload = onReaderLoad;
+      if (event.target.files?.[0]) {
+        reader.readAsText(event.target.files[0]);
+      }
+    },
+    [onReaderLoad],
+  );
 
   return (
     <Button
