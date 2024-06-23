@@ -9,13 +9,16 @@ const SpeedControlWrapper = styled('div')`
 `;
 
 export const SpeedControl = () => {
-  const { updateSpeed } = useLottieAnimation();
+  const { frameRate, updateSpeed } = useLottieAnimation();
 
   const handleSpeedChange = (_e: Event, value: number | number[]) => {
-    if (typeof value === 'number') {
-      updateSpeed(value);
-    }
+    // TypeCasting since Slider does not accept passing this from the caller
+    updateSpeed(value as number);
   };
+
+  if (!frameRate) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <SpeedControlWrapper>
@@ -24,10 +27,10 @@ export const SpeedControl = () => {
       </Typography>
       <Slider
         aria-label='Always visible'
-        defaultValue={1}
-        step={0.1}
-        min={0.1}
-        max={5}
+        defaultValue={Math.round(frameRate)}
+        step={3}
+        min={3}
+        max={150}
         onChange={handleSpeedChange}
         valueLabelDisplay='auto'
       />
