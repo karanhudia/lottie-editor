@@ -4,3 +4,9 @@
 
   text-align: center;
 }
+
+.lf-player-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}

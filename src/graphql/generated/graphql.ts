@@ -26,12 +26,114 @@ export type Scalars = {
   JSON: { input: any; output: any };
 };
 
+export type AnimatedProperty = {
+  __typename?: 'AnimatedProperty';
+  a: Scalars['Int']['output'];
+  ix: Scalars['Int']['output'];
+  k: Array<Keyframe>;
+  l?: Maybe<Scalars['Int']['output']>;
+};
+
+export type Asset = {
+  __typename?: 'Asset';
+  e?: Maybe<Scalars['Int']['output']>;
+  h?: Maybe<Scalars['Int']['output']>;
+  id?: Maybe<Scalars['String']['output']>;
+  layers?: Maybe<Array<Maybe<Layer>>>;
+  p?: Maybe<Scalars['String']['output']>;
+  u?: Maybe<Scalars['String']['output']>;
+  w?: Maybe<Scalars['Int']['output']>;
+};
+
+export type Color = {
+  __typename?: 'Color';
+  a: Scalars['Int']['output'];
+  ix: Scalars['Int']['output'];
+  k: Array<Scalars['Int']['output']>;
+};
+
+export type ColorPayload = {
+  __typename?: 'ColorPayload';
+  color: Array<Scalars['Int']['output']>;
+  layer: Scalars['Int']['output'];
+  shape: Scalars['Int']['output'];
+  shapeItem: Scalars['Int']['output'];
+};
+
+export type CreateLottieMessage = {
+  __typename?: 'CreateLottieMessage';
+  payload?: Maybe<CreateLottiePayload>;
+  uuid: Scalars['String']['output'];
+};
+
+export type CreateLottiePayload = {
+  __typename?: 'CreateLottiePayload';
+  json: Scalars['JSON']['output'];
+};
+
+export type Easing = {
+  __typename?: 'Easing';
+  x: Array<Scalars['Float']['output']>;
+  y: Array<Scalars['Float']['output']>;
+};
+
+export type Keyframe = {
+  __typename?: 'Keyframe';
+  i: Easing;
+  o: Easing;
+  s: Array<Scalars['Float']['output']>;
+  t: Scalars['Int']['output'];
+};
+
+export type Layer = {
+  __typename?: 'Layer';
+  ao?: Maybe<Scalars['Int']['output']>;
+  bm: Scalars['Int']['output'];
+  ct?: Maybe<Scalars['Int']['output']>;
+  ddd: Scalars['Int']['output'];
+  ind: Scalars['Int']['output'];
+  ip: Scalars['Int']['output'];
+  ks: Transform;
+  nm: Scalars['String']['output'];
+  op: Scalars['Int']['output'];
+  shapes?: Maybe<Array<Maybe<Shape>>>;
+  sr: Scalars['Float']['output'];
+  st: Scalars['Int']['output'];
+  ty: Scalars['Int']['output'];
+};
+
 export type Lottie = {
   __typename?: 'Lottie';
   createdAt: Scalars['Date']['output'];
   json: Scalars['JSON']['output'];
   updatedAt: Scalars['Date']['output'];
   uuid: Scalars['String']['output'];
+};
+
+export type LottieAnimation = {
+  __typename?: 'LottieAnimation';
+  assets: Array<Asset>;
+  ddd: Scalars['Int']['output'];
+  fr: Scalars['Float']['output'];
+  h: Scalars['Int']['output'];
+  ip: Scalars['Int']['output'];
+  layers: Array<Layer>;
+  nm: Scalars['String']['output'];
+  op: Scalars['Int']['output'];
+  v: Scalars['String']['output'];
+  w: Scalars['Int']['output'];
+};
+
+export enum LottieSocketEvents {
+  CreateJson = 'Create_Json',
+  UpdateJson = 'Update_Json',
+}
+
+export type Property = {
+  __typename?: 'Property';
+  a: Scalars['Int']['output'];
+  ix: Scalars['Int']['output'];
+  k: Scalars['JSON']['output'];
 };
 
 export type Query = {
@@ -41,6 +143,96 @@ export type Query = {
 
 export type QueryLottieArgs = {
   uuid: Scalars['ID']['input'];
+};
+
+export type ScalePayload = {
+  __typename?: 'ScalePayload';
+  scale: Scalars['Float']['output'];
+};
+
+export type Shape = {
+  __typename?: 'Shape';
+  bm: Scalars['Int']['output'];
+  cix: Scalars['Int']['output'];
+  hd: Scalars['Boolean']['output'];
+  it?: Maybe<Array<Maybe<ShapeItem>>>;
+  ix: Scalars['Int']['output'];
+  mn: Scalars['String']['output'];
+  nm: Scalars['String']['output'];
+  np: Scalars['Int']['output'];
+  ty: Scalars['String']['output'];
+};
+
+export type ShapeItem = {
+  __typename?: 'ShapeItem';
+  c?: Maybe<Color>;
+  hd: Scalars['Boolean']['output'];
+  ind: Scalars['Int']['output'];
+  ix: Scalars['Int']['output'];
+  ks?: Maybe<ShapeProperty>;
+  mn: Scalars['String']['output'];
+  nm: Scalars['String']['output'];
+  ty: Scalars['String']['output'];
+};
+
+export type ShapeKeyframe = {
+  __typename?: 'ShapeKeyframe';
+  c: Scalars['Boolean']['output'];
+  i: Array<Array<Scalars['Float']['output']>>;
+  o: Array<Array<Scalars['Float']['output']>>;
+  v: Array<Array<Scalars['Float']['output']>>;
+};
+
+export type ShapeProperty = {
+  __typename?: 'ShapeProperty';
+  a: Scalars['Int']['output'];
+  ix: Scalars['Int']['output'];
+  k: ShapeKeyframe;
+};
+
+export type SocketAcknowledgement = {
+  __typename?: 'SocketAcknowledgement';
+  code: Scalars['Int']['output'];
+  status: Scalars['String']['output'];
+};
+
+export type SpeedPayload = {
+  __typename?: 'SpeedPayload';
+  frameRate: Scalars['Int']['output'];
+};
+
+export type Transform = {
+  __typename?: 'Transform';
+  a: Property;
+  ix?: Maybe<Scalars['Int']['output']>;
+  l?: Maybe<Scalars['Int']['output']>;
+  o: Property;
+  p: Property;
+  r: Property;
+  s: AnimatedProperty;
+};
+
+export type UpdateLottieColorMessage = {
+  __typename?: 'UpdateLottieColorMessage';
+  payload: ColorPayload;
+  uuid: Scalars['String']['output'];
+};
+
+export type UpdateLottieMessage =
+  | UpdateLottieColorMessage
+  | UpdateLottieScaleMessage
+  | UpdateLottieSpeedMessage;
+
+export type UpdateLottieScaleMessage = {
+  __typename?: 'UpdateLottieScaleMessage';
+  payload: ScalePayload;
+  uuid: Scalars['String']['output'];
+};
+
+export type UpdateLottieSpeedMessage = {
+  __typename?: 'UpdateLottieSpeedMessage';
+  payload: SpeedPayload;
+  uuid: Scalars['String']['output'];
 };
 
 export type FetchEditedLottieQueryVariables = Exact<{
