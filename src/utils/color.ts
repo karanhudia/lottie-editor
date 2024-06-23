@@ -9,16 +9,11 @@ export const rgbaToLottieColor = (color: RgbaColor) => {
   ];
 };
 
-export const lottieColorToRgba = ([r, g, b, a]: number[]): {
-  r: number;
-  g: number;
-  b: number;
-  a: number;
-} => {
+export const lottieColorToRgba = ([r, g, b, a]: number[]): RgbaColor => {
   return {
     r: Math.round(r * 255),
     g: Math.round(g * 255),
     b: Math.round(b * 255),
-    a: a,
+    ...(a ? { a } : { a: 1 }),
   };
 };
