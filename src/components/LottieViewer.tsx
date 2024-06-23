@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { SharedProps } from '../context/SharedPropsContext';
 import { Stack } from '@mui/joy';
 import { Controls, Player } from '@lottiefiles/react-lottie-player';
@@ -22,9 +22,6 @@ export const LottieViewer = () => {
         loop
         src={lottieJSON}
         lottieRef={handleLottieRefCallback}
-        onStateChange={(data) => {
-          console.log('Animation updated', data);
-        }}
         controls
         keepLastFrame
         style={{ height: '100%' }}
