@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { SharedProps } from '../context/SharedPropsContext';
 import { Stack } from '@mui/joy';
 import { Controls, Player } from '@lottiefiles/react-lottie-player';
