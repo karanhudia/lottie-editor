@@ -1,0 +1,5 @@
+query fetchEditedLottie($editId: ID!) {
+    lottie(uuid: $editId) {
+        json
+    }
+}
