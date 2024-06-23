@@ -1,5 +1,6 @@
 import React from 'react';
 import { Slider, styled, Typography } from '@mui/joy';
+import { useLottieAnimation } from '../hooks/useLottieAnimation';
 
 const ScaleControlWrapper = styled('div')`
   display: flex;
@@ -8,8 +9,9 @@ const ScaleControlWrapper = styled('div')`
 `;
 
 export const ScaleControl = () => {
+  const { updateScale } = useLottieAnimation();
   const handleScaleChange = (_e: Event, value: number | number[]) => {
-    console.log(value);
+    updateScale(value as number);
   };
 
   return (
