@@ -1,6 +1,6 @@
 import { RgbaColor } from 'react-colorful';
 import { rgbaToLottieColor } from './color';
-import { Layer, LottieAnimation } from '../graphql/generated/graphql';
+import { Layer, LottieAnimation } from '../graphql/lottie-server/generated';
 import { LayerInfo } from '../types/shared';
 
 const getLayerInfo = (layer: Layer | null): Omit<LayerInfo, 'layerSeq'> | undefined => {

@@ -11,7 +11,7 @@ import {
   LottieSocketEvents,
   SocketAcknowledgement,
   UpdateLottieMessage,
-} from '../graphql/generated/graphql';
+} from '../graphql/lottie-server/generated';
 
 const DEFAULT_WEBSOCKET_URL = 'https://lottie-editor.onrender.com/';
 export const socket = io(process.env.REACT_APP_WEBSOCKET_URL ?? DEFAULT_WEBSOCKET_URL, {

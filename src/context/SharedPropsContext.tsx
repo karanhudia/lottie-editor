@@ -1,6 +1,6 @@
 import React, { createContext, Dispatch, SetStateAction, useCallback, useState } from 'react';
 import { AnimationItem } from 'lottie-web';
-import { LottieAnimation } from '../graphql/generated/graphql';
+import { LottieAnimation } from '../graphql/lottie-server/generated';
 import { LayerInfo, SelectedColor } from '../types/shared';
 
 export const SharedProps = createContext<{

@@ -3,7 +3,7 @@ import { Header } from '../components/Header';
 import { Content } from '../components/Content';
 import { SharedProps } from '../context/SharedPropsContext';
 import { useParams } from 'react-router-dom';
-import { useFetchEditedLottieQuery } from '../graphql/generated/graphql';
+import { useFetchEditedLottieQuery } from '../graphql/lottie-server/generated';
 import { useSocket } from '../hooks/useSocket';
 
 export type EditorRouteParams = { editId: string };

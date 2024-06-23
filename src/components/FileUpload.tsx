@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { Button, styled, SvgIcon } from '@mui/joy';
 import { useSocket } from '../hooks/useSocket';
-import { LottieAnimation } from '../graphql/generated/graphql';
+import { LottieAnimation } from '../graphql/lottie-server/generated';
 
 const VisuallyHiddenInput = styled('input')`
   clip: rect(0 0 0 0);
