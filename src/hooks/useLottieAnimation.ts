@@ -3,7 +3,7 @@ import { SharedProps } from '../context/SharedPropsContext';
 import { updateLottieColor, updateLottieSpeed } from '../utils/lottie';
 import { RgbaColor } from 'react-colorful';
 import { useParams } from 'react-router-dom';
-import { rgbaToLottieColor } from '../utils/extractColors';
+import { rgbaToLottieColor } from '../utils/color';
 import { useThrottle } from './useThrottle';
 import { useSocket } from './useSocket';
 
@@ -20,35 +20,8 @@ export const useLottieAnimation = (): UseLottieAnimationReturn => {
   const { updateJSON } = useSocket();
   const { lottieJSON, setLottieJSON } = useContext(SharedProps);
 
-  const syncColorChangesWithServer = useCallback(
-    useThrottle(
-      async (layerSeq: number, shapeSeq: number, shapeItemSeq: number, color: number[]) => {
-        if (!params.editId) {
-          return;
-        }
-
-        const response = await updateJSON({
-          uuid: params.editId,
-          payload: {
-            __typename: 'ColorPayload',
-            layer: layerSeq,
-            shape: shapeSeq,
-            shapeItem: shapeItemSeq,
-            color,
-          },
-        });
-
-        if (response.status === 200) {
-          console.info('Color updated');
-        }
-      },
-      1000,
-    ),
-    [params.editId, updateJSON],
-  );
-
-  const syncSpeedChangesWithServer = useCallback(
-    useThrottle(async (frameRate: number) => {
+  const syncColorChangesWithServer = useThrottle(
+    async (layerSeq: number, shapeSeq: number, shapeItemSeq: number, color: number[]) => {
       if (!params.editId) {
         return;
       }
@@ -56,17 +29,38 @@ export const useLottieAnimation = (): UseLottieAnimationReturn => {
       const response = await updateJSON({
         uuid: params.editId,
         payload: {
-          __typename: 'SpeedPayload',
-          frameRate,
+          __typename: 'ColorPayload',
+          layer: layerSeq,
+          shape: shapeSeq,
+          shapeItem: shapeItemSeq,
+          color,
         },
       });
 
-      if (response.status === 200) {
-        console.info('Speed updated');
+      if (response.code === 200) {
+        console.info('Color updated');
       }
-    }, 1000),
-    [params.editId, updateJSON],
+    },
+    1000,
   );
+
+  const syncSpeedChangesWithServer = useThrottle(async (frameRate: number) => {
+    if (!params.editId) {
+      return;
+    }
+
+    const response = await updateJSON({
+      uuid: params.editId,
+      payload: {
+        __typename: 'SpeedPayload',
+        frameRate,
+      },
+    });
+
+    if (response.code === 200) {
+      console.info('Speed updated');
+    }
+  }, 1000);
 
   const handleSpeedUpdate = useCallback(
     (newSpeed: number) => {
