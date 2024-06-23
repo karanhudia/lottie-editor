@@ -1,37 +1,71 @@
-import React, { createContext, Dispatch, SetStateAction, useState } from 'react';
-import { DotLottie } from '@lottiefiles/dotlottie-react';
-import { Layer, LottieAnimation } from '../types/LottieAnimation';
+import React, { createContext, Dispatch, SetStateAction, useCallback, useState } from 'react';
+import { LayerInfo } from '../utils/lottie';
+import { AnimationItem } from 'lottie-web';
+import { LottieAnimation } from '../graphql/generated/graphql';
+import { RgbaColor } from 'react-colorful';
 
 export const SharedProps = createContext<{
-  dotLottie: DotLottie | null;
-  setDotLottie: Dispatch<SetStateAction<DotLottie | null>>;
+  lottiePlayerRef: AnimationItem | null;
+  setLottiePlayerRef: Dispatch<SetStateAction<AnimationItem | null>>;
   lottieJSON: LottieAnimation | null;
   setLottieJSON: Dispatch<SetStateAction<LottieAnimation | null>>;
-  selectedLayer: Layer | null;
-  setSelectedLayer: Dispatch<SetStateAction<Layer | null>>;
+  selectedLayer: LayerInfo | null;
+  updateLayer: (newLayer: LayerInfo) => void;
+  selectedColor: { r: number; g: number; b: number; a: number } | null;
+  setSelectedColor: Dispatch<SetStateAction<{ r: number; g: number; b: number; a: number } | null>>;
+  isSocketConnected: boolean;
+  setIsSocketConnected: Dispatch<SetStateAction<boolean>>;
 }>({
-  dotLottie: null,
-  setDotLottie: () => null,
+  lottiePlayerRef: null,
+  setLottiePlayerRef: () => null,
   lottieJSON: null,
   setLottieJSON: () => null,
   selectedLayer: null,
-  setSelectedLayer: () => null,
+  updateLayer: () => null,
+  selectedColor: null,
+  setSelectedColor: () => null,
+  isSocketConnected: false,
+  setIsSocketConnected: () => null,
 });
 
 export const SharedPropsContext = ({ children }: { children: React.ReactNode }) => {
+  // Lottie Animation JSON
   const [lottieJSON, setLottieJSON] = useState<LottieAnimation | null>(null);
-  const [dotLottie, setDotLottie] = React.useState<DotLottie | null>(null);
-  const [selectedLayer, setSelectedLayer] = useState<Layer | null>(null);
+
+  // Keeps a reference of the lottie player
+  const [lottiePlayerRef, setLottiePlayerRef] = React.useState<AnimationItem | null>(null);
+
+  // Selected layer helps shows relevant colors from that layer
+  const [selectedLayer, setSelectedLayer] = useState<LayerInfo | null>(null);
+
+  // Selected color helps shows the color picker
+  const [selectedColor, setSelectedColor] = useState<RgbaColor | null>(null);
+
+  // Maintains the state of websockets connection
+  const [isSocketConnected, setIsSocketConnected] = useState(false);
+
+  // TODO: Move to its own hook
+  const handleLayerSelect = useCallback(
+    (newLayer: LayerInfo) => {
+      setSelectedLayer(newLayer);
+      setSelectedColor(null);
+    },
+    [setSelectedLayer, setSelectedColor],
+  );
 
   return (
     <SharedProps.Provider
       value={{
-        dotLottie,
-        setDotLottie,
+        lottiePlayerRef,
+        setLottiePlayerRef,
         lottieJSON,
         setLottieJSON,
         selectedLayer,
-        setSelectedLayer,
+        updateLayer: handleLayerSelect,
+        selectedColor,
+        setSelectedColor,
+        isSocketConnected,
+        setIsSocketConnected,
       }}
     >
       {children}
