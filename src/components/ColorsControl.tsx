@@ -1,69 +1,89 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { SharedProps } from '../context/SharedPropsContext';
-import { RGBToHex } from '../utils/extractColors';
+import { lottieColorToRgba } from '../utils/color';
 import { Box, RadioGroup, Typography } from '@mui/joy';
 import { SelectableColorItem } from './SelectableColorItem';
 import { RgbaColor, RgbaColorPicker } from 'react-colorful';
-import { getLottieDPArray, ShapeInfo } from '../utils/lottie';
+import { getAnimationLayersInfo, ShapeInfo } from '../utils/lottie';
+import { useLottieAnimation } from '../hooks/useLottieAnimation';
 
 export const ColorsControl = () => {
-  const [selectedShape, setSelectedShape] = useState<ShapeInfo | null>(null);
+  const { updateColor } = useLottieAnimation();
+
   const { selectedColor, setSelectedColor, lottieJSON, selectedLayer } = useContext(SharedProps);
 
-  const lottieDp = getLottieDPArray(lottieJSON);
+  const allLayers = getAnimationLayersInfo(lottieJSON);
 
-  const handleColorSelect = (selectedColor: RgbaColor, shapeInfo: ShapeInfo) => {
-    setSelectedShape(shapeInfo);
-    setSelectedColor(selectedColor);
+  const handleColorSelect = (selectedColor: RgbaColor, shapeInfo: ShapeInfo, layerSeq: number) => {
+    setSelectedColor({
+      layerSeq: layerSeq,
+      shapeSeq: shapeInfo.shapeSeq,
+      shapeItemSeq: shapeInfo.shapeItemSeq,
+      color: selectedColor,
+    });
   };
 
   const handleColorChange = (color: RgbaColor) => {
-    if (!selectedShape || !selectedLayer || !lottieJSON) {
+    if (!selectedColor) {
       return;
     }
 
-    console.log('New Color: ', color);
-    // TODO: Handle color change here
+    const { layerSeq, shapeSeq, shapeItemSeq } = selectedColor;
+    updateColor(layerSeq, shapeSeq, shapeItemSeq, color);
   };
 
   const renderColorItems = () => {
-    let layersToShow = selectedLayer ? [selectedLayer] : lottieDp;
+    const layersToShow = selectedLayer ? [selectedLayer] : allLayers;
 
-    return layersToShow.map(({ shapes }) => {
-      return shapes.map((shapeInfo) => (
-        <SelectableColorItem
-          onSelect={(selectedColor) => {
-            handleColorSelect(selectedColor, shapeInfo);
-          }}
-          color={RGBToHex(shapeInfo.color)}
-        />
-      ));
+    return layersToShow.map(({ shapes, layerSeq }, layerIndex) => {
+      return shapes.map((shapeInfo, shapeIndex) => {
+        const uniqueId = `layer-${layerSeq},shape-${shapeInfo.shapeSeq},shapeItem-${shapeInfo.shapeItemSeq}`;
+
+        const selectedId = selectedColor
+          ? `layer-${selectedColor.layerSeq},shape-${selectedColor.shapeSeq},shapeItem-${selectedColor.shapeItemSeq}`
+          : null;
+
+        return (
+          <SelectableColorItem
+            key={uniqueId}
+            id={uniqueId}
+            selected={selectedId === uniqueId}
+            color={lottieColorToRgba(shapeInfo.color)}
+            onSelect={(selectedColor) => {
+              handleColorSelect(selectedColor, shapeInfo, layerSeq);
+            }}
+          />
+        );
+      });
     });
   };
 
   return (
     <div>
       <Typography color='neutral' level='h4'>
+        {/* TODO: Add translations */}
         Colors
       </Typography>
       <Box
         sx={{
           padding: 4,
           paddingTop: 2,
-          display: 'flex',
-          flexWrap: 'wrap',
         }}
       >
-        <RadioGroup
-          aria-labelledby='product-color-attribute'
-          defaultValue='warning'
-          sx={{ gap: 2, flexWrap: 'wrap', flexDirection: 'row' }}
-        >
+        <RadioGroup sx={{ gap: 1.5, flexWrap: 'wrap', flexDirection: 'row' }}>
           {renderColorItems()}
         </RadioGroup>
       </Box>
-      <Box padding={4}>
-        {selectedColor && <RgbaColorPicker color={selectedColor} onChange={handleColorChange} />}
+      <Box
+        padding={4}
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+        }}
+      >
+        {selectedColor && (
+          <RgbaColorPicker color={selectedColor.color} onChange={handleColorChange} />
+        )}
       </Box>
     </div>
   );

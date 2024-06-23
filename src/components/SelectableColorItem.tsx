@@ -6,9 +6,15 @@ type SelectableColorItemProps = {
   color: RgbaColor;
   onSelect: (color: RgbaColor) => void;
   id: string;
+  selected: boolean;
 };
 
-export const SelectableColorItem = ({ color, onSelect, id }: SelectableColorItemProps) => {
+export const SelectableColorItem = ({
+  color,
+  onSelect,
+  id,
+  selected,
+}: SelectableColorItemProps) => {
   return (
     <Sheet
       sx={{
@@ -20,6 +26,7 @@ export const SelectableColorItem = ({ color, onSelect, id }: SelectableColorItem
       <Radio
         overlay
         disableIcon
+        checked={selected}
         onChange={() => {
           onSelect(color);
         }}

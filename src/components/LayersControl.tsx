@@ -1,11 +1,12 @@
 import React, { useContext } from 'react';
 import { SharedProps } from '../context/SharedPropsContext';
 import { Box, List, ListItem, ListItemButton, ListItemContent, Typography } from '@mui/joy';
-import { getLottieDPArray, LayerInfo } from '../utils/lottie';
+import { getAnimationLayersInfo } from '../utils/lottie';
+import { LayerInfo } from '../types/shared';
 
 export const LayersControl = () => {
   const { lottieJSON, selectedLayer, updateLayer } = useContext(SharedProps);
-  const lottieDp = getLottieDPArray(lottieJSON);
+  const allLayers = getAnimationLayersInfo(lottieJSON);
 
   const handleLayerSelect = (layerInfo: LayerInfo) => {
     updateLayer(layerInfo);
@@ -35,7 +36,7 @@ export const LayersControl = () => {
           // },
         }}
       >
-        {lottieDp.map((layerInfo) => {
+        {allLayers.map((layerInfo) => {
           return (
             <ListItem
               sx={{

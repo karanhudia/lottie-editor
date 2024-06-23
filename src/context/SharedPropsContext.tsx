@@ -1,8 +1,7 @@
 import React, { createContext, Dispatch, SetStateAction, useCallback, useState } from 'react';
-import { LayerInfo } from '../utils/lottie';
 import { AnimationItem } from 'lottie-web';
 import { LottieAnimation } from '../graphql/generated/graphql';
-import { RgbaColor } from 'react-colorful';
+import { LayerInfo, SelectedColor } from '../types/shared';
 
 export const SharedProps = createContext<{
   lottiePlayerRef: AnimationItem | null;
@@ -11,8 +10,8 @@ export const SharedProps = createContext<{
   setLottieJSON: Dispatch<SetStateAction<LottieAnimation | null>>;
   selectedLayer: LayerInfo | null;
   updateLayer: (newLayer: LayerInfo) => void;
-  selectedColor: { r: number; g: number; b: number; a: number } | null;
-  setSelectedColor: Dispatch<SetStateAction<{ r: number; g: number; b: number; a: number } | null>>;
+  selectedColor: SelectedColor | null;
+  setSelectedColor: Dispatch<SetStateAction<SelectedColor | null>>;
   isSocketConnected: boolean;
   setIsSocketConnected: Dispatch<SetStateAction<boolean>>;
 }>({
@@ -39,7 +38,7 @@ export const SharedPropsContext = ({ children }: { children: React.ReactNode }) 
   const [selectedLayer, setSelectedLayer] = useState<LayerInfo | null>(null);
 
   // Selected color helps shows the color picker
-  const [selectedColor, setSelectedColor] = useState<RgbaColor | null>(null);
+  const [selectedColor, setSelectedColor] = useState<SelectedColor | null>(null);
 
   // Maintains the state of websockets connection
   const [isSocketConnected, setIsSocketConnected] = useState(false);

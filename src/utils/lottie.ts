@@ -1,18 +1,7 @@
 import { RgbaColor } from 'react-colorful';
 import { rgbaToLottieColor } from './color';
 import { Layer, LottieAnimation } from '../graphql/generated/graphql';
-
-export type ShapeInfo = {
-  shapeSeq: number;
-  shapeItemSeq: number;
-  color: number[];
-};
-
-export type LayerInfo = {
-  layerSeq: number;
-  layerName: string;
-  shapes: ShapeInfo[];
-};
+import { LayerInfo } from '../types/shared';
 
 const getLayerInfo = (layer: Layer | null): Omit<LayerInfo, 'layerSeq'> | undefined => {
   if (!layer?.nm) {
@@ -49,7 +38,7 @@ const getLayerInfo = (layer: Layer | null): Omit<LayerInfo, 'layerSeq'> | undefi
   return info;
 };
 
-export const getLottieDPArray = (lottieAnimation: LottieAnimation | null): LayerInfo[] => {
+export const getAnimationLayersInfo = (lottieAnimation: LottieAnimation | null): LayerInfo[] => {
   if (!lottieAnimation) {
     return [];
   }
