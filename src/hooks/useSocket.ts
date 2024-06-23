@@ -3,12 +3,13 @@ import { v4 as uuidv4 } from 'uuid';
 import { useCallback, useContext, useEffect } from 'react';
 import { SharedProps } from '../context/SharedPropsContext';
 import { io } from 'socket.io-client';
-import { Lottie } from '../types/lottie';
 import { updateLottieColor, updateLottieSpeed } from '../utils/lottie';
-import { RGBToHex } from '../utils/extractColors';
+import { lottieColorToRgba } from '../utils/color';
 import {
   CreateLottieMessage,
+  LottieAnimation,
   LottieSocketEvents,
+  SocketAcknowledgement,
   UpdateLottieMessage,
 } from '../graphql/generated/graphql';
 
@@ -46,7 +47,7 @@ export const useSocket = () => {
             payload.layer,
             payload.shape,
             payload.shapeItem,
-            RGBToHex(payload.color),
+            lottieColorToRgba(payload.color),
           );
           break;
 
@@ -69,31 +70,36 @@ export const useSocket = () => {
       socket.off('disconnect', onDisconnect);
       socket.off(LottieSocketEvents.UpdateJson, getChangesFromServer);
     };
-  }, []);
+  }, [onConnect, onDisconnect, getChangesFromServer]);
 
-  const createJSON = async (json: Lottie) => {
-    const uuid = uuidv4();
+  const createJSON = useCallback(
+    async (json: LottieAnimation) => {
+      const uuid = uuidv4();
 
-    setLottieJSON(json);
-    const response = await socket.emitWithAck(LottieSocketEvents.CreateJson, {
-      uuid,
-      payload: {
-        json,
-      },
-    } as CreateLottieMessage);
+      setLottieJSON(json);
+      const response: SocketAcknowledgement = await socket.emitWithAck(
+        LottieSocketEvents.CreateJson,
+        {
+          uuid,
+          payload: {
+            json,
+          },
+        } as CreateLottieMessage,
+      );
 
-    if (response.status === 200) {
-      navigate(`edit/${uuid}`);
-    }
-  };
+      if (response.code === 200) {
+        navigate(`edit/${uuid}`);
+      }
+    },
+    [setLottieJSON, navigate],
+  );
 
-  const updateJSON = async (
-    message: UpdateLottieMessage,
-  ): Promise<{
-    status: number;
-  }> => {
-    return await socket.emitWithAck(LottieSocketEvents.UpdateJson, message);
-  };
+  const updateJSON = useCallback(
+    async (message: UpdateLottieMessage): Promise<SocketAcknowledgement> => {
+      return socket.emitWithAck(LottieSocketEvents.UpdateJson, message);
+    },
+    [],
+  );
 
   return {
     createJSON,
