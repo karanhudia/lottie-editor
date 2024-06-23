@@ -1,13 +1,14 @@
-import { useContext } from 'react';
+import { useCallback, useContext } from 'react';
 import { SharedProps } from '../context/SharedPropsContext';
-import { updateLottieColorProperty } from '../utils/lottie';
+import { updateLottieColor, updateLottieSpeed } from '../utils/lottie';
 import { RgbaColor } from 'react-colorful';
-import { socket } from '../socket';
 import { useParams } from 'react-router-dom';
 import { rgbaToLottieColor } from '../utils/extractColors';
 import { useThrottle } from './useThrottle';
+import { useSocket } from './useSocket';
 
 type UseLottieAnimationReturn = {
+  frameRate?: number;
   updateSpeed: (newSpeed: number) => void;
   updateScale: (newScale: number) => void;
   updateColor: (layerSeq: number, shapeSeq: number, shapeItemSeq: number, color: RgbaColor) => void;
@@ -15,66 +16,89 @@ type UseLottieAnimationReturn = {
 
 export const useLottieAnimation = (): UseLottieAnimationReturn => {
   const params = useParams<{ editId: string }>();
-  const { lottieJSON, setLottieJSON, lottiePlayerRef } = useContext(SharedProps);
 
-  const syncColorChangesWithServer = (
-    layerSeq: number,
-    shapeSeq: number,
-    shapeItemSeq: number,
-    color: number[],
-  ) => {
-    console.log('Updating color:', color);
-    socket.emit('updateJSON', {
-      type: 'color',
-      uuid: params.editId,
-      payload: {
-        layer: layerSeq,
-        shape: shapeSeq,
-        shapeItem: shapeItemSeq,
-        color,
+  const { updateJSON } = useSocket();
+  const { lottieJSON, setLottieJSON } = useContext(SharedProps);
+
+  const syncColorChangesWithServer = useCallback(
+    useThrottle(
+      async (layerSeq: number, shapeSeq: number, shapeItemSeq: number, color: number[]) => {
+        if (!params.editId) {
+          return;
+        }
+
+        const response = await updateJSON({
+          uuid: params.editId,
+          payload: {
+            __typename: 'ColorPayload',
+            layer: layerSeq,
+            shape: shapeSeq,
+            shapeItem: shapeItemSeq,
+            color,
+          },
+        });
+
+        if (response.status === 200) {
+          console.info('Color updated');
+        }
       },
-    });
-  };
+      1000,
+    ),
+    [params.editId, updateJSON],
+  );
 
-  const handleSpeedUpdate = (multiplier: number) => {
-    if (!lottieJSON) {
-      return;
-    }
+  const syncSpeedChangesWithServer = useCallback(
+    useThrottle(async (frameRate: number) => {
+      if (!params.editId) {
+        return;
+      }
 
-    lottiePlayerRef?.setSpeed(multiplier);
-    // setLottieJSON({
-    //   ...lottieJSON
-    //   fr: (30 ?? 1) * multiplier,
-    // });
-  };
+      const response = await updateJSON({
+        uuid: params.editId,
+        payload: {
+          __typename: 'SpeedPayload',
+          frameRate,
+        },
+      });
+
+      if (response.status === 200) {
+        console.info('Speed updated');
+      }
+    }, 1000),
+    [params.editId, updateJSON],
+  );
+
+  const handleSpeedUpdate = useCallback(
+    (newSpeed: number) => {
+      if (!lottieJSON) {
+        return;
+      }
+
+      setLottieJSON(updateLottieSpeed(lottieJSON, newSpeed));
+      syncSpeedChangesWithServer(newSpeed);
+    },
+    [lottieJSON, setLottieJSON, syncSpeedChangesWithServer],
+  );
 
   const handleScaleUpdate = () => {
     // TODO: Handle Scale
-    lottiePlayerRef?.resize();
   };
 
-  const handleThrottledColorUpdate = useThrottle(
+  const handleColorUpdate = useCallback(
     (layerSeq: number, shapeSeq: number, shapeItemSeq: number, color: RgbaColor) => {
       if (!lottieJSON) {
         return;
       }
 
-      const updatedLottie = updateLottieColorProperty(
-        lottieJSON,
-        layerSeq,
-        shapeSeq,
-        shapeItemSeq,
-        color,
-      );
-
-      setLottieJSON(updatedLottie);
+      setLottieJSON(updateLottieColor(lottieJSON, layerSeq, shapeSeq, shapeItemSeq, color));
       syncColorChangesWithServer(layerSeq, shapeSeq, shapeItemSeq, rgbaToLottieColor(color));
     },
-    1000,
+    [lottieJSON, setLottieJSON, syncColorChangesWithServer],
   );
 
   return {
-    updateColor: handleThrottledColorUpdate,
+    frameRate: lottieJSON?.fr,
+    updateColor: handleColorUpdate,
     updateScale: handleScaleUpdate,
     updateSpeed: handleSpeedUpdate,
   };
