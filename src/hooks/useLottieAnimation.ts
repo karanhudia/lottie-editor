@@ -1,6 +1,6 @@
 import { useCallback, useContext } from 'react';
 import { SharedProps } from '../context/SharedPropsContext';
-import { updateLottieColor, updateLottieSpeed } from '../utils/lottie';
+import { deleteLottieLayer, updateLottieColor, updateLottieSpeed } from '../utils/lottie';
 import { RgbaColor } from 'react-colorful';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useThrottle } from './useThrottle';
@@ -20,6 +20,7 @@ type UseLottieAnimationReturn = {
     shapeItemSeq: number,
     color: RgbaColor,
   ) => void;
+  deleteLayer: (layer: number[]) => void;
 };
 
 export const useLottieAnimation = (): UseLottieAnimationReturn => {
@@ -27,7 +28,25 @@ export const useLottieAnimation = (): UseLottieAnimationReturn => {
   const navigate = useNavigate();
 
   const { updateJSON } = useSocket();
-  const { lottieJSON, setLottieJSON } = useContext(SharedProps);
+  const { lottieJSON, setLottieJSON, setIsAnimationCreated } = useContext(SharedProps);
+
+  const syncLayerChangesWithServer = useThrottle(async (layer: number[]) => {
+    if (!params.editId) {
+      return;
+    }
+
+    const response = await updateJSON({
+      uuid: params.editId,
+      payload: {
+        __typename: 'LayerPayload',
+        layer,
+      },
+    });
+
+    if (response.code === 200) {
+      console.info('Layer deleted');
+    }
+  }, 1000);
 
   const syncColorChangesWithServer = useThrottle(
     async (nestedLayerSeq: number[], shapeSeq: number, shapeItemSeq: number, color: number[]) => {
@@ -76,9 +95,10 @@ export const useLottieAnimation = (): UseLottieAnimationReturn => {
       const uuid = uuidv4();
 
       setLottieJSON(json);
+      setIsAnimationCreated(true);
       navigate(`edit/${uuid}`);
     },
-    [navigate, setLottieJSON],
+    [navigate, setLottieJSON, setIsAnimationCreated],
   );
 
   const handleSpeedUpdate = useCallback(
@@ -109,11 +129,24 @@ export const useLottieAnimation = (): UseLottieAnimationReturn => {
     [lottieJSON, setLottieJSON, syncColorChangesWithServer],
   );
 
+  const handleLayerDelete = useCallback(
+    (layer: number[]) => {
+      if (!lottieJSON) {
+        return;
+      }
+
+      setLottieJSON(deleteLottieLayer(lottieJSON, layer));
+      syncLayerChangesWithServer(layer);
+    },
+    [lottieJSON, setLottieJSON, syncLayerChangesWithServer],
+  );
+
   return {
     frameRate: lottieJSON?.fr,
     importLottie: handleLottieImport,
     updateColor: handleColorUpdate,
     updateScale: handleScaleUpdate,
     updateSpeed: handleSpeedUpdate,
+    deleteLayer: handleLayerDelete,
   };
 };

@@ -11,6 +11,7 @@ import {
 import { Delete, Layers } from '@mui/icons-material';
 import { LayerInfo } from '../types/shared';
 import { LayerShape } from './LayerShape';
+import { useLottieAnimation } from '../hooks/useLottieAnimation';
 
 type LayerGroupProps = {
   layer: LayerInfo;
@@ -22,10 +23,12 @@ export const LayerGroup = ({ layer, selected, onSelect }: LayerGroupProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const { layerName, shapes } = layer;
 
+  const { deleteLayer } = useLottieAnimation();
+
   return (
     <ListItem
       endAction={
-        <IconButton aria-label='Delete' size='sm'>
+        <IconButton aria-label='Delete' size='sm' onClick={() => deleteLayer(layer.nestedLayerSeq)}>
           <Delete
             sx={{
               fill: 'var(--joy-palette-danger-300, #F09898)',

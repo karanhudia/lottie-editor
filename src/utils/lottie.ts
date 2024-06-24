@@ -122,3 +122,34 @@ export const updateLottieSpeed = (obj: LottieAnimation, frameRate: number) => {
     fr: frameRate,
   };
 };
+
+export const deleteLottieLayer = (obj: LottieAnimation, layerSeq: number[]) => {
+  const newObj = { ...obj };
+  let layer: Layer | undefined = newObj.layers[layerSeq[0]];
+
+  if (!layer) {
+    console.error('Layer not found to delete');
+    return obj;
+  }
+  // Check if nested layers exist and the specific layer exists
+  let i = 1;
+  while (i < layerSeq.length - 1) {
+    if (layer?.layers?.[layerSeq[i]]) {
+      layer = layer.layers[layerSeq[i]];
+    } else {
+      console.error('Layer not found to delete');
+      return obj;
+    }
+  }
+
+  // Check if the target layer to delete exists
+  const targetIndex = layerSeq[layerSeq.length - 1];
+  if (layer.layers && layer.layers[targetIndex]) {
+    layer.layers.splice(targetIndex, 1);
+  } else {
+    console.error('Layer not found to delete');
+    return obj;
+  }
+
+  return newObj;
+};

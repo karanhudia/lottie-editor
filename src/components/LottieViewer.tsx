@@ -8,7 +8,8 @@ import { useParams } from 'react-router-dom';
 import { EditorRouteParams } from './Editor';
 
 export const LottieViewer = () => {
-  const { setLottiePlayerRef, lottieJSON } = useContext(SharedProps);
+  const { isAnimationCreated, setLottiePlayerRef, lottieJSON, setIsAnimationCreated } =
+    useContext(SharedProps);
   const params = useParams<EditorRouteParams>();
   const [createLottieJsonMutation] = useCreateLottieJsonMutation();
 
@@ -36,7 +37,7 @@ export const LottieViewer = () => {
           // The default JSON format handles layers and assets differently
           // When the json is loaded in the Lottie Player it mutates the json reference
           // Into a format which can be read by our lottie editor and so safe to update to server
-          if (event === 'load') {
+          if (event === 'load' && isAnimationCreated) {
             if (!params.editId) {
               return;
             }
@@ -48,6 +49,7 @@ export const LottieViewer = () => {
                 json: lottieJSON,
               },
             });
+            setIsAnimationCreated(false);
           }
         }}
         src={lottieJSON}

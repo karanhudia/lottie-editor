@@ -14,6 +14,8 @@ export const SharedProps = createContext<{
   setSelectedColor: Dispatch<SetStateAction<SelectedColor | null>>;
   isSocketConnected: boolean;
   setIsSocketConnected: Dispatch<SetStateAction<boolean>>;
+  isAnimationCreated: boolean;
+  setIsAnimationCreated: Dispatch<SetStateAction<boolean>>;
 }>({
   lottiePlayerRef: null,
   setLottiePlayerRef: () => null,
@@ -25,6 +27,8 @@ export const SharedProps = createContext<{
   setSelectedColor: () => null,
   isSocketConnected: false,
   setIsSocketConnected: () => null,
+  isAnimationCreated: false,
+  setIsAnimationCreated: () => null,
 });
 
 export const SharedPropsContext = ({ children }: { children: React.ReactNode }) => {
@@ -42,6 +46,9 @@ export const SharedPropsContext = ({ children }: { children: React.ReactNode }) 
 
   // Maintains the state of websockets connection
   const [isSocketConnected, setIsSocketConnected] = useState(false);
+
+  // This is only true when an animation is just imported
+  const [isAnimationCreated, setIsAnimationCreated] = useState(false);
 
   // TODO: Move to its own hook
   const handleLayerSelect = useCallback(
@@ -65,6 +72,8 @@ export const SharedPropsContext = ({ children }: { children: React.ReactNode }) 
         setSelectedColor,
         isSocketConnected,
         setIsSocketConnected,
+        isAnimationCreated,
+        setIsAnimationCreated,
       }}
     >
       {children}
