@@ -10,7 +10,7 @@ export const Home = () => {
       alignItems='center'
       width='100%'
       sx={{
-        height: 'calc(100% - 65px)',
+        height: 'calc(100% - 60px)',
         display: 'grid',
         gridTemplateColumns: '30% 70%',
         gridTemplateRows: '100%',
