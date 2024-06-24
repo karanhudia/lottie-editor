@@ -4,7 +4,11 @@ import { useLottieAnimation } from '../hooks/useLottieAnimation';
 
 const SpeedControlWrapper = styled('div')`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
 `;
 
 export const SpeedControl = () => {
@@ -21,7 +25,7 @@ export const SpeedControl = () => {
 
   return (
     <SpeedControlWrapper>
-      <Typography color='neutral' level='title-lg'>
+      <Typography color='neutral' level='title-md'>
         Speed
       </Typography>
       <Slider
@@ -32,6 +36,10 @@ export const SpeedControl = () => {
         max={150}
         onChange={handleSpeedChange}
         valueLabelDisplay='auto'
+        sx={{
+          '--Slider-trackSize': '4px',
+          '--Slider-thumbSize': '10px',
+        }}
       />
     </SpeedControlWrapper>
   );

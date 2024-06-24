@@ -4,7 +4,11 @@ import { useLottieAnimation } from '../hooks/useLottieAnimation';
 
 const ScaleControlWrapper = styled('div')`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
 `;
 
 export const ScaleControl = () => {
@@ -15,7 +19,7 @@ export const ScaleControl = () => {
 
   return (
     <ScaleControlWrapper>
-      <Typography color='neutral' level='title-lg'>
+      <Typography color='neutral' level='title-md'>
         Scale
       </Typography>
       <Slider
@@ -26,6 +30,10 @@ export const ScaleControl = () => {
         max={5}
         onChange={handleScaleChange}
         valueLabelDisplay='auto'
+        sx={{
+          '--Slider-trackSize': '4px',
+          '--Slider-thumbSize': '10px',
+        }}
       />
     </ScaleControlWrapper>
   );

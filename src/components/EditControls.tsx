@@ -9,7 +9,7 @@ export const EditControls = () => {
     <Box
       sx={{
         display: 'grid',
-        gridTemplateRows: '10% 2% 25% 2% auto',
+        gridTemplateRows: '10% 1% 20% 2% auto',
         padding: 3,
         paddingTop: 0,
       }}
