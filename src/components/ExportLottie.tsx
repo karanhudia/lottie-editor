@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Box, Button } from '@mui/joy';
 import { SharedProps } from '../context/SharedPropsContext';
-import { Download, DownloadOutlined } from '@mui/icons-material';
+import { Download } from '@mui/icons-material';
 
 export const ExportLottie = () => {
   const { lottieJSON } = useContext(SharedProps);
