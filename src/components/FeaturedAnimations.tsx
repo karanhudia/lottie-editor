@@ -32,8 +32,8 @@ export const FeaturedAnimations = () => {
           border: '1px solid var(--joy-palette-neutral-100, #F0F4F8)',
         }}
       >
-        {data?.featuredPublicAnimations.edges.map((edge) => {
-          return <AnimationCard animation={edge.node} />;
+        {data.featuredPublicAnimations.edges.map((edge) => {
+          return <AnimationCard key={edge.node.id} animation={edge.node} />;
         })}
       </Box>
     </Box>
