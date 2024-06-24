@@ -60,7 +60,7 @@ export const ColorsControl = () => {
   };
 
   return (
-    <div>
+    <Box sx={{ overflow: 'auto' }}>
       <Typography color='neutral' level='title-lg'>
         {/* TODO: Add translations */}
         Colors
@@ -85,6 +85,6 @@ export const ColorsControl = () => {
           <RgbaColorPicker color={selectedColor.color} onChange={handleColorChange} />
         )}
       </Box>
-    </div>
+    </Box>
   );
 };

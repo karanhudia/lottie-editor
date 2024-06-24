@@ -12,6 +12,7 @@ export const EditControls = () => {
         gridTemplateRows: '10% 1% 20% 2% auto',
         padding: 3,
         paddingTop: 0,
+        overflow: 'hidden',
       }}
     >
       <ExportLottie />
