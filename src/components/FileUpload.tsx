@@ -1,7 +1,8 @@
 import React, { useCallback } from 'react';
-import { Button, styled, SvgIcon } from '@mui/joy';
+import { Box, Button, styled, SvgIcon, Typography } from '@mui/joy';
 import { useSocket } from '../hooks/useSocket';
 import { LottieAnimation } from '../graphql/lottie-server/generated';
+import { UploadFileOutlined } from '@mui/icons-material';
 
 const VisuallyHiddenInput = styled('input')`
   clip: rect(0 0 0 0);
@@ -40,32 +41,62 @@ export const FileUpload = () => {
   );
 
   return (
-    <Button
-      component='label'
-      role={undefined}
-      tabIndex={-1}
-      variant='outlined'
-      color='neutral'
-      startDecorator={
-        <SvgIcon>
-          <svg
-            xmlns='http://www.w3.org/2000/svg'
-            fill='none'
-            viewBox='0 0 24 24'
-            strokeWidth={1.5}
-            stroke='currentColor'
-          >
-            <path
-              strokeLinecap='round'
-              strokeLinejoin='round'
-              d='M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z'
-            />
-          </svg>
-        </SvgIcon>
-      }
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'var(--joy-palette-neutral-100, #F0F4F8)',
+
+        height: '100%',
+      }}
     >
-      Upload JSON
-      <VisuallyHiddenInput type='file' accept='.json' onChange={onChange} />
-    </Button>
+      <UploadFileOutlined
+        fontSize='large'
+        sx={{
+          height: 'auto',
+          width: '200px',
+          fill: '#97C3F0',
+        }}
+      />
+      <Typography
+        level='h4'
+        sx={{
+          color: 'primary.600',
+        }}
+      >
+        Edit Animation
+      </Typography>
+      <Box pt={2}>
+        <Button
+          component='label'
+          role={undefined}
+          tabIndex={-1}
+          variant='outlined'
+          color='primary'
+          startDecorator={
+            <SvgIcon>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                fill='none'
+                viewBox='0 0 24 24'
+                strokeWidth={1.5}
+                stroke='currentColor'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  d='M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z'
+                />
+              </svg>
+            </SvgIcon>
+          }
+        >
+          Upload JSON
+          <VisuallyHiddenInput type='file' accept='.json' onChange={onChange} />
+        </Button>
+      </Box>
+    </Box>
   );
 };

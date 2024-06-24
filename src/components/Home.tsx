@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Divider, Typography } from '@mui/joy';
+import { Box } from '@mui/joy';
 import { FileUpload } from './FileUpload';
 import { FeaturedAnimations } from './FeaturedAnimations';
 
@@ -9,23 +9,14 @@ export const Home = () => {
       alignContent='center'
       alignItems='center'
       width='100%'
-      sx={{ height: '100%', display: 'grid', gridTemplateColumns: '29% 2% 69%' }}
+      sx={{
+        height: 'calc(100% - 65px)',
+        display: 'grid',
+        gridTemplateColumns: '30% 70%',
+        gridTemplateRows: '100%',
+      }}
     >
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-        }}
-      >
-        <Typography color='neutral' level='h2'>
-          Edit Animation
-        </Typography>
-        <Box pt={2}>
-          <FileUpload />
-        </Box>
-      </Box>
-      <Divider orientation='vertical' />
+      <FileUpload />
       <FeaturedAnimations />
     </Box>
   );

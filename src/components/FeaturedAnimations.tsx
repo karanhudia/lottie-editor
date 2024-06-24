@@ -1,6 +1,7 @@
 import React from 'react';
-import { useFetchFeaturedAnimationsQuery } from '../graphql/lottiefiles/generated';
 import { Box, Typography } from '@mui/joy';
+import { AnimationOutlined } from '@mui/icons-material';
+import { useFetchFeaturedAnimationsQuery } from '../graphql/lottiefiles/generated';
 import { AnimationCard } from './AnimationCard';
 
 export const FeaturedAnimations = () => {
@@ -11,15 +12,24 @@ export const FeaturedAnimations = () => {
   }
 
   return (
-    <Box>
-      <Typography color='neutral' level='h2' pb={8}>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <Typography color='neutral' level='h4' pb={3} endDecorator={<AnimationOutlined />}>
         Choose from our featured animations
       </Typography>
       <Box
         sx={{
           display: 'grid',
           gridTemplateColumns: 'repeat(5, auto)',
-          gridGap: 10,
+          gridGap: 20,
+          padding: 5,
+          border: '1px solid var(--joy-palette-neutral-100, #F0F4F8)',
         }}
       >
         {data?.featuredPublicAnimations.edges.map((edge) => {
