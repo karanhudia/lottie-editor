@@ -7,6 +7,8 @@ import { createHashRouter, RouterProvider } from 'react-router-dom';
 import { HomePage } from './pages/HomePage';
 import { EditorPage } from './pages/EditorPage';
 import { Error } from './pages/Error';
+import { ApolloProvider } from '@apollo/client';
+import { client } from './graphql/client';
 
 function App() {
   const router = createHashRouter([
@@ -26,7 +28,9 @@ function App() {
     <div className='App'>
       <CssVarsProvider>
         <SharedPropsContext>
-          <RouterProvider router={router} />
+          <ApolloProvider client={client}>
+            <RouterProvider router={router} />
+          </ApolloProvider>
         </SharedPropsContext>
       </CssVarsProvider>
     </div>

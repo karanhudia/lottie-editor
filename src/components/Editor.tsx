@@ -1,10 +1,8 @@
 import React, { useContext } from 'react';
-import { ApolloProvider } from '@apollo/client';
 import { SharedProps } from '../context/SharedPropsContext';
 import { useParams } from 'react-router-dom';
 import { useFetchEditedLottieQuery } from '../graphql/lottie-server/generated';
 import { useSocket } from '../hooks/useSocket';
-import { client } from '../graphql/lottie-server/client';
 import { Header } from './Header';
 import { Content } from './Content';
 
@@ -30,9 +28,9 @@ export const Editor = () => {
   });
 
   return (
-    <ApolloProvider client={client}>
+    <>
       <Header />
       <Content />
-    </ApolloProvider>
+    </>
   );
 };

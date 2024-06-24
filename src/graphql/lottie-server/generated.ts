@@ -111,7 +111,7 @@ export type Layer = {
 
 export type LayerPayload = {
   __typename?: 'LayerPayload';
-  layer: Scalars['Int']['output'];
+  layer: Array<Scalars['Int']['output']>;
 };
 
 export type Lottie = {
@@ -140,6 +140,16 @@ export enum LottieSocketEvents {
   CreateJson = 'Create_Json',
   UpdateJson = 'Update_Json',
 }
+
+export type Mutation = {
+  __typename?: 'Mutation';
+  createLottie?: Maybe<SocketAcknowledgement>;
+};
+
+export type MutationCreateLottieArgs = {
+  json?: InputMaybe<Scalars['JSON']['input']>;
+  uuid: Scalars['ID']['input'];
+};
 
 export type Property = {
   __typename?: 'Property';
@@ -248,6 +258,16 @@ export type UpdateLottieSpeedMessage = {
   uuid: Scalars['String']['output'];
 };
 
+export type CreateLottieJsonMutationVariables = Exact<{
+  editId: Scalars['ID']['input'];
+  json?: InputMaybe<Scalars['JSON']['input']>;
+}>;
+
+export type CreateLottieJsonMutation = {
+  __typename?: 'Mutation';
+  createLottie?: { __typename?: 'SocketAcknowledgement'; status: string; code: number } | null;
+};
+
 export type FetchEditedLottieQueryVariables = Exact<{
   editId: Scalars['ID']['input'];
 }>;
@@ -257,6 +277,79 @@ export type FetchEditedLottieQuery = {
   lottie?: { __typename?: 'Lottie'; json: any } | null;
 };
 
+export const CreateLottieJsonDocument = gql`
+  mutation CreateLottieJson($editId: ID!, $json: JSON) {
+    createLottie(uuid: $editId, json: $json) {
+      status
+      code
+    }
+  }
+`;
+export type CreateLottieJsonMutationFn = Apollo.MutationFunction<
+  CreateLottieJsonMutation,
+  CreateLottieJsonMutationVariables
+>;
+export type CreateLottieJsonProps<TChildProps = {}, TDataName extends string = 'mutate'> = {
+  [key in TDataName]: Apollo.MutationFunction<
+    CreateLottieJsonMutation,
+    CreateLottieJsonMutationVariables
+  >;
+} & TChildProps;
+export function withCreateLottieJson<TProps, TChildProps = {}, TDataName extends string = 'mutate'>(
+  operationOptions?: ApolloReactHoc.OperationOption<
+    TProps,
+    CreateLottieJsonMutation,
+    CreateLottieJsonMutationVariables,
+    CreateLottieJsonProps<TChildProps, TDataName>
+  >,
+) {
+  return ApolloReactHoc.withMutation<
+    TProps,
+    CreateLottieJsonMutation,
+    CreateLottieJsonMutationVariables,
+    CreateLottieJsonProps<TChildProps, TDataName>
+  >(CreateLottieJsonDocument, {
+    alias: 'createLottieJson',
+    ...operationOptions,
+  });
+}
+
+/**
+ * __useCreateLottieJsonMutation__
+ *
+ * To run a mutation, you first call `useCreateLottieJsonMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateLottieJsonMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createLottieJsonMutation, { data, loading, error }] = useCreateLottieJsonMutation({
+ *   variables: {
+ *      editId: // value for 'editId'
+ *      json: // value for 'json'
+ *   },
+ * });
+ */
+export function useCreateLottieJsonMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateLottieJsonMutation,
+    CreateLottieJsonMutationVariables
+  >,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<CreateLottieJsonMutation, CreateLottieJsonMutationVariables>(
+    CreateLottieJsonDocument,
+    options,
+  );
+}
+export type CreateLottieJsonMutationHookResult = ReturnType<typeof useCreateLottieJsonMutation>;
+export type CreateLottieJsonMutationResult = Apollo.MutationResult<CreateLottieJsonMutation>;
+export type CreateLottieJsonMutationOptions = Apollo.BaseMutationOptions<
+  CreateLottieJsonMutation,
+  CreateLottieJsonMutationVariables
+>;
 export const FetchEditedLottieDocument = gql`
   query fetchEditedLottie($editId: ID!) {
     lottie(uuid: $editId) {
@@ -351,5 +444,8 @@ export type FetchEditedLottieQueryResult = Apollo.QueryResult<
 export const namedOperations = {
   Query: {
     fetchEditedLottie: 'fetchEditedLottie',
+  },
+  Mutation: {
+    CreateLottieJson: 'CreateLottieJson',
   },
 };
