@@ -30,23 +30,26 @@ export const useLottieAnimation = (): UseLottieAnimationReturn => {
   const { updateJSON } = useSocket();
   const { lottieJSON, setLottieJSON, setIsAnimationCreated } = useContext(SharedProps);
 
-  const syncLayerChangesWithServer = useThrottle(async (layer: number[]) => {
-    if (!params.editId) {
-      return;
-    }
+  const syncLayerChangesWithServer = useCallback(
+    async (layer: number[]) => {
+      if (!params.editId) {
+        return;
+      }
 
-    const response = await updateJSON({
-      uuid: params.editId,
-      payload: {
-        __typename: 'LayerPayload',
-        layer,
-      },
-    });
+      const response = await updateJSON({
+        uuid: params.editId,
+        payload: {
+          __typename: 'LayerPayload',
+          layer,
+        },
+      });
 
-    if (response.code === 200) {
-      console.info('Layer deleted');
-    }
-  }, 1000);
+      if (response.code === 200) {
+        console.info('Layer deleted');
+      }
+    },
+    [updateJSON, params?.editId],
+  );
 
   const syncColorChangesWithServer = useThrottle(
     async (nestedLayerSeq: number[], shapeSeq: number, shapeItemSeq: number, color: number[]) => {
@@ -136,7 +139,7 @@ export const useLottieAnimation = (): UseLottieAnimationReturn => {
       }
 
       setLottieJSON(deleteLottieLayer(lottieJSON, layer));
-      syncLayerChangesWithServer(layer);
+      void syncLayerChangesWithServer(layer);
     },
     [lottieJSON, setLottieJSON, syncLayerChangesWithServer],
   );
