@@ -26,7 +26,9 @@ export const LayersControl = () => {
       <List
         aria-label='Sidebar'
         sx={{
-          padding: 0,
+          '--ListItem-paddingLeft': '24px',
+          '--List-nestedInsetStart': '15px',
+          '--ListItem-startActionWidth': '20px',
         }}
       >
         {allLayers.map((layerInfo, index) => {
@@ -37,7 +39,9 @@ export const LayersControl = () => {
               key={`${layerInfo.layerName}-${index}`}
               layer={layerInfo}
               selected={isLayerSelected}
+              selectedLayer={selectedLayer}
               onSelect={handleLayerSelect}
+              nested
             />
           );
         })}

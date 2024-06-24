@@ -1,30 +1,16 @@
 import { RgbaColor } from 'react-colorful';
 import { rgbaToLottieColor } from './color';
 import { Layer, LottieAnimation } from '../graphql/lottie-server/generated';
-import { LayerInfo } from '../types/shared';
+import { LayerInfo, ShapeInfo } from '../types/shared';
 
-const getLayerInfo = (
-  layer: Layer | null,
-  layerSeq: number,
-  nestedLayerSeq: number[],
-): Omit<LayerInfo, 'layerSeq' | 'nestedLayerSeq'> | undefined => {
-  if (!layer?.nm) {
-    return;
-  }
-
-  const info: Omit<LayerInfo, 'layerSeq' | 'nestedLayerSeq'> = {
-    layerName: layer.nm,
-    shapes: [],
-  };
-
+const collectShapesInfo = (layer: Layer, shapeInfos: ShapeInfo[]): void => {
   if (layer.shapes) {
     for (let i = 0; i < layer.shapes.length; i++) {
       const shapeItems = layer.shapes[i]?.it;
-
       if (shapeItems) {
         for (let j = 0; j < shapeItems.length; j++) {
           if (shapeItems[j]?.c?.k) {
-            info.shapes.push({
+            shapeInfos.push({
               shapeName: layer.shapes[i]?.nm ?? 'Custom Shape',
               shapeSeq: i,
               shapeItemSeq: j,
@@ -35,22 +21,39 @@ const getLayerInfo = (
       }
     }
   }
+};
 
-  if (layer.layers) {
-    for (let i = 0; i < layer.layers.length; i++) {
-      const newNestedLayerSeq = [...nestedLayerSeq, i];
-      const nestedLayerInfo = getLayerInfo(layer.layers[i], layerSeq, newNestedLayerSeq);
-      if (nestedLayerInfo) {
-        info.shapes = info.shapes.concat(nestedLayerInfo.shapes);
-      }
+const processLayers = (
+  layers: Layer[],
+  baseLayerSeq: number,
+  nestedLayerSeq: number[],
+  layerSeqOffset: number,
+): LayerInfo[] => {
+  const layerInfos: LayerInfo[] = [];
+  for (let i = 0; i < layers.length; i++) {
+    const currentNestedLayerSeq = [...nestedLayerSeq, i];
+    const layer = layers[i];
+    const shapeInfos: ShapeInfo[] = [];
+
+    if (layer.shapes) {
+      // This layer has shapes, collect shapes info
+      collectShapesInfo(layer, shapeInfos);
     }
+
+    const nestedLayerInfos = layer.layers
+      ? processLayers(layer.layers, baseLayerSeq + i + 1, currentNestedLayerSeq, layerSeqOffset)
+      : [];
+
+    layerInfos.push({
+      layerSeq: baseLayerSeq + i + layerSeqOffset,
+      nestedLayerSeq: currentNestedLayerSeq,
+      layerName: layer.nm,
+      shapes: shapeInfos,
+      layers: nestedLayerInfos.length > 0 ? nestedLayerInfos : undefined,
+    });
   }
 
-  if (info.shapes.length === 0) {
-    return;
-  }
-
-  return info;
+  return layerInfos;
 };
 
 export const getAnimationLayersInfo = (lottieAnimation: LottieAnimation | null): LayerInfo[] => {
@@ -58,30 +61,7 @@ export const getAnimationLayersInfo = (lottieAnimation: LottieAnimation | null):
     return [];
   }
 
-  const dp: LayerInfo[] = [];
-  const layers = lottieAnimation.layers;
-
-  const processLayers = (layers: Layer[], baseLayerSeq: number, nestedLayerSeq: number[]) => {
-    for (let i = 0; i < layers.length; i++) {
-      const newNestedLayerSeq = [...nestedLayerSeq, i];
-      const layerInfo = getLayerInfo(layers[i], baseLayerSeq + i, newNestedLayerSeq);
-
-      if (layerInfo) {
-        dp.push({
-          ...layerInfo,
-          nestedLayerSeq: newNestedLayerSeq,
-        });
-
-        if (layers[i].layers) {
-          processLayers(layers[i]?.layers ?? [], baseLayerSeq + i + 1, newNestedLayerSeq);
-        }
-      }
-    }
-  };
-
-  processLayers(layers, 0, []);
-
-  return dp;
+  return processLayers(lottieAnimation.layers, 0, [], 0);
 };
 
 export const updateLottieColor = (

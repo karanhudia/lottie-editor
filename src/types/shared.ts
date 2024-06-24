@@ -15,7 +15,9 @@ export type ShapeInfo = {
 };
 
 export type LayerInfo = {
-  nestedLayerSeq: number[]; // Sequence indices for nested layers
+  layerSeq: number;
+  nestedLayerSeq: number[];
   layerName: string;
   shapes: ShapeInfo[];
+  layers?: LayerInfo[];
 };
