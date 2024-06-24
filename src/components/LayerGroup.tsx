@@ -23,48 +23,51 @@ export const LayerGroup = ({ layer, selected, onSelect }: LayerGroupProps) => {
   const { layerName, shapes } = layer;
 
   return (
-    <>
-      <ListItem
-        key={layerName}
-        endAction={
-          <IconButton aria-label='Delete' size='sm'>
-            <Delete
-              sx={{
-                fill: 'var(--joy-palette-danger-300, #F09898)',
-              }}
-            />
-          </IconButton>
-        }
-        nested
+    <ListItem
+      endAction={
+        <IconButton aria-label='Delete' size='sm'>
+          <Delete
+            sx={{
+              fill: 'var(--joy-palette-danger-300, #F09898)',
+            }}
+          />
+        </IconButton>
+      }
+      nested
+    >
+      <ListItemButton
+        selected={selected}
+        color={selected ? 'primary' : undefined}
+        onClick={() => {
+          setIsOpen(!isOpen);
+          onSelect(layer);
+        }}
+        sx={{
+          paddingLeft: 3,
+          gap: 0,
+        }}
       >
-        <ListItemButton
-          selected={selected}
-          color={selected ? 'primary' : undefined}
-          onClick={() => {
-            setIsOpen(!isOpen);
-            onSelect(layer);
-          }}
-          sx={{
-            paddingLeft: 3,
-            gap: 0,
-          }}
-        >
-          <ListItemDecorator>
-            <Layers />
-          </ListItemDecorator>
-          <ListItemContent>
-            <Typography level='body-xs' fontWeight={selected ? 800 : 500}>
-              {layerName}
-            </Typography>
-          </ListItemContent>
-        </ListItemButton>
-        <List>
-          {isOpen &&
-            shapes.map((shape) => (
-              <LayerShape layer={layer} onSelect={onSelect} selected={selected} shape={shape} />
-            ))}
-        </List>
-      </ListItem>
-    </>
+        <ListItemDecorator>
+          <Layers />
+        </ListItemDecorator>
+        <ListItemContent>
+          <Typography level='body-xs' fontWeight={selected ? 800 : 500}>
+            {layerName}
+          </Typography>
+        </ListItemContent>
+      </ListItemButton>
+      <List>
+        {isOpen &&
+          shapes.map((shape, index) => (
+            <LayerShape
+              key={`${layerName}-${shape.shapeName}-${index}`}
+              layer={layer}
+              onSelect={onSelect}
+              selected={selected}
+              shape={shape}
+            />
+          ))}
+      </List>
+    </ListItem>
   );
 };

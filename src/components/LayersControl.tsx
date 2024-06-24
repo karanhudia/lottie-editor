@@ -29,11 +29,16 @@ export const LayersControl = () => {
           padding: 0,
         }}
       >
-        {allLayers.map((layerInfo) => {
+        {allLayers.map((layerInfo, index) => {
           const isLayerSelected = layerInfo.layerName === selectedLayer?.layerName;
 
           return (
-            <LayerGroup layer={layerInfo} selected={isLayerSelected} onSelect={handleLayerSelect} />
+            <LayerGroup
+              key={`${layerInfo.layerName}-${index}`}
+              layer={layerInfo}
+              selected={isLayerSelected}
+              onSelect={handleLayerSelect}
+            />
           );
         })}
       </List>
