@@ -1,8 +1,8 @@
 import React, { useCallback } from 'react';
 import { Box, Button, styled, SvgIcon, Typography } from '@mui/joy';
-import { useSocket } from '../hooks/useSocket';
 import { LottieAnimation } from '../graphql/lottie-server/generated';
 import { UploadFileOutlined } from '@mui/icons-material';
+import { useLottieAnimation } from '../hooks/useLottieAnimation';
 
 const VisuallyHiddenInput = styled('input')`
   clip: rect(0 0 0 0);
@@ -16,17 +16,17 @@ const VisuallyHiddenInput = styled('input')`
   width: 1px;
 `;
 
-export const FileUpload = () => {
-  const { createJSON } = useSocket();
+export const UploadLottie = () => {
+  const { importLottie } = useLottieAnimation();
 
   const onReaderLoad = useCallback(
     (event: ProgressEvent<FileReader>): void => {
       // TODO: Add type guard
       const obj = JSON.parse(event.target?.result as string) as LottieAnimation;
 
-      void createJSON(obj);
+      void importLottie(obj);
     },
-    [createJSON],
+    [importLottie],
   );
 
   const onChange = useCallback(

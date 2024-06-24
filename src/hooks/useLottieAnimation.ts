@@ -2,13 +2,16 @@ import { useCallback, useContext } from 'react';
 import { SharedProps } from '../context/SharedPropsContext';
 import { updateLottieColor, updateLottieSpeed } from '../utils/lottie';
 import { RgbaColor } from 'react-colorful';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useThrottle } from './useThrottle';
 import { useSocket } from './useSocket';
 import { rgbaToLottieColor } from '../utils/color';
+import { v4 as uuidv4 } from 'uuid';
+import { LottieAnimation } from '../graphql/lottie-server/generated';
 
 type UseLottieAnimationReturn = {
   frameRate?: number;
+  importLottie: (json: LottieAnimation) => void;
   updateSpeed: (newSpeed: number) => void;
   updateScale: (newScale: number) => void;
   updateColor: (
@@ -21,6 +24,7 @@ type UseLottieAnimationReturn = {
 
 export const useLottieAnimation = (): UseLottieAnimationReturn => {
   const params = useParams<{ editId: string }>();
+  const navigate = useNavigate();
 
   const { updateJSON } = useSocket();
   const { lottieJSON, setLottieJSON } = useContext(SharedProps);
@@ -67,6 +71,16 @@ export const useLottieAnimation = (): UseLottieAnimationReturn => {
     }
   }, 1000);
 
+  const handleLottieImport = useCallback(
+    (json: LottieAnimation) => {
+      const uuid = uuidv4();
+
+      setLottieJSON(json);
+      navigate(`edit/${uuid}`);
+    },
+    [navigate, setLottieJSON],
+  );
+
   const handleSpeedUpdate = useCallback(
     (newSpeed: number) => {
       if (!lottieJSON) {
@@ -97,6 +111,7 @@ export const useLottieAnimation = (): UseLottieAnimationReturn => {
 
   return {
     frameRate: lottieJSON?.fr,
+    importLottie: handleLottieImport,
     updateColor: handleColorUpdate,
     updateScale: handleScaleUpdate,
     updateSpeed: handleSpeedUpdate,

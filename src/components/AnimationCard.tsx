@@ -3,14 +3,15 @@ import { Player } from '@lottiefiles/react-lottie-player';
 import { AspectRatio, Box, Button, Card, CardContent, CardCover, Typography } from '@mui/joy';
 import { Download, Favorite } from '@mui/icons-material';
 import { FetchFeaturedAnimationsQuery } from '../graphql/lottiefiles/generated';
-import { useSocket } from '../hooks/useSocket';
+import { useLottieAnimation } from '../hooks/useLottieAnimation';
 
 type AnimationCardProps = {
   animation: FetchFeaturedAnimationsQuery['featuredPublicAnimations']['edges'][0]['node'];
 };
 
 export const AnimationCard = ({ animation }: AnimationCardProps) => {
-  const { createJSON } = useSocket();
+  const { importLottie } = useLottieAnimation();
+
   const handleAnimationClick = async () => {
     if (!animation.jsonUrl) {
       return;
@@ -18,7 +19,7 @@ export const AnimationCard = ({ animation }: AnimationCardProps) => {
 
     const response = await fetch(animation.jsonUrl).then((result) => result.json());
 
-    void createJSON(response);
+    void importLottie(response);
   };
 
   return (

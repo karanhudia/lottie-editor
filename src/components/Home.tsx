@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box } from '@mui/joy';
-import { FileUpload } from './FileUpload';
+import { UploadLottie } from './UploadLottie';
 import { FeaturedAnimations } from './FeaturedAnimations';
 
 export const Home = () => {
@@ -16,7 +16,7 @@ export const Home = () => {
         gridTemplateRows: '100%',
       }}
     >
-      <FileUpload />
+      <UploadLottie />
       <FeaturedAnimations />
     </Box>
   );

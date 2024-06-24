@@ -1,0 +1,6 @@
+mutation CreateLottieJson($editId: ID!, $json: JSON) {
+    createLottie(uuid: $editId, json: $json) {
+        status
+        code
+    }
+}
