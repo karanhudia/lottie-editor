@@ -5656,9 +5656,11 @@ export type FetchFeaturedAnimationsQuery = {
       __typename?: 'PublicAnimationEdge';
       node: {
         __typename?: 'PublicAnimation';
-        jsonUrl?: string | null;
-        gifUrl?: string | null;
         id: number;
+        jsonUrl?: string | null;
+        videoUrl?: string | null;
+        downloads?: number | null;
+        likesCount: number;
       };
     }>;
   };
@@ -5669,9 +5671,11 @@ export const FetchFeaturedAnimationsDocument = gql`
     featuredPublicAnimations {
       edges {
         node {
-          jsonUrl
-          gifUrl
           id
+          jsonUrl
+          videoUrl
+          downloads
+          likesCount
         }
       }
     }
