@@ -7,6 +7,7 @@ export const SideBar = () => {
     <Box
       sx={{
         height: '100%',
+        overflow: 'auto',
       }}
     >
       <LayersControl />
