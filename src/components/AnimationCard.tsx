@@ -1,7 +1,8 @@
 import React from 'react';
-import { AspectRatio, Box, Button, Card, CardCover } from '@mui/joy';
-import { FetchFeaturedAnimationsQuery } from '../graphql/lottiefiles/generated';
 import { Player } from '@lottiefiles/react-lottie-player';
+import { AspectRatio, Box, Button, Card, CardContent, CardCover, Typography } from '@mui/joy';
+import { Download, Favorite } from '@mui/icons-material';
+import { FetchFeaturedAnimationsQuery } from '../graphql/lottiefiles/generated';
 import { useSocket } from '../hooks/useSocket';
 
 type AnimationCardProps = {
@@ -32,13 +33,7 @@ export const AnimationCard = ({ animation }: AnimationCardProps) => {
       <Box sx={{ position: 'relative' }}>
         <AspectRatio ratio='4/3'>
           <figure>
-            <Player
-              autoplay
-              loop
-              src={animation.jsonUrl ?? ''}
-              controls
-              style={{ height: '150px' }}
-            />
+            <Player autoplay loop src={animation.jsonUrl ?? ''} controls />
           </figure>
         </AspectRatio>
         <CardCover
@@ -72,6 +67,27 @@ export const AnimationCard = ({ animation }: AnimationCardProps) => {
             </Box>
           </div>
         </CardCover>
+        <CardContent
+          sx={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            margin: '8px',
+
+            opacity: 0.5,
+          }}
+        >
+          <Typography level='body-xs' color='neutral' startDecorator={<Download />}>
+            {animation.downloads}
+          </Typography>
+          <Typography level='body-xs' color='neutral' startDecorator={<Favorite />}>
+            {animation.likesCount}
+          </Typography>
+        </CardContent>
       </Box>
     </Card>
   );
