@@ -3,15 +3,20 @@ import { SharedProps } from '../context/SharedPropsContext';
 import { updateLottieColor, updateLottieSpeed } from '../utils/lottie';
 import { RgbaColor } from 'react-colorful';
 import { useParams } from 'react-router-dom';
-import { rgbaToLottieColor } from '../utils/color';
 import { useThrottle } from './useThrottle';
 import { useSocket } from './useSocket';
+import { rgbaToLottieColor } from '../utils/color';
 
 type UseLottieAnimationReturn = {
   frameRate?: number;
   updateSpeed: (newSpeed: number) => void;
   updateScale: (newScale: number) => void;
-  updateColor: (layerSeq: number, shapeSeq: number, shapeItemSeq: number, color: RgbaColor) => void;
+  updateColor: (
+    nestedLayerSeq: number[],
+    shapeSeq: number,
+    shapeItemSeq: number,
+    color: RgbaColor,
+  ) => void;
 };
 
 export const useLottieAnimation = (): UseLottieAnimationReturn => {
@@ -21,7 +26,7 @@ export const useLottieAnimation = (): UseLottieAnimationReturn => {
   const { lottieJSON, setLottieJSON } = useContext(SharedProps);
 
   const syncColorChangesWithServer = useThrottle(
-    async (layerSeq: number, shapeSeq: number, shapeItemSeq: number, color: number[]) => {
+    async (nestedLayerSeq: number[], shapeSeq: number, shapeItemSeq: number, color: number[]) => {
       if (!params.editId) {
         return;
       }
@@ -30,7 +35,7 @@ export const useLottieAnimation = (): UseLottieAnimationReturn => {
         uuid: params.editId,
         payload: {
           __typename: 'ColorPayload',
-          layer: layerSeq,
+          layer: nestedLayerSeq,
           shape: shapeSeq,
           shapeItem: shapeItemSeq,
           color,
@@ -79,13 +84,13 @@ export const useLottieAnimation = (): UseLottieAnimationReturn => {
   };
 
   const handleColorUpdate = useCallback(
-    (layerSeq: number, shapeSeq: number, shapeItemSeq: number, color: RgbaColor) => {
+    (nestedLayerSeq: number[], shapeSeq: number, shapeItemSeq: number, color: RgbaColor) => {
       if (!lottieJSON) {
         return;
       }
 
-      setLottieJSON(updateLottieColor(lottieJSON, layerSeq, shapeSeq, shapeItemSeq, color));
-      syncColorChangesWithServer(layerSeq, shapeSeq, shapeItemSeq, rgbaToLottieColor(color));
+      setLottieJSON(updateLottieColor(lottieJSON, nestedLayerSeq, shapeSeq, shapeItemSeq, color));
+      syncColorChangesWithServer(nestedLayerSeq, shapeSeq, shapeItemSeq, rgbaToLottieColor(color));
     },
     [lottieJSON, setLottieJSON, syncColorChangesWithServer],
   );

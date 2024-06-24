@@ -1,17 +1,9 @@
 import React, { useContext } from 'react';
-import {
-  Box,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemContent,
-  ListItemDecorator,
-  Typography,
-} from '@mui/joy';
-import { Layers } from '@mui/icons-material';
+import { Box, List, Typography } from '@mui/joy';
 import { SharedProps } from '../context/SharedPropsContext';
 import { getAnimationLayersInfo } from '../utils/lottie';
 import { LayerInfo } from '../types/shared';
+import { LayerGroup } from './LayerGroup';
 
 export const LayersControl = () => {
   const { lottieJSON, selectedLayer, updateLayer } = useContext(SharedProps);
@@ -41,28 +33,7 @@ export const LayersControl = () => {
           const isLayerSelected = layerInfo.layerName === selectedLayer?.layerName;
 
           return (
-            <ListItem key={layerInfo.layerName}>
-              <ListItemButton
-                selected={layerInfo.layerName === selectedLayer?.layerName}
-                color={isLayerSelected ? 'primary' : undefined}
-                onClick={() => {
-                  handleLayerSelect(layerInfo);
-                }}
-                sx={{
-                  paddingLeft: 3,
-                  gap: 0,
-                }}
-              >
-                <ListItemDecorator>
-                  <Layers />
-                </ListItemDecorator>
-                <ListItemContent>
-                  <Typography level='body-xs' fontWeight={isLayerSelected ? 800 : 500}>
-                    {layerInfo.layerName}
-                  </Typography>
-                </ListItemContent>
-              </ListItemButton>
-            </ListItem>
+            <LayerGroup layer={layerInfo} selected={isLayerSelected} onSelect={handleLayerSelect} />
           );
         })}
       </List>
