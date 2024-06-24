@@ -16,7 +16,13 @@ export const LottieViewer = () => {
   }
 
   return (
-    <Stack spacing={2} sx={{ px: { xs: 2, md: 4 }, pt: 2, minHeight: 0 }}>
+    <Stack
+      spacing={2}
+      sx={{
+        minHeight: 0,
+        backgroundColor: 'var(--joy-palette-neutral-100, #F0F4F8)',
+      }}
+    >
       <Player
         autoplay
         loop
@@ -25,8 +31,9 @@ export const LottieViewer = () => {
         controls
         keepLastFrame
         style={{ height: '100%' }}
+        background={'var(--joy-palette-neutral-100, #F0F4F8)'}
       >
-        <Controls visible={true} buttons={['play', 'repeat', 'frame', 'debug']} />
+        <Controls visible={true} transparentTheme buttons={['play', 'repeat', 'frame', 'debug']} />
       </Player>
     </Stack>
   );

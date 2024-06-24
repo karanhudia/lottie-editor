@@ -61,13 +61,12 @@ export const ColorsControl = () => {
 
   return (
     <div>
-      <Typography color='neutral' level='h4'>
+      <Typography color='neutral' level='title-lg'>
         {/* TODO: Add translations */}
         Colors
       </Typography>
       <Box
         sx={{
-          padding: 4,
           paddingTop: 2,
         }}
       >

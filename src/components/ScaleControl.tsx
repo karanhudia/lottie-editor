@@ -5,7 +5,6 @@ import { useLottieAnimation } from '../hooks/useLottieAnimation';
 const ScaleControlWrapper = styled('div')`
   display: flex;
   flex-direction: column;
-  padding: 10px 30px;
 `;
 
 export const ScaleControl = () => {
@@ -16,7 +15,7 @@ export const ScaleControl = () => {
 
   return (
     <ScaleControlWrapper>
-      <Typography color='neutral' level='h4'>
+      <Typography color='neutral' level='title-lg'>
         Scale
       </Typography>
       <Slider

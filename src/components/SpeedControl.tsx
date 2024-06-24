@@ -5,7 +5,6 @@ import { useLottieAnimation } from '../hooks/useLottieAnimation';
 const SpeedControlWrapper = styled('div')`
   display: flex;
   flex-direction: column;
-  padding: 10px 30px;
 `;
 
 export const SpeedControl = () => {
@@ -22,7 +21,7 @@ export const SpeedControl = () => {
 
   return (
     <SpeedControlWrapper>
-      <Typography color='neutral' level='h4'>
+      <Typography color='neutral' level='title-lg'>
         Speed
       </Typography>
       <Slider
