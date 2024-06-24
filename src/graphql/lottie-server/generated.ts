@@ -55,7 +55,7 @@ export type Color = {
 export type ColorPayload = {
   __typename?: 'ColorPayload';
   color: Array<Scalars['Int']['output']>;
-  layer: Scalars['Int']['output'];
+  layer: Array<Scalars['Int']['output']>;
   shape: Scalars['Int']['output'];
   shapeItem: Scalars['Int']['output'];
 };
@@ -69,6 +69,12 @@ export type CreateLottieMessage = {
 export type CreateLottiePayload = {
   __typename?: 'CreateLottiePayload';
   json: Scalars['JSON']['output'];
+};
+
+export type DeleteLottieLayerMessage = {
+  __typename?: 'DeleteLottieLayerMessage';
+  payload: LayerPayload;
+  uuid: Scalars['String']['output'];
 };
 
 export type Easing = {
@@ -94,12 +100,18 @@ export type Layer = {
   ind: Scalars['Int']['output'];
   ip: Scalars['Int']['output'];
   ks: Transform;
+  layers?: Maybe<Array<Layer>>;
   nm: Scalars['String']['output'];
   op: Scalars['Int']['output'];
-  shapes?: Maybe<Array<Maybe<Shape>>>;
+  shapes?: Maybe<Array<Shape>>;
   sr: Scalars['Float']['output'];
   st: Scalars['Int']['output'];
   ty: Scalars['Int']['output'];
+};
+
+export type LayerPayload = {
+  __typename?: 'LayerPayload';
+  layer: Scalars['Int']['output'];
 };
 
 export type Lottie = {
@@ -219,6 +231,7 @@ export type UpdateLottieColorMessage = {
 };
 
 export type UpdateLottieMessage =
+  | DeleteLottieLayerMessage
   | UpdateLottieColorMessage
   | UpdateLottieScaleMessage
   | UpdateLottieSpeedMessage;
