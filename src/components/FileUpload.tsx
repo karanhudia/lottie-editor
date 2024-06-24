@@ -64,7 +64,7 @@ export const FileUpload = () => {
         </SvgIcon>
       }
     >
-      Upload a file
+      Upload JSON
       <VisuallyHiddenInput type='file' accept='.json' onChange={onChange} />
     </Button>
   );

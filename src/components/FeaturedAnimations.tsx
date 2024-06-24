@@ -13,7 +13,7 @@ export const FeaturedAnimations = () => {
   return (
     <Box>
       <Typography color='neutral' level='h2' pb={8}>
-        Choose from our featured animation
+        Choose from our featured animations
       </Typography>
       <Box
         sx={{

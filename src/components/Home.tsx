@@ -19,7 +19,7 @@ export const Home = () => {
         }}
       >
         <Typography color='neutral' level='h2'>
-          Upload Your Animation
+          Edit Animation
         </Typography>
         <Box pt={2}>
           <FileUpload />
