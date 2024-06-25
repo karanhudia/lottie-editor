@@ -28,6 +28,7 @@ export const ScaleControl = () => {
         step={0.1}
         min={0.1}
         max={5}
+        disabled
         onChange={handleScaleChange}
         valueLabelDisplay='auto'
         sx={{
