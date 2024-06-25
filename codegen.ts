@@ -9,7 +9,9 @@ const config: CodegenConfig = {
       plugins: [
         {
           add: {
-            content: '// @ts-nocheck',
+            content: `// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-nocheck
+            /* eslint-disable */`,
           },
         },
         'typescript',
@@ -30,7 +32,9 @@ const config: CodegenConfig = {
       plugins: [
         {
           add: {
-            content: '// @ts-nocheck',
+            content: `// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-nocheck
+            /* eslint-disable */`,
           },
         },
         'typescript',

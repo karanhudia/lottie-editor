@@ -1,4 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
+/* eslint-disable */
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 import * as ApolloReactHoc from '@apollo/client/react/hoc';
