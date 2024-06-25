@@ -1,46 +1,120 @@
-# Getting Started with Create React App
+# Lottie Editor
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Lottie Editor is a React application for editing Lottie animations. It provides an intuitive interface to modify, update, and delete layers and shapes within Lottie animations.
 
-## Available Scripts
+## Table of Contents
 
-In the project directory, you can run:
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Scripts](#scripts)
+- [Testing](#testing)
+- [Project Structure](#project-structure)
+- [Contributing](#contributing)
+- [License](#license)
 
-### `yarn start`
+## Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- Import Lottie animations from file upload (JSON)
+- Import Lottie animations from top featured animations from LottieFiles
+- Update animation speed
+- Update shape colors
+- Delete layers
+- Real-time synchronization with the server
+- Collaboration with multiple users just by sharing the working url
+- Responsive design
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Installation
 
-### `yarn test`
+Follow these steps to set up the project locally:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. **Clone the repository:**
+   ```sh
+   git clone https://github.com/karanhudia/lottie-editor.git
+   cd lottie-editor
 
-### `yarn build`
+2. **Install dependencies:**
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+   ```sh
+   yarn
+   
+3. **Set up environment variables:**
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+   Create a .env (or .env.local) file in the root of the project and add the following environment variables:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+   ```sh
+   // Option 1 -- when running the frontend only app
+   
+   REACT_APP_WEBSOCKET_URL=https://lottie-editor.onrender.com/
+   REACT_APP_LOTTIE_SERVER_GRAPHQL_URL=https://lottie-editor.onrender.com/graphql
+   REACT_APP_LOTTIEFILES_GRAPHQL_URL=https://graphql.lottiefiles.com
+   
+   // Option 2 -- when running the server locally
+   
+   REACT_APP_WEBSOCKET_URL=ws://localhost:4000
+   REACT_APP_LOTTIE_SERVER_GRAPHQL_URL=http://localhost:4000/graphql
+   REACT_APP_LOTTIEFILES_GRAPHQL_URL=https://graphql.lottiefiles.com
 
-### `yarn eject`
+4. **Setting up the server locally:**
+   
+   Please refer to using [this repository](https://github.com/karanhudia/lottie-server) to locally setup the server.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## Usage
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+   To start the development server, run:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+   ```
+   yarn start
+   ```
+   
+   This will start the React application and open it in your default web browser on http://localhost:3000. The app will reload automatically as you make changes to the code.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## Scripts
 
-## Learn More
+   ```
+   yarn start: Starts the development server.
+   yarn build: Builds the app for production.
+   yarn test: Runs the test suite.
+   yarn eject: Ejects the Create React App configuration. Use with caution.
+   ```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Testing
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+   The project uses React Testing Library for unit and integration tests.
+
+   To run the test suite, use: ```yarn test```
+
+## Project Structure
+   
+   ```text
+   src/
+   ├── api/              # Typed implementation of fetch api
+   ├── assets/           # Assets to be used by application
+   ├── components/       # React components
+   ├── context/          # React context for shared props
+   ├── graphql/          # GraphQL schema and queries
+   ├── hooks/            # Custom React hooks
+   ├── pages/            # Pages for react router
+   ├── test/             # Test related mocks and utils
+   ├── types/            # Shared typescript types
+   ├── utils/            # Utility functions
+   ├── App.tsx           # Main application component
+   ├── index.tsx         # Entry point of the application
+   └── styles/           # Styling files
+   ```
+
+## Contributing
+
+   I welcome contributions to improve Lottie Editor! Here’s how you can contribute:
+
+   - Fork the repository.
+   - Create a new branch with a descriptive name.
+   - Make your changes.
+   - Ensure all tests pass.
+   - Open a pull request describing your changes.
+
+## License
+
+   This project is licensed under the MIT License.
+
+Feel free to reach out if you have any questions or need further assistance. Happy coding!
