@@ -103,32 +103,38 @@ export const updateLottieSpeed = (obj: LottieAnimation, frameRate: number) => {
   };
 };
 
-export const deleteLottieLayer = (obj: LottieAnimation, layerSeq: number[]) => {
-  const newObj = { ...obj };
-  let layer: Layer | undefined = newObj.layers[layerSeq[0]];
-
-  if (!layer) {
-    console.error('Layer not found to delete');
+export const deleteLottieLayer = (
+  obj: LottieAnimation,
+  nestedLayerSeq: number[],
+): LottieAnimation => {
+  if (nestedLayerSeq.length === 0) {
     return obj;
   }
-  // Check if nested layers exist and the specific layer exists
-  let i = 1;
-  while (i < layerSeq.length - 1) {
-    if (layer?.layers?.[layerSeq[i]]) {
-      layer = layer.layers[layerSeq[i]];
+
+  const newObj = { ...obj };
+  let layer = newObj.layers[nestedLayerSeq[0]];
+
+  if (nestedLayerSeq.length === 1) {
+    // If the sequence has only one element, we delete the top-level layer
+    newObj.layers.splice(nestedLayerSeq[0], 1);
+    return newObj;
+  }
+
+  // Traverse to the parent of the target layer
+  for (let i = 1; i < nestedLayerSeq.length - 1; i++) {
+    if (layer.layers) {
+      layer = layer.layers[nestedLayerSeq[i]];
     } else {
-      console.error('Layer not found to delete');
-      return obj;
+      console.error('Invalid nested layer sequence provided.');
+      return newObj;
     }
   }
 
-  // Check if the target layer to delete exists
-  const targetIndex = layerSeq[layerSeq.length - 1];
-  if (layer.layers && layer.layers[targetIndex]) {
-    layer.layers.splice(targetIndex, 1);
+  // Delete the target layer
+  if (layer.layers) {
+    layer.layers.splice(nestedLayerSeq[nestedLayerSeq.length - 1], 1);
   } else {
-    console.error('Layer not found to delete');
-    return obj;
+    console.error('Invalid nested layer sequence provided.');
   }
 
   return newObj;
