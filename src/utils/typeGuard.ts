@@ -1,9 +1,12 @@
 import { LottieAnimation } from '../graphql/lottie-server/generated';
 
-export const isLottieAnimation = (obj: any): obj is LottieAnimation => {
+const isObject = (value: unknown): value is Record<string, unknown> => {
+  return typeof value === 'object' && value !== null;
+};
+
+export const isLottieAnimation = (obj: unknown): obj is LottieAnimation => {
   return (
-    typeof obj === 'object' &&
-    obj !== null &&
+    isObject(obj) &&
     typeof obj.assets === 'object' &&
     Array.isArray(obj.layers) &&
     typeof obj.op === 'number' &&
