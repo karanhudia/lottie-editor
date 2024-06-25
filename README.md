@@ -1,6 +1,7 @@
 # Lottie Editor
 
-Lottie Editor is a React application for editing Lottie animations. It provides an intuitive interface to modify, update, and delete layers and shapes within Lottie animations.
+Lottie Editor is a React application for editing Lottie animations. 
+It provides an intuitive interface to modify, update, and delete layers and shapes within Lottie animations.
 
 ## Table of Contents
 
@@ -67,7 +68,8 @@ Follow these steps to set up the project locally:
    yarn start
    ```
    
-   This will start the React application and open it in your default web browser on http://localhost:3000. The app will reload automatically as you make changes to the code.
+   This will start the React application and open it in your default web browser on http://localhost:3000. 
+   The app will reload automatically as you make changes to the code.
 
 ## Scripts
 
@@ -75,6 +77,10 @@ Follow these steps to set up the project locally:
    yarn start: Starts the development server.
    yarn build: Builds the app for production.
    yarn test: Runs the test suite.
+   yarn codegen: Generates the GraphQL types for all schemas
+   yarn type-check: Runs type check
+   yarn lint: Runs linting for the project
+   yarn deploy: Deploys manually on the github pages
    yarn eject: Ejects the Create React App configuration. Use with caution.
    ```
 
@@ -103,6 +109,25 @@ Follow these steps to set up the project locally:
    └── styles/           # Styling files
    ```
 
+## GraphQL and Codegen
+
+   We are using [graphql-codegen](https://the-guild.dev/graphql/codegen) to generate GraphQL types for the schemas used.
+   You can find the configuration file for the [codegen here](https://github.com/karanhudia/lottie-editor/blob/main/codegen.ts). 
+
+   The script has to be run everytime you want to fetch new types from the servers. The changes need to be pushed in the commit. 
+
+## Routing
+
+   This project is using [Hash Routing](https://reactrouter.com/en/main/router-components/hash-router) from react-router.
+   So you will see a `#` in your url when editing a lottie.
+
+## Deployment
+
+   The app uses `github-pages` in the [deploy.yml](https://github.com/karanhudia/lottie-editor/blob/main/.github/workflows/deploy.yml) 
+   pipeline to automatically trigger a deployment on this url.
+
+   https://karanhudia.github.io/lottie-editor/
+   
 ## Contributing
 
    I welcome contributions to improve Lottie Editor! Here’s how you can contribute:
@@ -117,4 +142,4 @@ Follow these steps to set up the project locally:
 
    This project is licensed under the MIT License.
 
-Feel free to reach out if you have any questions or need further assistance. Happy coding!
+   Feel free to reach out if you have any questions or need further assistance. Happy coding!
