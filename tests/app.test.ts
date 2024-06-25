@@ -21,9 +21,7 @@ test.describe('home page', () => {
   });
 
   test('selecting an animation should open editor', async ({ page }) => {
-    await page
-      .locator('div:nth-child(2) > div > .MuiCardCover-root > div > .MuiBox-root > .MuiButton-root')
-      .click();
+    await page.locator('button').first().click();
 
     await expect(page.getByText('Layers')).toBeVisible();
     await expect(page.getByText('Speed')).toBeVisible();
