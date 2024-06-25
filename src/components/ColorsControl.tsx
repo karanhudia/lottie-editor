@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import { SharedProps } from '../context/SharedPropsContext';
+import React from 'react';
+import { useSharedProps } from '../context/SharedPropsContext';
 import { Box, RadioGroup, Typography } from '@mui/joy';
 import { RgbaColor, RgbaColorPicker } from 'react-colorful';
 import { getAnimationLayersInfo } from '../utils/lottie';
@@ -10,7 +10,7 @@ import { ColorItems } from './ColorItems';
 export const ColorsControl = () => {
   const { updateColor } = useLottieAnimation();
 
-  const { selectedColor, setSelectedColor, lottieJSON, selectedLayer } = useContext(SharedProps);
+  const { selectedColor, setSelectedColor, lottieJSON, selectedLayer } = useSharedProps();
 
   const allLayers = getAnimationLayersInfo(lottieJSON);
 
@@ -63,7 +63,11 @@ export const ColorsControl = () => {
         }}
       >
         {selectedColor && (
-          <RgbaColorPicker color={selectedColor.color} onChange={handleColorChange} />
+          <RgbaColorPicker
+            data-testid='rgba-color-picker'
+            color={selectedColor.color}
+            onChange={handleColorChange}
+          />
         )}
       </Box>
     </Box>
