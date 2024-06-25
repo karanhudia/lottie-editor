@@ -33,7 +33,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "lint": "eslint 'src/**/*.{ts,tsx}' --ignore-pattern 'src/**/*.test.ts'",
+    "lint": "eslint 'src/**/*.{ts,tsx}' --ignore-pattern 'src/**/*.test.{ts,tsx}'",
     "type-check": "tsc",
     "build": "react-scripts build",
     "test": "react-scripts test",
