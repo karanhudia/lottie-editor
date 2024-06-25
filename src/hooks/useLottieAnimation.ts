@@ -1,5 +1,5 @@
-import { useCallback, useContext } from 'react';
-import { SharedProps } from '../context/SharedPropsContext';
+import { useCallback } from 'react';
+import { useSharedProps } from '../context/SharedPropsContext';
 import { deleteLottieLayer, updateLottieColor, updateLottieSpeed } from '../utils/lottie';
 import { RgbaColor } from 'react-colorful';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -29,7 +29,7 @@ export const useLottieAnimation = (): UseLottieAnimationReturn => {
   const navigate = useNavigate();
 
   const { updateJSON } = useSocket();
-  const { lottieJSON, setLottieJSON, setIsAnimationCreated } = useContext(SharedProps);
+  const { lottieJSON, setLottieJSON, setIsAnimationCreated } = useSharedProps();
 
   const syncLayerChangesWithServer = useCallback(
     async (layer: number[]) => {

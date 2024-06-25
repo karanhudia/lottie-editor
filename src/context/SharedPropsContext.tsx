@@ -1,4 +1,11 @@
-import React, { createContext, Dispatch, SetStateAction, useCallback, useState } from 'react';
+import React, {
+  createContext,
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useContext,
+  useState,
+} from 'react';
 import { AnimationItem } from 'lottie-web';
 import { LottieAnimation } from '../graphql/lottie-server/generated';
 import { LayerInfo, SelectedColor } from '../types/shared';
@@ -79,4 +86,14 @@ export const SharedPropsContext = ({ children }: { children: React.ReactNode }) 
       {children}
     </SharedProps.Provider>
   );
+};
+
+export const useSharedProps = () => {
+  const context = useContext(SharedProps);
+
+  if (context === undefined) {
+    throw new Error('useSharedProps must be used within a SharedProps provider');
+  }
+
+  return context;
 };
