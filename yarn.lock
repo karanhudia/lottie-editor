@@ -1514,6 +1514,11 @@
   resolved "https://registry.yarnpkg.com/@eslint/object-schema/-/object-schema-2.1.4.tgz#9e69f8bb4031e11df79e03db09f9dbbae1740843"
   integrity sha512-BsWiH1yFGjXXS2yvrf5LyuoSIIbPrGUWob917o+BTKuZ7qJdxX8aJLRxs1fS9n6r7vESrq1OUqb68dANcFXuQQ==
 
+"@faker-js/faker@^7.5.0":
+  version "7.6.0"
+  resolved "https://registry.yarnpkg.com/@faker-js/faker/-/faker-7.6.0.tgz#9ea331766084288634a9247fcd8b84f16ff4ba07"
+  integrity sha512-XK6BTq1NDMo9Xqw/YkYyGjSsg44fbNwYRx7QK2CuoQgyy+f1rrTDHoExVM5PsyXCtfl2vs2vVJ0MN0yN6LppRw==
+
 "@floating-ui/core@^1.0.0":
   version "1.6.2"
   resolved "https://registry.yarnpkg.com/@floating-ui/core/-/core-1.6.2.tgz#d37f3e0ac1f1c756c7de45db13303a266226851a"
@@ -4757,6 +4762,14 @@ case-sensitive-paths-webpack-plugin@^2.4.0:
   resolved "https://registry.yarnpkg.com/case-sensitive-paths-webpack-plugin/-/case-sensitive-paths-webpack-plugin-2.4.0.tgz#db64066c6422eed2e08cc14b986ca43796dbc6d4"
   integrity sha512-roIFONhcxog0JSSWbvVAh3OocukmSgpqOH6YpMkCvav/ySIV3JKg4Dc8vYtQjYi/UxpNE36r/9v+VqTQqgkYmw==
 
+casual@^1.6.2:
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/casual/-/casual-1.6.2.tgz#f56b87113ae99a6bba45e04bdfa068ca443f9e85"
+  integrity sha512-NQObL800rg32KZ9bBajHbyDjxLXxxuShChQg7A4tbSeG3n1t7VYGOSkzFSI9gkSgOHp+xilEJ7G0L5l6M30KYA==
+  dependencies:
+    mersenne-twister "^1.0.1"
+    moment "^2.15.2"
+
 chalk@^2.4.1, chalk@^2.4.2:
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-2.4.2.tgz#cd42541677a54333cf541a49108c1432b44c9424"
@@ -4798,7 +4811,7 @@ change-case-all@1.0.14:
     upper-case "^2.0.2"
     upper-case-first "^2.0.2"
 
-change-case-all@1.0.15:
+change-case-all@1.0.15, change-case-all@^1.0.15:
   version "1.0.15"
   resolved "https://registry.yarnpkg.com/change-case-all/-/change-case-all-1.0.15.tgz#de29393167fc101d646cd76b0ef23e27d09756ad"
   integrity sha512-3+GIFhk3sNuvFAJKU46o26OdzudQlPNBCu1ZQi3cMeMHhty1bhDxu2WrEilVNYaGvqUtR1VSigFcJOiS13dRhQ==
@@ -7005,6 +7018,21 @@ graphemer@^1.4.0:
   resolved "https://registry.yarnpkg.com/graphemer/-/graphemer-1.4.0.tgz#fb2f1d55e0e3a1849aeffc90c4fa0dd53a0e66c6"
   integrity sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==
 
+graphql-codegen-typescript-mock-data@^3.8.0:
+  version "3.8.0"
+  resolved "https://registry.yarnpkg.com/graphql-codegen-typescript-mock-data/-/graphql-codegen-typescript-mock-data-3.8.0.tgz#8329cb39502826c0862c66186a83d7874fcbcabb"
+  integrity sha512-Kr0/lsZnQa41YbpWfkpYDjawNBJxOWknxa+UW22FsNxe0xeXuH9+2JSLw+qMbHrxQDQkWPt0lrPZ78VvxKMH1A==
+  dependencies:
+    "@faker-js/faker" "^7.5.0"
+    "@graphql-codegen/plugin-helpers" "^2.7.2"
+    casual "^1.6.2"
+    change-case-all "^1.0.15"
+    indefinite "^2.4.1"
+    pascal-case "^3.1.1"
+    sentence-case "^3.0.3"
+    tslib "^2.4.0"
+    upper-case "^2.0.1"
+
 graphql-config@^4.4.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/graphql-config/-/graphql-config-4.5.0.tgz#257c2338950b8dce295a27f75c5f6c39f8f777b2"
@@ -7390,6 +7418,11 @@ imurmurhash@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/imurmurhash/-/imurmurhash-0.1.4.tgz#9218b9b2b928a238b13dc4fb6b6d576f231453ea"
   integrity sha512-JmXMZ6wuvDmLiHEml9ykzqO6lwFbof0GG4IkcGaENdCRDDmMVnny7s5HsIgHCbaq0w2MyPhDqkhTUgS2LU2PHA==
+
+indefinite@^2.4.1:
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/indefinite/-/indefinite-2.5.1.tgz#f898da40762342ddb6878f07a38f8b35311ddd00"
+  integrity sha512-Ul0hCdnSjuFDEloYWeozTaEfljbz+0q+u4HsHns2dOk2DlhGlbRMGFtNcIL+Ve7sZYeIOTOAKA0usAXBGHpNDg==
 
 indent-string@^4.0.0:
   version "4.0.0"
@@ -8852,6 +8885,11 @@ meros@^1.2.1:
   resolved "https://registry.yarnpkg.com/meros/-/meros-1.3.0.tgz#c617d2092739d55286bf618129280f362e6242f2"
   integrity sha512-2BNGOimxEz5hmjUG2FwoxCt5HN7BXdaWyFqEwxPTrJzVdABtrL4TiHTcsWSFAxPQ/tOnEaQEJh3qWq71QRMY+w==
 
+mersenne-twister@^1.0.1:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/mersenne-twister/-/mersenne-twister-1.1.0.tgz#f916618ee43d7179efcf641bec4531eb9670978a"
+  integrity sha512-mUYWsMKNrm4lfygPkL3OfGzOPTR2DBlTkBNHM//F6hGp8cLThY897crAlk3/Jo17LEOOjQUrNAx6DvgO77QJkA==
+
 methods@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/methods/-/methods-1.1.2.tgz#5529a4d67654134edcc5266656835b0f851afcee"
@@ -8949,6 +8987,11 @@ mkdirp@~0.5.1:
   integrity sha512-FP+p8RB8OWpF3YZBCrP5gtADmtXApB5AMLn+vdyA+PyxCjrCs00mjyUozssO33cwDeT3wNGdLxJ5M//YqtHAJw==
   dependencies:
     minimist "^1.2.6"
+
+moment@^2.15.2:
+  version "2.30.1"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.30.1.tgz#f8c91c07b7a786e30c59926df530b4eac96974ae"
+  integrity sha512-uEmtNhbDOrWPFS+hdjFCBfy9f2YoyzRpwcl+DqpC6taX21FzsTLQVbMV/W7PzNSX6x/bhC1zA3c2UQ5NzH6how==
 
 ms@2.0.0:
   version "2.0.0"
@@ -9382,7 +9425,7 @@ parseurl@~1.3.2, parseurl@~1.3.3:
   resolved "https://registry.yarnpkg.com/parseurl/-/parseurl-1.3.3.tgz#9da19e7bee8d12dff0513ed5b76957793bc2e8d4"
   integrity sha512-CiyeOxFT/JZyN5m0z9PfXw4SCBJ6Sygz1Dpl0wqjlhDEGGBP1GnsUVEL0p63hoG1fcj3fHynXi9NYO4nWOL+qQ==
 
-pascal-case@^3.1.2:
+pascal-case@^3.1.1, pascal-case@^3.1.2:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/pascal-case/-/pascal-case-3.1.2.tgz#b48e0ef2b98e205e7c1dae747d0b1508237660eb"
   integrity sha512-uWlGT3YSnK9x3BQJaOdcZwrnV6hPpd8jFH1/ucpiLRPh/2zCVJKS19E4GvYHvaCcACn3foXZ0cLB9Wrx1KGe5g==
@@ -10304,6 +10347,11 @@ react-error-overlay@^6.0.11:
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-6.0.11.tgz#92835de5841c5cf08ba00ddd2d677b6d17ff9adb"
   integrity sha512-/6UZ2qgEyH2aqzYZgQPxEnz33NJ2gNsnHA2o5+o4wW9bLM/JYQitNP9xPhsXwC08hMMovfGe/8retsdDsczPRg==
 
+"react-is@^16.12.0 || ^17.0.0 || ^18.0.0", react-is@^18.0.0, react-is@^18.2.0, react-is@^18.3.1:
+  version "18.3.1"
+  resolved "https://registry.yarnpkg.com/react-is/-/react-is-18.3.1.tgz#e83557dc12eae63a99e003a46388b1dcbb44db7e"
+  integrity sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==
+
 react-is@^16.13.1, react-is@^16.7.0:
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
@@ -10313,11 +10361,6 @@ react-is@^17.0.1:
   version "17.0.2"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-17.0.2.tgz#e691d4a8e9c789365655539ab372762b0efb54f0"
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
-
-react-is@^18.0.0, react-is@^18.2.0:
-  version "18.3.1"
-  resolved "https://registry.yarnpkg.com/react-is/-/react-is-18.3.1.tgz#e83557dc12eae63a99e003a46388b1dcbb44db7e"
-  integrity sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==
 
 react-refresh@^0.11.0:
   version "0.11.0"
@@ -10393,6 +10436,23 @@ react-scripts@5.0.1:
     workbox-webpack-plugin "^6.4.1"
   optionalDependencies:
     fsevents "^2.3.2"
+
+react-shallow-renderer@^16.15.0:
+  version "16.15.0"
+  resolved "https://registry.yarnpkg.com/react-shallow-renderer/-/react-shallow-renderer-16.15.0.tgz#48fb2cf9b23d23cde96708fe5273a7d3446f4457"
+  integrity sha512-oScf2FqQ9LFVQgA73vr86xl2NaOIX73rh+YFqcOp68CWj56tSfgtGKrEbyhCj0rSijyG9M1CYprTh39fBi5hzA==
+  dependencies:
+    object-assign "^4.1.1"
+    react-is "^16.12.0 || ^17.0.0 || ^18.0.0"
+
+react-test-renderer@^18.3.1:
+  version "18.3.1"
+  resolved "https://registry.yarnpkg.com/react-test-renderer/-/react-test-renderer-18.3.1.tgz#e693608a1f96283400d4a3afead6893f958b80b4"
+  integrity sha512-KkAgygexHUkQqtvvx/otwxtuFu5cVjfzTCtjXLH9boS19/Nbtg84zS7wIQn39G8IlrhThBpQsMKkq5ZHZIYFXA==
+  dependencies:
+    react-is "^18.3.1"
+    react-shallow-renderer "^16.15.0"
+    scheduler "^0.23.2"
 
 react-transition-group@^4.4.5:
   version "4.4.5"
@@ -10875,7 +10935,7 @@ send@0.18.0:
     range-parser "~1.2.1"
     statuses "2.0.1"
 
-sentence-case@^3.0.4:
+sentence-case@^3.0.3, sentence-case@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/sentence-case/-/sentence-case-3.0.4.tgz#3645a7b8c117c787fde8702056225bb62a45131f"
   integrity sha512-8LS0JInaQMCRoQ7YUytAo/xUu5W2XnQxV2HI/6uM6U7CITS1RqPElr30V6uIqyMKM9lJGRVFy5/4CuzcixNYSg==
@@ -11956,7 +12016,7 @@ upper-case-first@^2.0.2:
   dependencies:
     tslib "^2.0.3"
 
-upper-case@^2.0.2:
+upper-case@^2.0.1, upper-case@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/upper-case/-/upper-case-2.0.2.tgz#d89810823faab1df1549b7d97a76f8662bae6f7a"
   integrity sha512-KgdgDGJt2TpuwBUIjgG6lzw2GWFRCW9Qkfkiv0DxqHHLYJHmtmdUIKcZd8rHgFSjopVTlw6ggzCm1b8MFQwikg==
