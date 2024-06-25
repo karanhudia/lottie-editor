@@ -260,6 +260,14 @@ export type UpdateLottieSpeedMessage = {
   uuid: Scalars['String']['output'];
 };
 
+export type LottieFragment = { __typename?: 'Lottie'; json: any };
+
+export type ResponseFragment = {
+  __typename?: 'SocketAcknowledgement';
+  code: number;
+  status: string;
+};
+
 export type CreateLottieJsonMutationVariables = Exact<{
   editId: Scalars['ID']['input'];
   json?: InputMaybe<Scalars['JSON']['input']>;
@@ -267,7 +275,7 @@ export type CreateLottieJsonMutationVariables = Exact<{
 
 export type CreateLottieJsonMutation = {
   __typename?: 'Mutation';
-  createLottie?: { __typename?: 'SocketAcknowledgement'; status: string; code: number } | null;
+  createLottie?: { __typename?: 'SocketAcknowledgement'; code: number; status: string } | null;
 };
 
 export type FetchEditedLottieQueryVariables = Exact<{
@@ -279,13 +287,24 @@ export type FetchEditedLottieQuery = {
   lottie?: { __typename?: 'Lottie'; json: any } | null;
 };
 
+export const LottieFragmentDoc = gql`
+  fragment Lottie on Lottie {
+    json
+  }
+`;
+export const ResponseFragmentDoc = gql`
+  fragment Response on SocketAcknowledgement {
+    code
+    status
+  }
+`;
 export const CreateLottieJsonDocument = gql`
   mutation CreateLottieJson($editId: ID!, $json: JSON) {
     createLottie(uuid: $editId, json: $json) {
-      status
-      code
+      ...Response
     }
   }
+  ${ResponseFragmentDoc}
 `;
 export type CreateLottieJsonMutationFn = Apollo.MutationFunction<
   CreateLottieJsonMutation,
@@ -355,9 +374,10 @@ export type CreateLottieJsonMutationOptions = Apollo.BaseMutationOptions<
 export const FetchEditedLottieDocument = gql`
   query fetchEditedLottie($editId: ID!) {
     lottie(uuid: $editId) {
-      json
+      ...Lottie
     }
   }
+  ${LottieFragmentDoc}
 `;
 export type FetchEditedLottieProps<TChildProps = {}, TDataName extends string = 'data'> = {
   [key in TDataName]: ApolloReactHoc.DataValue<
@@ -449,5 +469,9 @@ export const namedOperations = {
   },
   Mutation: {
     CreateLottieJson: 'CreateLottieJson',
+  },
+  Fragment: {
+    Lottie: 'Lottie',
+    Response: 'Response',
   },
 };

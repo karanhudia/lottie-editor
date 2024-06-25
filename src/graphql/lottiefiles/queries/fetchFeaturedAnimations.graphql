@@ -2,11 +2,7 @@ query FetchFeaturedAnimations {
     featuredPublicAnimations {
         edges {
             node {
-                id
-                jsonUrl
-                videoUrl
-                downloads
-                likesCount
+                ...Animation
             }
         }
     }

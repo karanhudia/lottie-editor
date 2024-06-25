@@ -1,0 +1,7 @@
+fragment Animation on PublicAnimation {
+    id
+    jsonUrl
+    videoUrl
+    downloads
+    likesCount
+}

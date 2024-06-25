@@ -1,0 +1,3 @@
+fragment Lottie on Lottie {
+    json
+}

@@ -5648,6 +5648,15 @@ export type _ZipFileCreateInput = {
   entryType?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type AnimationFragment = {
+  __typename?: 'PublicAnimation';
+  id: number;
+  jsonUrl?: string | null;
+  videoUrl?: string | null;
+  downloads?: number | null;
+  likesCount: number;
+};
+
 export type FetchFeaturedAnimationsQueryVariables = Exact<{ [key: string]: never }>;
 
 export type FetchFeaturedAnimationsQuery = {
@@ -5668,20 +5677,26 @@ export type FetchFeaturedAnimationsQuery = {
   };
 };
 
+export const AnimationFragmentDoc = gql`
+  fragment Animation on PublicAnimation {
+    id
+    jsonUrl
+    videoUrl
+    downloads
+    likesCount
+  }
+`;
 export const FetchFeaturedAnimationsDocument = gql`
   query FetchFeaturedAnimations {
     featuredPublicAnimations {
       edges {
         node {
-          id
-          jsonUrl
-          videoUrl
-          downloads
-          likesCount
+          ...Animation
         }
       }
     }
   }
+  ${AnimationFragmentDoc}
 `;
 export type FetchFeaturedAnimationsProps<TChildProps = {}, TDataName extends string = 'data'> = {
   [key in TDataName]: ApolloReactHoc.DataValue<
@@ -5779,5 +5794,8 @@ export type FetchFeaturedAnimationsQueryResult = Apollo.QueryResult<
 export const namedOperations = {
   Query: {
     FetchFeaturedAnimations: 'FetchFeaturedAnimations',
+  },
+  Fragment: {
+    Animation: 'Animation',
   },
 };
