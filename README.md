@@ -25,6 +25,10 @@ It provides an intuitive interface to modify, update, and delete layers and shap
 - Collaboration with multiple users just by sharing the working url
 - Responsive design
 
+## Live
+
+   https://karanhudia.github.io/lottie-editor/
+
 ## Installation
 
 Follow these steps to set up the project locally:
