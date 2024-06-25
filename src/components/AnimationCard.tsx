@@ -112,7 +112,7 @@ export const AnimationCard = ({ animation, loading }: AnimationCardProps) => {
         p: 0,
       }}
     >
-      {loading || !animation ? (
+      {loading ?? !animation ? (
         <Box sx={{ height: { lg: 135, xs: 120 } }}>
           <Skeleton sx={{ borderRadius: 'var(--CardCover-radius)' }}>
             <img
