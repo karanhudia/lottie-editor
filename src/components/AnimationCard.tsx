@@ -33,7 +33,9 @@ export const AnimationCard = ({ animation }: AnimationCardProps) => {
     <Card
       variant='plain'
       sx={{
-        width: 180,
+        maxWidth: 180,
+        minWidth: 160,
+        width: '100%',
         bgcolor: 'initial',
         p: 0,
       }}

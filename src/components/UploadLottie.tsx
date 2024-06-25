@@ -68,7 +68,7 @@ export const UploadLottie = () => {
       >
         Edit Animation
       </Typography>
-      <Box pt={2}>
+      <Box py={2}>
         <Button
           component='label'
           role={undefined}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography } from '@mui/joy';
+import { Box, Grid, Typography } from '@mui/joy';
 import { AnimationOutlined } from '@mui/icons-material';
 import { useFetchFeaturedAnimationsQuery } from '../graphql/lottiefiles/generated';
 import { AnimationCard } from './AnimationCard';
@@ -23,22 +23,27 @@ export const FeaturedAnimations = () => {
         justifyContent: 'center',
       }}
     >
-      <Typography color='neutral' level='h4' pb={3} endDecorator={<AnimationOutlined />}>
+      <Typography color='neutral' level='h4' p={3} pb={0} endDecorator={<AnimationOutlined />}>
         Choose from our featured animations
       </Typography>
-      <Box
+      <Grid
+        container
+        columns={20}
+        spacing={{ xs: 1, sm: 2, md: 2, lg: 3 }}
         sx={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(5, auto)',
-          gridGap: 20,
-          padding: 5,
+          justifyContent: 'center',
+          alignItems: 'center',
+          margin: { xs: 2, lg: 5 },
+          padding: { xs: 1, lg: 2 },
           border: '1px solid var(--joy-palette-neutral-100, #F0F4F8)',
         }}
       >
-        {data.featuredPublicAnimations.edges.map((edge) => {
-          return <AnimationCard key={edge.node.id} animation={edge.node} />;
-        })}
-      </Box>
+        {data.featuredPublicAnimations.edges.map((edge) => (
+          <Grid xl={4} key={edge.node.id}>
+            <AnimationCard animation={edge.node} />
+          </Grid>
+        ))}
+      </Grid>
     </Box>
   );
 };
