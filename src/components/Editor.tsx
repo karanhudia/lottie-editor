@@ -1,10 +1,11 @@
 import React, { useContext } from 'react';
 import { SharedProps } from '../context/SharedPropsContext';
 import { useParams } from 'react-router-dom';
-import { LottieAnimation, useFetchEditedLottieQuery } from '../graphql/lottie-server/generated';
+import { useFetchEditedLottieQuery } from '../graphql/lottie-server/generated';
 import { useSocket } from '../hooks/useSocket';
 import { Header } from './Header';
 import { Content } from './Content';
+import { isLottieAnimation } from '../utils/typeGuard';
 
 export type EditorRouteParams = { editId: string };
 
@@ -19,12 +20,11 @@ export const Editor = () => {
     },
     fetchPolicy: 'no-cache',
     onCompleted: (data) => {
-      if (!data.lottie) {
+      if (!isLottieAnimation(data.lottie?.json)) {
         return;
       }
 
-      // TODO: Add typeguard to check if lottie animation
-      setLottieJSON(data.lottie.json as LottieAnimation);
+      setLottieJSON(data.lottie.json);
     },
   });
 
