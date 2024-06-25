@@ -10,10 +10,6 @@ export const FeaturedAnimations = () => {
     client: lottieFilesClient,
   });
 
-  if (loading || !data?.featuredPublicAnimations.edges) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <Box
       sx={{
@@ -38,11 +34,17 @@ export const FeaturedAnimations = () => {
           border: '1px solid var(--joy-palette-neutral-100, #F0F4F8)',
         }}
       >
-        {data.featuredPublicAnimations.edges.map((edge) => (
-          <Grid xl={4} key={edge.node.id}>
-            <AnimationCard animation={edge.node} />
-          </Grid>
-        ))}
+        {loading || !data?.featuredPublicAnimations.edges
+          ? Array.from({ length: 20 }, () => 0).map((edge, index) => (
+              <Grid xl={4} key={index}>
+                <AnimationCard loading={loading} />
+              </Grid>
+            ))
+          : data.featuredPublicAnimations.edges.map((edge) => (
+              <Grid xl={4} key={edge.node.id}>
+                <AnimationCard animation={edge.node} />
+              </Grid>
+            ))}
       </Grid>
     </Box>
   );
