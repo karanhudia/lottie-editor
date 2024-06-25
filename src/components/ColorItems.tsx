@@ -30,10 +30,10 @@ export const ColorItems = ({ allLayers, selectedColor, handleColorSelect }: Colo
     }
 
     shapes.forEach((shapeInfo) => {
-      const uniqueId = `nestedLayer-${nestedLayerSeq.join()},shape-${shapeInfo.shapeSeq},shapeItem-${shapeInfo.shapeItemSeq}`;
+      const uniqueId = `nestedLayer-${nestedLayerSeq.join()},shape-${String(shapeInfo.shapeSeq)},shapeItem-${String(shapeInfo.shapeItemSeq)}`;
 
       const selectedId = selectedColor
-        ? `nestedLayer-${selectedColor.nestedLayerSeq.join()},shape-${selectedColor.shapeSeq},shapeItem-${selectedColor.shapeItemSeq}`
+        ? `nestedLayer-${selectedColor.nestedLayerSeq.join()},shape-${String(selectedColor.shapeSeq)},shapeItem-${String(selectedColor.shapeItemSeq)}`
         : null;
 
       selectableColorItems.push(

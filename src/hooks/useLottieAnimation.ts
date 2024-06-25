@@ -8,6 +8,7 @@ import { useSocket } from './useSocket';
 import { rgbaToLottieColor } from '../utils/color';
 import { v4 as uuidv4 } from 'uuid';
 import { LottieAnimation } from '../graphql/lottie-server/generated';
+import { EditorRouteParams } from '../components/Editor';
 
 type UseLottieAnimationReturn = {
   frameRate?: number;
@@ -24,7 +25,7 @@ type UseLottieAnimationReturn = {
 };
 
 export const useLottieAnimation = (): UseLottieAnimationReturn => {
-  const params = useParams<{ editId: string }>();
+  const params = useParams<EditorRouteParams>();
   const navigate = useNavigate();
 
   const { updateJSON } = useSocket();
@@ -48,7 +49,7 @@ export const useLottieAnimation = (): UseLottieAnimationReturn => {
         console.info('Layer deleted');
       }
     },
-    [updateJSON, params?.editId],
+    [updateJSON, params.editId],
   );
 
   const syncColorChangesWithServer = useThrottle(

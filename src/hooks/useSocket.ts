@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { useCallback, useContext, useEffect } from 'react';
 import { SharedProps } from '../context/SharedPropsContext';
 import { io } from 'socket.io-client';
-import { updateLottieColor, updateLottieSpeed } from '../utils/lottie';
+import { deleteLottieLayer, updateLottieColor, updateLottieSpeed } from '../utils/lottie';
 import { lottieColorToRgba } from '../utils/color';
 import {
   CreateLottieMessage,
@@ -53,6 +53,9 @@ export const useSocket = () => {
 
         case 'SpeedPayload':
           updatedLottie = updateLottieSpeed(lottieJSON, payload.frameRate);
+          break;
+        case 'LayerPayload':
+          updatedLottie = deleteLottieLayer(lottieJSON, payload.layer);
       }
 
       setLottieJSON(updatedLottie);
@@ -77,18 +80,19 @@ export const useSocket = () => {
       const uuid = uuidv4();
 
       setLottieJSON(json);
-      const response: SocketAcknowledgement = await socket.emitWithAck(
-        LottieSocketEvents.CreateJson,
-        {
+      try {
+        const response = (await socket.emitWithAck(LottieSocketEvents.CreateJson, {
           uuid,
           payload: {
             json,
           },
-        } as CreateLottieMessage,
-      );
+        } as CreateLottieMessage)) as SocketAcknowledgement;
 
-      if (response.code === 200) {
-        navigate(`edit/${uuid}`);
+        if (response.code === 200) {
+          navigate(`edit/${uuid}`);
+        }
+      } catch {
+        console.error('Failed to create JSON on server');
       }
     },
     [setLottieJSON, navigate],
@@ -96,7 +100,10 @@ export const useSocket = () => {
 
   const updateJSON = useCallback(
     async (message: UpdateLottieMessage): Promise<SocketAcknowledgement> => {
-      return socket.emitWithAck(LottieSocketEvents.UpdateJson, message);
+      return socket.emitWithAck(
+        LottieSocketEvents.UpdateJson,
+        message,
+      ) as Promise<SocketAcknowledgement>;
     },
     [],
   );

@@ -76,7 +76,7 @@ export const updateLottieColor = (
   let layer: Layer | null | undefined = newObj.layers[nestedLayerSeq[0]];
 
   let i = 1;
-  while (i < nestedLayerSeq.length && layer) {
+  while (i < nestedLayerSeq.length) {
     layer = layer.layers?.[nestedLayerSeq[i]];
 
     if (!layer) {
@@ -87,7 +87,7 @@ export const updateLottieColor = (
     i++;
   }
 
-  if (layer?.shapes?.[shapeSeq]?.it?.[shapeItemSeq]?.c) {
+  if (layer.shapes?.[shapeSeq]?.it?.[shapeItemSeq]?.c) {
     layer.shapes[shapeSeq].it[shapeItemSeq].c.k = rgbaToLottieColor(value);
   } else {
     console.error('Invalid path provided or shape item not found.');

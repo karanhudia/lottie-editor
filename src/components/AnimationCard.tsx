@@ -4,6 +4,8 @@ import { AspectRatio, Box, Button, Card, CardContent, CardCover, Typography } fr
 import { Download, Favorite } from '@mui/icons-material';
 import { FetchFeaturedAnimationsQuery } from '../graphql/lottiefiles/generated';
 import { useLottieAnimation } from '../hooks/useLottieAnimation';
+import { LottieAnimation } from '../graphql/lottie-server/generated';
+import { fetchAsyncJsonApi } from '../api';
 
 type AnimationCardProps = {
   animation: FetchFeaturedAnimationsQuery['featuredPublicAnimations']['edges'][0]['node'];
@@ -17,9 +19,14 @@ export const AnimationCard = ({ animation }: AnimationCardProps) => {
       return;
     }
 
-    const response = await fetch(animation.jsonUrl).then((result) => result.json());
+    const response = await fetchAsyncJsonApi<LottieAnimation | null>(animation.jsonUrl);
 
-    void importLottie(response);
+    if (!response) {
+      return;
+    }
+
+    // TODO: Add typeguard for lottie json
+    importLottie(response);
   };
 
   return (

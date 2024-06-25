@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { SharedProps } from '../context/SharedPropsContext';
 import { Stack } from '@mui/joy';
-import { Controls, Player } from '@lottiefiles/react-lottie-player';
+import { Controls, Player, PlayerEvent } from '@lottiefiles/react-lottie-player';
 import { AnimationItem } from 'lottie-web';
 import { useCreateLottieJsonMutation } from '../graphql/lottie-server/generated';
 import { useParams } from 'react-router-dom';
@@ -37,7 +37,7 @@ export const LottieViewer = () => {
           // The default JSON format handles layers and assets differently
           // When the json is loaded in the Lottie Player it mutates the json reference
           // Into a format which can be read by our lottie editor and so safe to update to server
-          if (event === 'load' && isAnimationCreated) {
+          if (event === PlayerEvent.Load && isAnimationCreated) {
             if (!params.editId) {
               return;
             }

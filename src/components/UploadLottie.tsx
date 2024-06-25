@@ -24,7 +24,7 @@ export const UploadLottie = () => {
       // TODO: Add type guard
       const obj = JSON.parse(event.target?.result as string) as LottieAnimation;
 
-      void importLottie(obj);
+      importLottie(obj);
     },
     [importLottie],
   );

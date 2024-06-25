@@ -38,7 +38,7 @@ export const SelectableColorItem = ({
           },
           // This shows the actual color of the icon
           [`& .${radioClasses.action}`]: {
-            backgroundColor: `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a})`,
+            backgroundColor: `rgba(${Object.values(color).join()})`,
           },
         }}
       />

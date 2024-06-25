@@ -77,7 +77,7 @@ export const LayerGroup = ({
       </ListItemButton>
       {isOpen && (
         <List>
-          {layers?.map((layer, index) => (
+          {layers?.map((layer) => (
             <LayerGroup
               key={layer.layerName}
               layer={layer}

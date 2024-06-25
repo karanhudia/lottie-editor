@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { SharedProps } from '../context/SharedPropsContext';
 import { useParams } from 'react-router-dom';
-import { useFetchEditedLottieQuery } from '../graphql/lottie-server/generated';
+import { LottieAnimation, useFetchEditedLottieQuery } from '../graphql/lottie-server/generated';
 import { useSocket } from '../hooks/useSocket';
 import { Header } from './Header';
 import { Content } from './Content';
@@ -23,7 +23,8 @@ export const Editor = () => {
         return;
       }
 
-      setLottieJSON(data.lottie.json);
+      // TODO: Add typeguard to check if lottie animation
+      setLottieJSON(data.lottie.json as LottieAnimation);
     },
   });
 
