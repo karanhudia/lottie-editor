@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
-import { useCallback, useContext, useEffect } from 'react';
-import { SharedProps } from '../context/SharedPropsContext';
+import { useCallback, useEffect } from 'react';
 import { io } from 'socket.io-client';
+import { useSharedProps } from '../context/SharedPropsContext';
 import { deleteLottieLayer, updateLottieColor, updateLottieSpeed } from '../utils/lottie';
 import { lottieColorToRgba } from '../utils/color';
 import {
@@ -20,7 +20,7 @@ export const socket = io(process.env.REACT_APP_WEBSOCKET_URL ?? DEFAULT_WEBSOCKE
 
 export const useSocket = () => {
   const navigate = useNavigate();
-  const { lottieJSON, setLottieJSON, setIsSocketConnected } = useContext(SharedProps);
+  const { lottieJSON, setLottieJSON, setIsSocketConnected } = useSharedProps();
 
   const onConnect = useCallback(() => {
     setIsSocketConnected(true);
