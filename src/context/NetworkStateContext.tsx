@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { io } from 'socket.io-client';
 import { LottieSocketEvents, UpdateLottieMessage } from '../graphql/lottie-server/generated';
 import { deleteLottieLayer, updateLottieColor, updateLottieSpeed } from '../utils/lottie';
@@ -113,20 +113,21 @@ export const NetworkStateContext = ({ children }: { children: React.ReactNode })
     };
   }, [onConnect, onDisconnect, getChangesFromServer]);
 
-  const isSaving = Array.from(saveQueue.values()).some((value) => value !== 0);
+  const isSaving = useMemo(() => {
+    return Array.from(saveQueue.values()).some((value) => value !== 0);
+  }, [saveQueue]);
 
-  return (
-    <NetworkState.Provider
-      value={{
-        isSaving: isSaving,
-        addToSaveQueue: handleAddToSaveQueue,
-        removeFromSaveQueue: handleRemoveFromSaveQueue,
-        isConnected: isSocketConnected,
-      }}
-    >
-      {children}
-    </NetworkState.Provider>
+  const contextValue = useMemo(
+    () => ({
+      isSaving: isSaving,
+      addToSaveQueue: handleAddToSaveQueue,
+      removeFromSaveQueue: handleRemoveFromSaveQueue,
+      isConnected: isSocketConnected,
+    }),
+    [isSaving, handleAddToSaveQueue, handleRemoveFromSaveQueue, isSocketConnected],
   );
+
+  return <NetworkState.Provider value={contextValue}>{children}</NetworkState.Provider>;
 };
 
 export const useNetworkState = () => {
