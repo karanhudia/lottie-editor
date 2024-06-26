@@ -1,11 +1,16 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { io } from 'socket.io-client';
-import { LottieSocketEvents, UpdateLottieMessage } from '../graphql/lottie-server/generated';
+import {
+  LottieSocketEvents,
+  namedOperations,
+  UpdateLottieMessage,
+} from '../graphql/lottie-server/generated';
 import { deleteLottieLayer, updateLottieColor, updateLottieSpeed } from '../utils/lottie';
 import { lottieColorToRgba } from '../utils/color';
 import { useSharedProps } from './SharedPropsContext';
 import { Outlet, useParams } from 'react-router-dom';
 import { EditorRouteParams } from '../components/Editor';
+import { client } from '../graphql/client';
 
 export enum SaveState {
   LayerDelete,
@@ -45,16 +50,11 @@ export const NetworkStateContext = () => {
   const getChangesFromServer = useCallback(
     (message: UpdateLottieMessage) => {
       // If the current lottie is different, we don't need to consume this message
-      if (params.editId !== message.uuid) {
-        return;
-      }
-
-      if (!lottieJSON) {
+      if (params.editId !== message.uuid || !lottieJSON) {
         return;
       }
 
       const { payload } = message;
-
       let updatedLottie = { ...lottieJSON };
 
       switch (payload.__typename) {
@@ -67,12 +67,12 @@ export const NetworkStateContext = () => {
             lottieColorToRgba(payload.color),
           );
           break;
-
         case 'SpeedPayload':
           updatedLottie = updateLottieSpeed(lottieJSON, payload.frameRate);
           break;
         case 'LayerPayload':
           updatedLottie = deleteLottieLayer(lottieJSON, payload.layer);
+          break;
       }
 
       setLottieJSON(updatedLottie);
@@ -92,15 +92,17 @@ export const NetworkStateContext = () => {
   const handleRemoveFromSaveQueue = useCallback((state: SaveState, count?: number) => {
     setSaveQueue((prev) => {
       const newSaveQueue = new Map(prev);
-
       newSaveQueue.set(state, count ?? (newSaveQueue.get(state) ?? 1) - 1);
 
       return newSaveQueue;
     });
   }, []);
 
-  const onConnect = useCallback(() => {
+  const onConnect = useCallback(async () => {
     setIsSocketConnected(true);
+    await client.refetchQueries({
+      include: [namedOperations.Query.fetchEditedLottie],
+    });
   }, [setIsSocketConnected]);
 
   const onDisconnect = useCallback(() => {
@@ -108,13 +110,11 @@ export const NetworkStateContext = () => {
   }, [setIsSocketConnected]);
 
   useEffect(() => {
-    console.log('First subscription attempt');
     socket.on('connect', onConnect);
     socket.on('disconnect', onDisconnect);
     socket.on(LottieSocketEvents.UpdateJson, getChangesFromServer);
 
     return () => {
-      console.log('Unsubscribing from socket events');
       socket.off('connect', onConnect);
       socket.off('disconnect', onDisconnect);
       socket.off(LottieSocketEvents.UpdateJson, getChangesFromServer);
@@ -127,7 +127,7 @@ export const NetworkStateContext = () => {
 
   const contextValue = useMemo(
     () => ({
-      isSaving: isSaving,
+      isSaving,
       addToSaveQueue: handleAddToSaveQueue,
       removeFromSaveQueue: handleRemoveFromSaveQueue,
       isConnected: isSocketConnected,
