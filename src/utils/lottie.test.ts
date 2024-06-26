@@ -4,7 +4,7 @@ import {
   updateLottieColor,
   updateLottieSpeed,
 } from './lottie';
-import { LottieAnimation } from '../graphql/lottie-server/generated';
+import { aLayer, aLottieAnimation, LottieAnimation } from '../graphql/lottie-server/generated';
 import { mockLottieAnimation } from '../test/mocks/mockLottieAnimation';
 
 describe('Test lottie utils', () => {
@@ -15,45 +15,37 @@ describe('Test lottie utils', () => {
     });
 
     it('should return an empty array if layers are empty', () => {
-      const result = getAnimationLayersInfo({
-        layers: [],
-      });
+      const result = getAnimationLayersInfo({ ...aLottieAnimation(), layers: [] });
 
       expect(result).toEqual([]);
     });
 
     it('should return correct layer info for a single layer with shapes', () => {
       const lottieAnimation: LottieAnimation = {
-        layers: [
-          {
-            nm: 'Layer 1',
-            shapes: [
-              {
-                nm: 'Shape 1',
-                it: [
-                  {
-                    c: { k: [1, 0, 0, 1] },
-                  },
-                ],
-              },
-            ],
-          },
-        ],
+        ...aLottieAnimation(),
+        layers: [aLayer()],
       };
 
       const result = getAnimationLayersInfo(lottieAnimation);
 
       expect(result).toEqual([
         {
+          layerName: 'sed',
           layerSeq: 0,
+          layers: [
+            {
+              layerSeq: 1,
+              nestedLayerSeq: [0, 0],
+              shapes: [],
+            },
+          ],
           nestedLayerSeq: [0],
-          layerName: 'Layer 1',
           shapes: [
             {
-              shapeName: 'Shape 1',
-              shapeSeq: 0,
+              color: [7061],
               shapeItemSeq: 0,
-              color: [1, 0, 0, 1],
+              shapeName: 'vel',
+              shapeSeq: 0,
             },
           ],
         },
@@ -62,24 +54,11 @@ describe('Test lottie utils', () => {
 
     it('should handle nested layers correctly', () => {
       const lottieAnimation: LottieAnimation = {
+        ...aLottieAnimation(),
         layers: [
           {
-            nm: 'Layer 1',
-            layers: [
-              {
-                nm: 'Nested Layer 1',
-                shapes: [
-                  {
-                    nm: 'Shape 1',
-                    it: [
-                      {
-                        c: { k: [0, 1, 0, 1] },
-                      },
-                    ],
-                  },
-                ],
-              },
-            ],
+            ...aLayer(),
+            layers: [aLayer()],
           },
         ],
       };
@@ -88,31 +67,45 @@ describe('Test lottie utils', () => {
 
       expect(result).toEqual([
         {
-          layerName: 'Layer 1',
+          layerName: 'sed',
           layerSeq: 0,
           layers: [
             {
-              layerName: 'Nested Layer 1',
+              layerName: 'sed',
               layerSeq: 1,
+              layers: [
+                {
+                  layerSeq: 2,
+                  nestedLayerSeq: [0, 0, 0],
+                  shapes: [],
+                },
+              ],
               nestedLayerSeq: [0, 0],
               shapes: [
                 {
-                  color: [0, 1, 0, 1],
+                  color: [7061],
                   shapeItemSeq: 0,
-                  shapeName: 'Shape 1',
+                  shapeName: 'vel',
                   shapeSeq: 0,
                 },
               ],
             },
           ],
           nestedLayerSeq: [0],
-          shapes: [],
+          shapes: [
+            {
+              color: [7061],
+              shapeItemSeq: 0,
+              shapeName: 'vel',
+              shapeSeq: 0,
+            },
+          ],
         },
       ]);
     });
 
     it('should return all layers (including nested)  inside the animation', () => {
-      const result = getAnimationLayersInfo(mockLottieAnimation);
+      const result = getAnimationLayersInfo(mockLottieAnimation as unknown as LottieAnimation);
 
       const allLayers = result.map((layer) => layer.layerName);
       expect(allLayers).toStrictEqual([
@@ -145,7 +138,7 @@ describe('Test lottie utils', () => {
       const shapeItemSeq = 1;
 
       const updatedAnimation = updateLottieColor(
-        mockLottieAnimation,
+        mockLottieAnimation as unknown as LottieAnimation,
         nestedLayerSeq,
         shapeSeq,
         shapeItemSeq,
@@ -153,9 +146,9 @@ describe('Test lottie utils', () => {
       );
 
       expect(
-        updatedAnimation.layers[nestedLayerSeq[0]].layers[nestedLayerSeq[1]].shapes[shapeSeq].it[
-          shapeItemSeq
-        ].c.k,
+        updatedAnimation.layers[nestedLayerSeq?.[0]].layers?.[nestedLayerSeq?.[1]]?.shapes?.[
+          shapeSeq
+        ]?.it?.[shapeItemSeq]?.c?.k,
       ).toEqual([0.39, 0.43, 0.47, 1]);
     });
 
@@ -165,7 +158,7 @@ describe('Test lottie utils', () => {
       const shapeItemSeq = 0;
 
       const updatedAnimation = updateLottieColor(
-        mockLottieAnimation,
+        mockLottieAnimation as unknown as LottieAnimation,
         nestedLayerSeq,
         shapeSeq,
         shapeItemSeq,
@@ -180,7 +173,10 @@ describe('Test lottie utils', () => {
     it('should update the frame rate of the animation', () => {
       const newFrameRate = 80;
 
-      const updatedAnimation = updateLottieSpeed(mockLottieAnimation, newFrameRate);
+      const updatedAnimation = updateLottieSpeed(
+        mockLottieAnimation as unknown as LottieAnimation,
+        newFrameRate,
+      );
 
       expect(updatedAnimation.fr).toEqual(newFrameRate);
     });
@@ -189,7 +185,7 @@ describe('Test lottie utils', () => {
       const originalAnimation = { ...mockLottieAnimation };
       const newFrameRate = 80;
 
-      updateLottieSpeed(mockLottieAnimation, newFrameRate);
+      updateLottieSpeed(mockLottieAnimation as unknown as LottieAnimation, newFrameRate);
 
       expect(originalAnimation.fr).toEqual(30);
     });
@@ -199,7 +195,10 @@ describe('Test lottie utils', () => {
     it('should delete the specified nested layer', () => {
       const nestedLayerSeq = [2, 0];
 
-      const updatedAnimation = deleteLottieLayer(mockLottieAnimation, nestedLayerSeq);
+      const updatedAnimation = deleteLottieLayer(
+        mockLottieAnimation as unknown as LottieAnimation,
+        nestedLayerSeq,
+      );
 
       expect(updatedAnimation.layers[nestedLayerSeq[0]].layers).toHaveLength(2);
     });
@@ -207,7 +206,10 @@ describe('Test lottie utils', () => {
     it('should handle invalid nested layer sequence gracefully', () => {
       const nestedLayerSeq = [0, 1];
 
-      const updatedAnimation = deleteLottieLayer(mockLottieAnimation, nestedLayerSeq);
+      const updatedAnimation = deleteLottieLayer(
+        mockLottieAnimation as unknown as LottieAnimation,
+        nestedLayerSeq,
+      );
 
       expect(updatedAnimation).toEqual(mockLottieAnimation);
     });

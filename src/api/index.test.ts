@@ -46,7 +46,7 @@ describe('fetchAsyncJsonApi', () => {
       // If fetchAsyncJsonApi did not throw an error, fail the test
       expect(true).toBe(false); // This line should not be reached
     } catch (error) {
-      expect(error.message).toBe('404: Not Found');
+      expect((error as unknown as Error).message).toBe('404: Not Found');
     }
 
     expect(global.fetch).toHaveBeenCalledWith(url, undefined);
