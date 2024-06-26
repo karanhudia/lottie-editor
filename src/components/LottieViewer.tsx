@@ -22,6 +22,7 @@ export const LottieViewer = () => {
       spacing={2}
       sx={{
         minHeight: 0,
+        height: '100%',
         backgroundColor: 'var(--joy-palette-neutral-100, #F0F4F8)',
       }}
     >

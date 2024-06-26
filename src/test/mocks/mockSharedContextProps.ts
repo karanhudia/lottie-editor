@@ -25,4 +25,6 @@ export const mockSharedContextProps: SharedContextProps = {
   setSelectedColor: mockSetSelectedColor,
   isAnimationCreated: false,
   setIsAnimationCreated: jest.fn(),
+  isDrawerOpen: false,
+  setIsDrawerOpen: jest.fn(),
 };

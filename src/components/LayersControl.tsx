@@ -1,9 +1,10 @@
 import React, { useContext } from 'react';
-import { Box, List, ListItem, Skeleton, Typography } from '@mui/joy';
+import { List, ListItem, Skeleton, Typography } from '@mui/joy';
 import { SharedProps } from '../context/SharedPropsContext';
 import { getAnimationLayersInfo } from '../utils/lottie';
 import { LayerInfo } from '../types/shared';
 import { LayerGroup } from './LayerGroup';
+import { LayersWrapper } from './LayersWrapper';
 
 export const LayersControl = () => {
   const { lottieJSON, selectedLayer, updateLayer } = useContext(SharedProps);
@@ -22,7 +23,7 @@ export const LayersControl = () => {
   };
 
   return (
-    <Box sx={{ py: 1 }}>
+    <LayersWrapper>
       <Typography
         color='neutral'
         textAlign='start'
@@ -56,6 +57,6 @@ export const LayersControl = () => {
               );
             })}
       </List>
-    </Box>
+    </LayersWrapper>
   );
 };

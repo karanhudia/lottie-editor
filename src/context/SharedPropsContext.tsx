@@ -21,6 +21,8 @@ export type SharedContextProps = {
   setSelectedColor: Dispatch<SetStateAction<ColorPayload | null>>;
   isAnimationCreated: boolean;
   setIsAnimationCreated: Dispatch<SetStateAction<boolean>>;
+  isDrawerOpen: boolean;
+  setIsDrawerOpen: Dispatch<SetStateAction<boolean>>;
 };
 
 export const SharedProps = createContext<SharedContextProps>({
@@ -34,6 +36,8 @@ export const SharedProps = createContext<SharedContextProps>({
   setSelectedColor: () => null,
   isAnimationCreated: false,
   setIsAnimationCreated: () => null,
+  isDrawerOpen: false,
+  setIsDrawerOpen: () => null,
 });
 
 export const SharedPropsContext = ({ children }: { children: React.ReactNode }) => {
@@ -51,6 +55,9 @@ export const SharedPropsContext = ({ children }: { children: React.ReactNode }) 
 
   // This is only true when an animation is just imported
   const [isAnimationCreated, setIsAnimationCreated] = useState(false);
+
+  // This is for mobile drawer state
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   // TODO: Move to its own hook
   const handleLayerSelect = useCallback(
@@ -74,6 +81,8 @@ export const SharedPropsContext = ({ children }: { children: React.ReactNode }) 
         setSelectedColor,
         isAnimationCreated,
         setIsAnimationCreated,
+        isDrawerOpen,
+        setIsDrawerOpen,
       }}
     >
       {children}
