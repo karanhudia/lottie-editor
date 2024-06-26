@@ -176,6 +176,7 @@ Follow these steps to set up the project locally:
    - [ ] Tests for Lottie Player related components (involves canvas testing)
    - [ ] Generate codegen related files on CI / CD and `.gitignore` them locally
    - [ ] Integrate logger to read `console.(log, info, error)` (maybe datadog)
+   - [ ] Show active / online users editing the animation (websockets rooms) 
    
 ## Contributing
 
