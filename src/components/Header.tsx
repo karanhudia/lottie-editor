@@ -1,13 +1,16 @@
 import React from 'react';
 import { Avatar, Box, IconButton, Link, Typography } from '@mui/joy';
 import LottieFilesLogo from '../assets/lottie.svg';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useLocation } from 'react-router-dom';
 import { NetworkState } from './NetworkState';
 import { MenuOutlined } from '@mui/icons-material';
 import { useSharedProps } from '../context/SharedPropsContext';
 
 export const Header = () => {
+  const { pathname } = useLocation();
   const { setIsDrawerOpen } = useSharedProps();
+
+  const isHomePage = pathname === '/';
 
   return (
     <Box
@@ -29,11 +32,13 @@ export const Header = () => {
       </Link>
       <NetworkState />
       {/* Mobile Hamburg Icon for Layers Drawer */}
-      <Box sx={{ display: { xs: 'flex', sm: 'flex', md: 'none' }, justifyContent: 'flex-end' }}>
-        <IconButton variant='outlined' color='neutral' onClick={() => setIsDrawerOpen(true)}>
-          <MenuOutlined />
-        </IconButton>
-      </Box>
+      {!isHomePage && (
+        <Box sx={{ display: { xs: 'flex', sm: 'flex', md: 'none' }, justifyContent: 'flex-end' }}>
+          <IconButton variant='outlined' color='neutral' onClick={() => setIsDrawerOpen(true)}>
+            <MenuOutlined />
+          </IconButton>
+        </Box>
+      )}
     </Box>
   );
 };
