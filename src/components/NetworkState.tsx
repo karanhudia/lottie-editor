@@ -1,9 +1,15 @@
 import React from 'react';
 import { Box, Typography } from '@mui/joy';
+import { useLocation } from 'react-router-dom';
 import { useNetworkState } from '../context/NetworkStateContext';
 
 export const NetworkState = () => {
+  const { pathname } = useLocation();
   const { isSaving, isConnected } = useNetworkState();
+
+  if (pathname === '/') {
+    return null;
+  }
 
   let message = isSaving ? 'Saving...' : 'All updated';
 
