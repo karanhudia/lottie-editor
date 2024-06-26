@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSharedProps } from '../context/SharedPropsContext';
-import { Box, RadioGroup, Typography } from '@mui/joy';
+import { Box, RadioGroup, Skeleton, Typography } from '@mui/joy';
 import { RgbaColor, RgbaColorPicker } from 'react-colorful';
 import { getAnimationLayersInfo } from '../utils/lottie';
 import { useLottieAnimation } from '../hooks/useLottieAnimation';
@@ -34,7 +34,7 @@ export const ColorsControl = () => {
   };
 
   return (
-    <Box sx={{ overflow: 'auto' }}>
+    <Box sx={{ overflow: 'auto', pt: '30px' }}>
       <Typography color='neutral' level='title-lg'>
         {/* TODO: Add translations */}
         Colors
@@ -42,14 +42,21 @@ export const ColorsControl = () => {
       <Box
         sx={{
           paddingTop: 2,
+          paddingLeft: '2px',
         }}
       >
         <RadioGroup sx={{ gap: 1.5, flexWrap: 'wrap', flexDirection: 'row' }}>
-          <ColorItems
-            selectedColor={selectedColor}
-            handleColorSelect={handleColorSelect}
-            allLayers={selectedLayer ? [selectedLayer] : allLayers}
-          />
+          {!lottieJSON ? (
+            Array.from({ length: 20 }).map(() => (
+              <Skeleton animation='wave' variant='circular' width={30} height={30} />
+            ))
+          ) : (
+            <ColorItems
+              selectedColor={selectedColor}
+              handleColorSelect={handleColorSelect}
+              allLayers={selectedLayer ? [selectedLayer] : allLayers}
+            />
+          )}
         </RadioGroup>
       </Box>
       <Box

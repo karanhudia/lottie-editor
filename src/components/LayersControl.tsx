@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Box, List, Typography } from '@mui/joy';
+import { Box, List, ListItem, Skeleton, Typography } from '@mui/joy';
 import { SharedProps } from '../context/SharedPropsContext';
 import { getAnimationLayersInfo } from '../utils/lottie';
 import { LayerInfo } from '../types/shared';
@@ -11,6 +11,14 @@ export const LayersControl = () => {
 
   const handleLayerSelect = (layerInfo: LayerInfo) => {
     updateLayer(layerInfo);
+  };
+
+  const LayerItemSkeleton = () => {
+    return (
+      <ListItem sx={{ mr: 1, ml: 2 }}>
+        <Skeleton animation='wave' variant='text' level='body-lg' />
+      </ListItem>
+    );
   };
 
   return (
@@ -31,20 +39,22 @@ export const LayersControl = () => {
           '--ListItem-startActionWidth': '20px',
         }}
       >
-        {allLayers.map((layerInfo, index) => {
-          const isLayerSelected = layerInfo.layerName === selectedLayer?.layerName;
+        {!lottieJSON
+          ? Array.from({ length: 15 }, () => 0).map(() => <LayerItemSkeleton />)
+          : allLayers.map((layerInfo, index) => {
+              const isLayerSelected = layerInfo.layerName === selectedLayer?.layerName;
 
-          return (
-            <LayerGroup
-              key={`${layerInfo.layerName}-${index}`}
-              layer={layerInfo}
-              selected={isLayerSelected}
-              selectedLayer={selectedLayer}
-              onSelect={handleLayerSelect}
-              nested
-            />
-          );
-        })}
+              return (
+                <LayerGroup
+                  key={`${layerInfo.layerName}-${index}`}
+                  layer={layerInfo}
+                  selected={isLayerSelected}
+                  selectedLayer={selectedLayer}
+                  onSelect={handleLayerSelect}
+                  nested
+                />
+              );
+            })}
       </List>
     </Box>
   );

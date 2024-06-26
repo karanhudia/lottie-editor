@@ -1,5 +1,5 @@
 import React from 'react';
-import { Slider, styled, Typography } from '@mui/joy';
+import { Skeleton, Slider, styled, Typography } from '@mui/joy';
 import { useLottieAnimation } from '../hooks/useLottieAnimation';
 
 const SpeedControlWrapper = styled('div')`
@@ -19,28 +19,28 @@ export const SpeedControl = () => {
     updateSpeed(value as number);
   };
 
-  if (!frameRate) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <SpeedControlWrapper>
       <Typography color='neutral' level='title-md'>
         Speed
       </Typography>
-      <Slider
-        aria-label='Always visible'
-        defaultValue={Math.round(frameRate)}
-        step={3}
-        min={3}
-        max={150}
-        onChange={handleSpeedChange}
-        valueLabelDisplay='auto'
-        sx={{
-          '--Slider-trackSize': '4px',
-          '--Slider-thumbSize': '10px',
-        }}
-      />
+      {!frameRate ? (
+        <Skeleton variant='text' level='h2' />
+      ) : (
+        <Slider
+          aria-label='Always visible'
+          defaultValue={Math.round(frameRate)}
+          step={3}
+          min={3}
+          max={150}
+          onChange={handleSpeedChange}
+          valueLabelDisplay='auto'
+          sx={{
+            '--Slider-trackSize': '4px',
+            '--Slider-thumbSize': '10px',
+          }}
+        />
+      )}
     </SpeedControlWrapper>
   );
 };
