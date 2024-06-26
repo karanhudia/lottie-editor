@@ -1,5 +1,5 @@
-import React, { useCallback, useMemo } from 'react';
-import { Box, Button, styled, Typography } from '@mui/joy';
+import React, { useCallback, useMemo, useState } from 'react';
+import { Box, Button, Snackbar, styled, Typography } from '@mui/joy';
 import { UploadFile, UploadFileOutlined } from '@mui/icons-material';
 import { useLottieAnimation } from '../hooks/useLottieAnimation';
 import { isLottieAnimation } from '../utils/typeGuard';
@@ -17,18 +17,26 @@ const VisuallyHiddenInput = styled('input')`
 `;
 
 export const UploadLottie = () => {
+  const [openNotification, setOpenNotification] = useState(false);
   const { importLottie } = useLottieAnimation();
 
   const onReaderLoad = useCallback(
     (event: ProgressEvent<FileReader>): void => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const parsedJSON = JSON.parse(event.target?.result as string);
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        const parsedJSON = JSON.parse(event.target?.result as string);
 
-      if (!isLottieAnimation(parsedJSON)) {
-        return;
+        if (!isLottieAnimation(parsedJSON)) {
+          console.error('Invalid JSON');
+          setOpenNotification(true);
+          return;
+        }
+
+        importLottie(parsedJSON);
+      } catch (error) {
+        console.error('Invalid JSON', error);
+        setOpenNotification(true);
       }
-
-      importLottie(parsedJSON);
     },
     [importLottie],
   );
@@ -84,6 +92,20 @@ export const UploadLottie = () => {
           <VisuallyHiddenInput type='file' accept='.json' onChange={onChange} />
         </Button>
       </Box>
+      <Snackbar
+        anchorOrigin={{ horizontal: 'center', vertical: 'top' }}
+        open={openNotification}
+        autoHideDuration={1500}
+        onClose={() => setOpenNotification(false)}
+        variant='solid'
+        color='danger'
+        sx={{
+          maxWidth: '100%',
+          minWidth: 0,
+        }}
+      >
+        Invalid JSON
+      </Snackbar>
     </Box>
   );
 };

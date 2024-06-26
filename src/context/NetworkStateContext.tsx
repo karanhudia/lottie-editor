@@ -100,10 +100,15 @@ export const NetworkStateContext = () => {
 
   const onConnect = useCallback(async () => {
     setIsSocketConnected(true);
+
+    if (!lottieJSON) {
+      return;
+    }
+
     await client.refetchQueries({
       include: [namedOperations.Query.fetchEditedLottie],
     });
-  }, [setIsSocketConnected]);
+  }, [setIsSocketConnected, lottieJSON]);
 
   const onDisconnect = useCallback(() => {
     setIsSocketConnected(false);
