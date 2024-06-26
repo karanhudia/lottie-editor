@@ -31,7 +31,6 @@ describe('SharedPropsContext', () => {
     expect(result.current.lottieJSON).toBe(null);
     expect(result.current.selectedLayer).toBe(null);
     expect(result.current.selectedColor).toBe(null);
-    expect(result.current.isSocketConnected).toBe(false);
     expect(result.current.isAnimationCreated).toBe(false);
   });
 
@@ -49,7 +48,6 @@ describe('SharedPropsContext', () => {
       result.current.setLottieJSON(mockLottieAnimation);
       result.current.updateLayer(mockLayerInfo);
       result.current.setSelectedColor(mockSelectedColor);
-      result.current.setIsSocketConnected(true);
       result.current.setIsAnimationCreated(true);
     });
 
@@ -57,7 +55,6 @@ describe('SharedPropsContext', () => {
     expect(result.current.lottieJSON).toBe(mockLottieAnimation);
     expect(result.current.selectedLayer).toBe(mockLayerInfo);
     expect(result.current.selectedColor).toBe(mockSelectedColor);
-    expect(result.current.isSocketConnected).toBe(true);
     expect(result.current.isAnimationCreated).toBe(true);
   });
 
@@ -70,7 +67,6 @@ describe('SharedPropsContext', () => {
     expect(result.current.lottieJSON).toBe(null);
     expect(result.current.selectedLayer).toBe(null);
     expect(result.current.selectedColor).toBe(null);
-    expect(result.current.isSocketConnected).toBe(false);
     expect(result.current.isAnimationCreated).toBe(false);
   });
 });

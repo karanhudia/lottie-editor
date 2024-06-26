@@ -3,6 +3,7 @@ import './App.css';
 import '@fontsource/inter';
 import { CssVarsProvider } from '@mui/joy';
 import { SharedPropsContext } from './context/SharedPropsContext';
+import { NetworkStateContext } from './context/NetworkStateContext';
 import { createHashRouter, RouterProvider } from 'react-router-dom';
 import { HomePage } from './pages/HomePage';
 import { EditorPage } from './pages/EditorPage';
@@ -27,11 +28,13 @@ function App() {
   return (
     <div className='App'>
       <CssVarsProvider>
-        <SharedPropsContext>
-          <ApolloProvider client={client}>
-            <RouterProvider router={router} />
-          </ApolloProvider>
-        </SharedPropsContext>
+        <NetworkStateContext>
+          <SharedPropsContext>
+            <ApolloProvider client={client}>
+              <RouterProvider router={router} />
+            </ApolloProvider>
+          </SharedPropsContext>
+        </NetworkStateContext>
       </CssVarsProvider>
     </div>
   );

@@ -12,6 +12,7 @@ import {
   SocketAcknowledgement,
   UpdateLottieMessage,
 } from '../graphql/lottie-server/generated';
+import { useNetworkState } from '../context/NetworkStateContext';
 
 const DEFAULT_WEBSOCKET_URL = 'https://lottie-editor.onrender.com/';
 export const socket = io(process.env.REACT_APP_WEBSOCKET_URL ?? DEFAULT_WEBSOCKET_URL, {
@@ -20,15 +21,17 @@ export const socket = io(process.env.REACT_APP_WEBSOCKET_URL ?? DEFAULT_WEBSOCKE
 
 export const useSocket = () => {
   const navigate = useNavigate();
-  const { lottieJSON, setLottieJSON, setIsSocketConnected } = useSharedProps();
+
+  const { setConnection } = useNetworkState();
+  const { lottieJSON, setLottieJSON } = useSharedProps();
 
   const onConnect = useCallback(() => {
-    setIsSocketConnected(true);
-  }, [setIsSocketConnected]);
+    setConnection(true);
+  }, [setConnection]);
 
   const onDisconnect = useCallback(() => {
-    setIsSocketConnected(false);
-  }, [setIsSocketConnected]);
+    setConnection(false);
+  }, [setConnection]);
 
   const getChangesFromServer = useCallback(
     (message: UpdateLottieMessage) => {
@@ -98,15 +101,12 @@ export const useSocket = () => {
     [setLottieJSON, navigate],
   );
 
-  const updateJSON = useCallback(
-    async (message: UpdateLottieMessage): Promise<SocketAcknowledgement> => {
-      return socket.emitWithAck(
-        LottieSocketEvents.UpdateJson,
-        message,
-      ) as Promise<SocketAcknowledgement>;
-    },
-    [],
-  );
+  const updateJSON = useCallback((message: UpdateLottieMessage): Promise<SocketAcknowledgement> => {
+    return socket.emitWithAck(
+      LottieSocketEvents.UpdateJson,
+      message,
+    ) as Promise<SocketAcknowledgement>;
+  }, []);
 
   return {
     createJSON,

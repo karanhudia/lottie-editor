@@ -19,10 +19,10 @@ export const SharedProps = createContext<{
   updateLayer: (newLayer: LayerInfo) => void;
   selectedColor: SelectedColor | null;
   setSelectedColor: Dispatch<SetStateAction<SelectedColor | null>>;
-  isSocketConnected: boolean;
-  setIsSocketConnected: Dispatch<SetStateAction<boolean>>;
   isAnimationCreated: boolean;
   setIsAnimationCreated: Dispatch<SetStateAction<boolean>>;
+  isUnsaved: boolean;
+  setIsUnsaved: Dispatch<SetStateAction<boolean>>;
 }>({
   lottiePlayerRef: null,
   setLottiePlayerRef: () => null,
@@ -32,10 +32,10 @@ export const SharedProps = createContext<{
   updateLayer: () => null,
   selectedColor: null,
   setSelectedColor: () => null,
-  isSocketConnected: false,
-  setIsSocketConnected: () => null,
   isAnimationCreated: false,
   setIsAnimationCreated: () => null,
+  isUnsaved: false,
+  setIsUnsaved: () => null,
 });
 
 export const SharedPropsContext = ({ children }: { children: React.ReactNode }) => {
@@ -51,11 +51,11 @@ export const SharedPropsContext = ({ children }: { children: React.ReactNode }) 
   // Selected color helps shows the color picker
   const [selectedColor, setSelectedColor] = useState<SelectedColor | null>(null);
 
-  // Maintains the state of websockets connection
-  const [isSocketConnected, setIsSocketConnected] = useState(false);
-
   // This is only true when an animation is just imported
   const [isAnimationCreated, setIsAnimationCreated] = useState(false);
+
+  // This is only true when the app has unsaved changes
+  const [isUnsaved, setIsUnsaved] = useState(false);
 
   // TODO: Move to its own hook
   const handleLayerSelect = useCallback(
@@ -77,10 +77,10 @@ export const SharedPropsContext = ({ children }: { children: React.ReactNode }) 
         updateLayer: handleLayerSelect,
         selectedColor,
         setSelectedColor,
-        isSocketConnected,
-        setIsSocketConnected,
         isAnimationCreated,
         setIsAnimationCreated,
+        isUnsaved,
+        setIsUnsaved,
       }}
     >
       {children}

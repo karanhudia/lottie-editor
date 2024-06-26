@@ -9,6 +9,7 @@ import { rgbaToLottieColor } from '../utils/color';
 import { v4 as uuidv4 } from 'uuid';
 import { LottieAnimation } from '../graphql/lottie-server/generated';
 import { EditorRouteParams } from '../components/Editor';
+import { SaveState, useNetworkState } from '../context/NetworkStateContext';
 
 type UseLottieAnimationReturn = {
   frameRate?: number;
@@ -29,6 +30,7 @@ export const useLottieAnimation = (): UseLottieAnimationReturn => {
   const navigate = useNavigate();
 
   const { updateJSON } = useSocket();
+  const { addToSaveQueue, removeFromSaveQueue } = useNetworkState();
   const { lottieJSON, setLottieJSON, setIsAnimationCreated } = useSharedProps();
 
   const syncLayerChangesWithServer = useCallback(
@@ -47,9 +49,10 @@ export const useLottieAnimation = (): UseLottieAnimationReturn => {
 
       if (response.code === 200) {
         console.info('Layer deleted');
+        removeFromSaveQueue(SaveState.LayerDelete);
       }
     },
-    [updateJSON, params.editId],
+    [updateJSON, params.editId, removeFromSaveQueue],
   );
 
   const syncColorChangesWithServer = useThrottle(
@@ -71,6 +74,8 @@ export const useLottieAnimation = (): UseLottieAnimationReturn => {
 
       if (response.code === 200) {
         console.info('Color updated');
+        // Since it is throttled, we can set directly to 0
+        removeFromSaveQueue(SaveState.ColorUpdate, 0);
       }
     },
     1000,
@@ -91,6 +96,8 @@ export const useLottieAnimation = (): UseLottieAnimationReturn => {
 
     if (response.code === 200) {
       console.info('Speed updated');
+      // Since it is throttled, we can set directly to 0
+      removeFromSaveQueue(SaveState.SpeedUpdate, 0);
     }
   }, 1000);
 
@@ -111,10 +118,11 @@ export const useLottieAnimation = (): UseLottieAnimationReturn => {
         return;
       }
 
+      addToSaveQueue(SaveState.SpeedUpdate);
       setLottieJSON(updateLottieSpeed(lottieJSON, newSpeed));
       syncSpeedChangesWithServer(newSpeed);
     },
-    [lottieJSON, setLottieJSON, syncSpeedChangesWithServer],
+    [lottieJSON, setLottieJSON, syncSpeedChangesWithServer, addToSaveQueue],
   );
 
   const handleScaleUpdate = () => {
@@ -127,10 +135,11 @@ export const useLottieAnimation = (): UseLottieAnimationReturn => {
         return;
       }
 
+      addToSaveQueue(SaveState.ColorUpdate);
       setLottieJSON(updateLottieColor(lottieJSON, nestedLayerSeq, shapeSeq, shapeItemSeq, color));
       syncColorChangesWithServer(nestedLayerSeq, shapeSeq, shapeItemSeq, rgbaToLottieColor(color));
     },
-    [lottieJSON, setLottieJSON, syncColorChangesWithServer],
+    [lottieJSON, setLottieJSON, syncColorChangesWithServer, addToSaveQueue],
   );
 
   const handleLayerDelete = useCallback(
@@ -139,10 +148,11 @@ export const useLottieAnimation = (): UseLottieAnimationReturn => {
         return;
       }
 
+      addToSaveQueue(SaveState.LayerDelete);
       setLottieJSON(deleteLottieLayer(lottieJSON, layer));
       void syncLayerChangesWithServer(layer);
     },
-    [lottieJSON, setLottieJSON, syncLayerChangesWithServer],
+    [lottieJSON, setLottieJSON, syncLayerChangesWithServer, addToSaveQueue],
   );
 
   return {
