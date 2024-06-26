@@ -2,7 +2,7 @@ import React from 'react';
 import { act, renderHook } from '@testing-library/react';
 import { SharedPropsContext, useSharedProps } from './SharedPropsContext';
 import { aColorPayload, aLottieAnimation } from '../graphql/lottie-server/generated';
-import { mockLottiePlayerRef, mockSelectedLayer } from '../test/mocks/mockSharedContextProps';
+import { mockSelectedLayer } from '../test/mocks/mockSharedContextProps';
 import clearAllMocks = jest.clearAllMocks;
 
 describe('SharedPropsContext', () => {
@@ -17,7 +17,6 @@ describe('SharedPropsContext', () => {
 
     const { result } = renderHook(() => useSharedProps(), { wrapper });
 
-    expect(result.current.lottiePlayerRef).toBe(null);
     expect(result.current.lottieJSON).toBe(null);
     expect(result.current.selectedLayer).toBe(null);
     expect(result.current.selectedColor).toBe(null);
@@ -32,14 +31,12 @@ describe('SharedPropsContext', () => {
     const { result } = renderHook(() => useSharedProps(), { wrapper });
 
     act(() => {
-      result.current.setLottiePlayerRef(mockLottiePlayerRef);
       result.current.setLottieJSON(aLottieAnimation());
       result.current.updateLayer(mockSelectedLayer);
       result.current.setSelectedColor(aColorPayload());
       result.current.setIsAnimationCreated(true);
     });
 
-    expect(result.current.lottiePlayerRef).toStrictEqual(mockLottiePlayerRef);
     expect(result.current.lottieJSON).toStrictEqual(aLottieAnimation());
     expect(result.current.selectedLayer).toStrictEqual(mockSelectedLayer);
     expect(result.current.selectedColor).toStrictEqual(aColorPayload());
@@ -51,7 +48,6 @@ describe('SharedPropsContext', () => {
     const { result } = renderHook(() => useSharedProps(), { wrapper: SharedPropsContext });
 
     // Accessing values from result.current should not throw an error
-    expect(result.current.lottiePlayerRef).toBe(null);
     expect(result.current.lottieJSON).toBe(null);
     expect(result.current.selectedLayer).toBe(null);
     expect(result.current.selectedColor).toBe(null);

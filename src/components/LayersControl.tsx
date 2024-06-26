@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { List, ListItem, Skeleton, Typography } from '@mui/joy';
 import { useSharedProps } from '../context/SharedPropsContext';
 import { getAnimationLayersInfo } from '../utils/lottie';
@@ -6,21 +6,22 @@ import { LayerInfo } from '../types/shared';
 import { LayerGroup } from './LayerGroup';
 import { LayersWrapper } from './LayersWrapper';
 
+const LayerItemSkeleton = () => (
+  <ListItem sx={{ mr: 1, ml: 2 }}>
+    <Skeleton animation='wave' variant='text' level='body-lg' />
+  </ListItem>
+);
+
 export const LayersControl = () => {
   const { lottieJSON, selectedLayer, updateLayer } = useSharedProps();
-  const allLayers = getAnimationLayersInfo(lottieJSON);
+  const allLayers = useMemo(() => getAnimationLayersInfo(lottieJSON), [lottieJSON]);
 
-  const handleLayerSelect = (layerInfo: LayerInfo) => {
-    updateLayer(layerInfo);
-  };
-
-  const LayerItemSkeleton = () => {
-    return (
-      <ListItem sx={{ mr: 1, ml: 2 }}>
-        <Skeleton animation='wave' variant='text' level='body-lg' />
-      </ListItem>
-    );
-  };
+  const handleLayerSelect = useCallback(
+    (layerInfo: LayerInfo) => {
+      updateLayer(layerInfo);
+    },
+    [updateLayer],
+  );
 
   return (
     <LayersWrapper>

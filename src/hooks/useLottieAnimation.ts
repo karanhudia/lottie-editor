@@ -45,21 +45,27 @@ export const useLottieAnimation = (): UseLottieAnimationReturn => {
 
   const syncLayerChangesWithServer = useCallback(
     async (layer: number[]) => {
-      if (!params.editId) {
-        return;
-      }
+      try {
+        if (!params.editId) {
+          return;
+        }
 
-      const response = await updateJSON({
-        uuid: params.editId,
-        payload: {
-          __typename: 'LayerPayload',
-          layer,
-        },
-      });
+        const response = await updateJSON({
+          uuid: params.editId,
+          payload: {
+            __typename: 'LayerPayload',
+            layer,
+          },
+        });
 
-      if (response.code === 200) {
-        console.info('Layer deleted');
-        removeFromSaveQueue(SaveState.LayerDelete);
+        if (response.code === 200) {
+          console.info('Layer deleted');
+          removeFromSaveQueue(SaveState.LayerDelete);
+        } else {
+          console.error('Failed to delete layer:', response.status);
+        }
+      } catch (error) {
+        console.error('Error deleting layer:', error);
       }
     },
     [updateJSON, params.editId, removeFromSaveQueue],
@@ -67,6 +73,38 @@ export const useLottieAnimation = (): UseLottieAnimationReturn => {
 
   const syncColorChangesWithServer = useThrottle(
     async (nestedLayerSeq: number[], shapeSeq: number, shapeItemSeq: number, color: number[]) => {
+      try {
+        if (!params.editId) {
+          return;
+        }
+
+        const response = await updateJSON({
+          uuid: params.editId,
+          payload: {
+            __typename: 'ColorPayload',
+            layer: nestedLayerSeq,
+            shape: shapeSeq,
+            shapeItem: shapeItemSeq,
+            color,
+          },
+        });
+
+        if (response.code === 200) {
+          console.info('Color updated');
+          // Since it is throttled, we can set directly to 0
+          removeFromSaveQueue(SaveState.ColorUpdate, 0);
+        } else {
+          console.error('Failed to update color:', response.status);
+        }
+      } catch (error) {
+        console.error('Error updating color:', error);
+      }
+    },
+    1000,
+  );
+
+  const syncSpeedChangesWithServer = useThrottle(async (frameRate: number) => {
+    try {
       if (!params.editId) {
         return;
       }
@@ -74,40 +112,20 @@ export const useLottieAnimation = (): UseLottieAnimationReturn => {
       const response = await updateJSON({
         uuid: params.editId,
         payload: {
-          __typename: 'ColorPayload',
-          layer: nestedLayerSeq,
-          shape: shapeSeq,
-          shapeItem: shapeItemSeq,
-          color,
+          __typename: 'SpeedPayload',
+          frameRate,
         },
       });
 
       if (response.code === 200) {
-        console.info('Color updated');
+        console.info('Speed updated');
         // Since it is throttled, we can set directly to 0
-        removeFromSaveQueue(SaveState.ColorUpdate, 0);
+        removeFromSaveQueue(SaveState.SpeedUpdate, 0);
+      } else {
+        console.error('Failed to update speed:', response.status);
       }
-    },
-    1000,
-  );
-
-  const syncSpeedChangesWithServer = useThrottle(async (frameRate: number) => {
-    if (!params.editId) {
-      return;
-    }
-
-    const response = await updateJSON({
-      uuid: params.editId,
-      payload: {
-        __typename: 'SpeedPayload',
-        frameRate,
-      },
-    });
-
-    if (response.code === 200) {
-      console.info('Speed updated');
-      // Since it is throttled, we can set directly to 0
-      removeFromSaveQueue(SaveState.SpeedUpdate, 0);
+    } catch (error) {
+      console.error('Error updating speed:', error);
     }
   }, 1000);
 
@@ -124,13 +142,17 @@ export const useLottieAnimation = (): UseLottieAnimationReturn => {
 
   const handleSpeedUpdate = useCallback(
     (newSpeed: number) => {
-      if (!lottieJSON) {
-        return;
-      }
+      try {
+        if (!lottieJSON) {
+          return;
+        }
 
-      addToSaveQueue(SaveState.SpeedUpdate);
-      setLottieJSON(updateLottieSpeed(lottieJSON, newSpeed));
-      syncSpeedChangesWithServer(newSpeed);
+        addToSaveQueue(SaveState.SpeedUpdate);
+        setLottieJSON(updateLottieSpeed(lottieJSON, newSpeed));
+        syncSpeedChangesWithServer(newSpeed);
+      } catch (error) {
+        console.error('Error updating speed:', error);
+      }
     },
     [lottieJSON, setLottieJSON, syncSpeedChangesWithServer, addToSaveQueue],
   );
@@ -141,26 +163,39 @@ export const useLottieAnimation = (): UseLottieAnimationReturn => {
 
   const handleColorUpdate = useCallback(
     (nestedLayerSeq: number[], shapeSeq: number, shapeItemSeq: number, color: RgbaColor) => {
-      if (!lottieJSON) {
-        return;
-      }
+      try {
+        if (!lottieJSON) {
+          return;
+        }
 
-      addToSaveQueue(SaveState.ColorUpdate);
-      setLottieJSON(updateLottieColor(lottieJSON, nestedLayerSeq, shapeSeq, shapeItemSeq, color));
-      syncColorChangesWithServer(nestedLayerSeq, shapeSeq, shapeItemSeq, rgbaToLottieColor(color));
+        addToSaveQueue(SaveState.ColorUpdate);
+        setLottieJSON(updateLottieColor(lottieJSON, nestedLayerSeq, shapeSeq, shapeItemSeq, color));
+        syncColorChangesWithServer(
+          nestedLayerSeq,
+          shapeSeq,
+          shapeItemSeq,
+          rgbaToLottieColor(color),
+        );
+      } catch (error) {
+        console.error('Error updating color:', error);
+      }
     },
     [lottieJSON, setLottieJSON, syncColorChangesWithServer, addToSaveQueue],
   );
 
   const handleLayerDelete = useCallback(
     (layer: number[]) => {
-      if (!lottieJSON) {
-        return;
-      }
+      try {
+        if (!lottieJSON) {
+          return;
+        }
 
-      addToSaveQueue(SaveState.LayerDelete);
-      setLottieJSON(deleteLottieLayer(lottieJSON, layer));
-      void syncLayerChangesWithServer(layer);
+        addToSaveQueue(SaveState.LayerDelete);
+        setLottieJSON(deleteLottieLayer(lottieJSON, layer));
+        void syncLayerChangesWithServer(layer);
+      } catch (error) {
+        console.error('Error deleting layer:', error);
+      }
     },
     [lottieJSON, setLottieJSON, syncLayerChangesWithServer, addToSaveQueue],
   );

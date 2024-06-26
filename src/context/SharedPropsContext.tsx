@@ -6,13 +6,10 @@ import React, {
   useContext,
   useState,
 } from 'react';
-import { AnimationItem } from 'lottie-web';
 import { ColorPayload, LottieAnimation } from '../graphql/lottie-server/generated';
 import { LayerInfo } from '../types/shared';
 
 export type SharedContextProps = {
-  lottiePlayerRef: AnimationItem | null;
-  setLottiePlayerRef: Dispatch<SetStateAction<AnimationItem | null>>;
   lottieJSON: LottieAnimation | null;
   setLottieJSON: Dispatch<SetStateAction<LottieAnimation | null>>;
   selectedLayer: LayerInfo | null;
@@ -26,8 +23,6 @@ export type SharedContextProps = {
 };
 
 export const SharedProps = createContext<SharedContextProps>({
-  lottiePlayerRef: null,
-  setLottiePlayerRef: () => null,
   lottieJSON: null,
   setLottieJSON: () => null,
   selectedLayer: null,
@@ -43,9 +38,6 @@ export const SharedProps = createContext<SharedContextProps>({
 export const SharedPropsContext = ({ children }: { children: React.ReactNode }) => {
   // Lottie Animation JSON
   const [lottieJSON, setLottieJSON] = useState<LottieAnimation | null>(null);
-
-  // Keeps a reference of the lottie player
-  const [lottiePlayerRef, setLottiePlayerRef] = React.useState<AnimationItem | null>(null);
 
   // Selected layer helps shows relevant colors from that layer
   const [selectedLayer, setSelectedLayer] = useState<LayerInfo | null>(null);
@@ -71,8 +63,6 @@ export const SharedPropsContext = ({ children }: { children: React.ReactNode }) 
   return (
     <SharedProps.Provider
       value={{
-        lottiePlayerRef,
-        setLottiePlayerRef,
         lottieJSON,
         setLottieJSON,
         selectedLayer,

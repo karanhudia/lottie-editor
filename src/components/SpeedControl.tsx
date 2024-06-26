@@ -1,11 +1,10 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Skeleton, Slider, styled, Typography } from '@mui/joy';
 import { useLottieAnimation } from '../hooks/useLottieAnimation';
 
 const SpeedControlWrapper = styled('div')`
   display: flex;
   flex-direction: row;
-
   justify-content: center;
   align-items: center;
   gap: 20px;
@@ -14,10 +13,13 @@ const SpeedControlWrapper = styled('div')`
 export const SpeedControl = () => {
   const { frameRate, updateSpeed } = useLottieAnimation();
 
-  const handleSpeedChange = (_e: Event, value: number | number[]) => {
-    // TypeCasting since Slider does not accept passing this from the caller
-    updateSpeed(value as number);
-  };
+  const handleSpeedChange = useCallback(
+    (_e: Event, value: number | number[]) => {
+      // TypeCasting since Slider does not accept passing this from the caller
+      updateSpeed(value as number);
+    },
+    [updateSpeed],
+  );
 
   return (
     <SpeedControlWrapper>

@@ -6,9 +6,12 @@ export const ShareLottie = () => {
   const [openNotification, setOpenNotification] = useState(false);
 
   const shareLottie = async () => {
-    await navigator.clipboard.writeText(window.location.href);
-
-    setOpenNotification(true);
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setOpenNotification(true);
+    } catch (error) {
+      console.error('Failed to copy to clipboard:', error);
+    }
   };
 
   return (

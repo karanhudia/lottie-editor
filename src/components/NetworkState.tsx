@@ -13,11 +13,12 @@ export const NetworkState = () => {
     return null;
   }
 
-  let message = isSaving ? 'Saving...' : 'All updated';
-
-  if (!isConnected) {
-    message = 'Disconnected';
-  }
+  const getMessage = () => {
+    if (!isConnected) {
+      return 'Disconnected';
+    }
+    return isSaving ? 'Saving...' : 'All updated';
+  };
 
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -32,7 +33,7 @@ export const NetworkState = () => {
           level='body-sm'
           fontFamily='Noto Sans'
         >
-          {message}
+          {getMessage()}
         </Typography>
       )}
     </Box>

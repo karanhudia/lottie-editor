@@ -31,6 +31,7 @@ export const SelectableColorItem = ({
           onSelect(color);
         }}
         value={id}
+        aria-label={`Color ${id}`}
         sx={{
           [`& .${radioClasses.action}.${radioClasses.checked}`]: {
             '--variant-borderWidth': '2px',
