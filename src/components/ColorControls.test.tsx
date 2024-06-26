@@ -3,12 +3,13 @@ import { fireEvent, render } from '@testing-library/react';
 import { ColorsControl } from './ColorsControl';
 import { useSharedProps } from '../context/SharedPropsContext';
 import { useLottieAnimation } from '../hooks/useLottieAnimation';
-import { mockLottieAnimation } from '../test/mocks/mockLottieAnimation';
+import { mockSetSelectedColor, mockSharedContextProps } from '../test/mocks/mockSharedContextProps';
+import { RgbaColor } from 'react-colorful';
 import mocked = jest.mocked;
 
 // Mock SelectableColorItem component
 jest.mock('./SelectableColorItem', () => ({
-  SelectableColorItem: ({ onSelect }) => (
+  SelectableColorItem: ({ onSelect }: { onSelect: (color: RgbaColor) => void }) => (
     <div
       data-testid='mock-selectable-color-item'
       onClick={() => onSelect({ r: 255, g: 0, b: 0, a: 1 })}
@@ -29,27 +30,11 @@ jest.mock('../context/SharedPropsContext', () => ({
 }));
 
 describe('ColorsControl', () => {
-  const mockSetSelectedColor = jest.fn();
   const mockUpdateColor = jest.fn();
-
-  const mockSharedProps = {
-    selectedColor: {
-      nestedLayerSeq: [0],
-      shapeSeq: 0,
-      shapeItemSeq: 0,
-      color: { r: 255, g: 0, b: 0, a: 1 },
-    },
-    setSelectedColor: mockSetSelectedColor,
-    lottieJSON: mockLottieAnimation,
-    selectedLayer: {
-      shapes: [{ shapeSeq: 0, shapeItemSeq: 0, color: '#ff0000' }], // Mocked selected layer for allLayers
-      nestedLayerSeq: [0],
-    },
-  };
 
   beforeEach(() => {
     jest.clearAllMocks();
-    mocked(useSharedProps).mockReturnValue(mockSharedProps);
+    mocked(useSharedProps).mockReturnValue(mockSharedContextProps);
     // Mock the return value of useLottieAnimation hook
     (useLottieAnimation as jest.Mock).mockReturnValue({
       updateColor: mockUpdateColor,
@@ -78,10 +63,10 @@ describe('ColorsControl', () => {
 
     // Verify that setSelectedColor was called with the correct parameters
     expect(mockSetSelectedColor).toHaveBeenCalledWith({
-      nestedLayerSeq: [0],
-      shapeSeq: 0,
-      shapeItemSeq: 0,
-      color: { r: 255, g: 0, b: 0, a: 1 },
+      color: [1, 0, 0, 1],
+      layer: [2, 0],
+      shape: 0,
+      shapeItem: 1,
     });
   });
 });
