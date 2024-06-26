@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSharedProps } from '../context/SharedPropsContext';
 import { Box, RadioGroup, Skeleton, Typography } from '@mui/joy';
 import { RgbaColor, RgbaColorPicker } from 'react-colorful';
@@ -6,22 +6,24 @@ import { getAnimationLayersInfo } from '../utils/lottie';
 import { useLottieAnimation } from '../hooks/useLottieAnimation';
 import { ShapeInfo } from '../types/shared';
 import { ColorItems } from './ColorItems';
-import { lottieColorToRgba, rgbaToLottieColor } from '../utils/color';
+import { rgbaToLottieColor } from '../utils/color';
 
 export const ColorsControl = () => {
   const { updateColor } = useLottieAnimation();
 
+  const [currentColor, setCurrentColor] = useState<RgbaColor | undefined>();
   const { selectedColor, setSelectedColor, lottieJSON, selectedLayer } = useSharedProps();
 
   const allLayers = getAnimationLayersInfo(lottieJSON);
 
-  const handleColorSelect = (selectedColor: RgbaColor, shapeInfo: ShapeInfo, layer: number[]) => {
+  const handleColorSelect = (color: RgbaColor, shapeInfo: ShapeInfo, layer: number[]) => {
     setSelectedColor({
       layer,
       shape: shapeInfo.shapeSeq,
       shapeItem: shapeInfo.shapeItemSeq,
-      color: rgbaToLottieColor(selectedColor),
+      color: rgbaToLottieColor(color),
     });
+    setCurrentColor(color);
   };
 
   const handleColorChange = (color: RgbaColor) => {
@@ -31,6 +33,7 @@ export const ColorsControl = () => {
 
     const { shape, shapeItem, layer } = selectedColor;
     updateColor(layer, shape, shapeItem, color);
+    setCurrentColor(color);
   };
 
   return (
@@ -69,7 +72,7 @@ export const ColorsControl = () => {
         {selectedColor && (
           <RgbaColorPicker
             data-testid='rgba-color-picker'
-            color={lottieColorToRgba(selectedColor.color)}
+            color={currentColor}
             onChange={handleColorChange}
           />
         )}
