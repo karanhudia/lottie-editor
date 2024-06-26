@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Divider } from '@mui/joy';
+import { Box, Divider, Grid } from '@mui/joy';
 import { ColorsControl } from './ColorsControl';
 import { ExportLottie } from './ExportLottie';
 import { ShareLottie } from './ShareLottie';
@@ -7,13 +7,17 @@ import { SpeedControl } from './SpeedControl';
 
 export const EditControls = () => {
   return (
-    <Box
+    <Grid
+      xs={12}
+      sm={6}
+      md={4}
+      lg={3}
       sx={{
         display: 'flex',
         flexDirection: 'column',
         padding: 3,
         paddingTop: 0,
-        overflow: 'hidden',
+        height: '100%',
       }}
     >
       <Box
@@ -36,6 +40,6 @@ export const EditControls = () => {
       <Divider />
 
       <ColorsControl />
-    </Box>
+    </Grid>
   );
 };

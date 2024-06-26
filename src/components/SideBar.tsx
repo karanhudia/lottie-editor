@@ -1,16 +1,19 @@
 import React from 'react';
-import { Box } from '@mui/joy';
+import { Grid } from '@mui/joy';
 import { LayersControl } from './LayersControl';
 
 export const SideBar = () => {
   return (
-    <Box
+    <Grid
+      sm={0}
+      md={3}
+      lg={3}
       sx={{
         height: '100%',
         overflow: 'auto',
       }}
     >
       <LayersControl />
-    </Box>
+    </Grid>
   );
 };
