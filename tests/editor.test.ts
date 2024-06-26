@@ -4,13 +4,13 @@ test.describe('editor page', () => {
   test.beforeEach(async ({ page }) => {
     // Go to the starting url before each test.
     await page.goto(
-      'http://localhost:3000/lottie-editor/#/edit/4237dad5-98a6-4dbd-b304-0d5b6494efe7',
+      'http://localhost:3000/lottie-editor/#/edit/fb31f910-6e53-43fc-bb6b-12a32a7806ab',
     );
   });
 
   test('navigation', async ({ page }) => {
     await expect(page).toHaveURL(
-      'http://localhost:3000/lottie-editor/#/edit/4237dad5-98a6-4dbd-b304-0d5b6494efe7',
+      'http://localhost:3000/lottie-editor/#/edit/fb31f910-6e53-43fc-bb6b-12a32a7806ab',
     );
 
     await expect(page).toHaveTitle(/Lottie Editor/);

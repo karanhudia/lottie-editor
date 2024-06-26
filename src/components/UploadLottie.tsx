@@ -21,6 +21,7 @@ export const UploadLottie = () => {
 
   const onReaderLoad = useCallback(
     (event: ProgressEvent<FileReader>): void => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const parsedJSON = JSON.parse(event.target?.result as string);
 
       if (!isLottieAnimation(parsedJSON)) {
