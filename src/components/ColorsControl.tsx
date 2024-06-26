@@ -6,6 +6,7 @@ import { getAnimationLayersInfo } from '../utils/lottie';
 import { useLottieAnimation } from '../hooks/useLottieAnimation';
 import { ShapeInfo } from '../types/shared';
 import { ColorItems } from './ColorItems';
+import { lottieColorToRgba, rgbaToLottieColor } from '../utils/color';
 
 export const ColorsControl = () => {
   const { updateColor } = useLottieAnimation();
@@ -14,16 +15,12 @@ export const ColorsControl = () => {
 
   const allLayers = getAnimationLayersInfo(lottieJSON);
 
-  const handleColorSelect = (
-    selectedColor: RgbaColor,
-    shapeInfo: ShapeInfo,
-    nestedLayerSeq: number[],
-  ) => {
+  const handleColorSelect = (selectedColor: RgbaColor, shapeInfo: ShapeInfo, layer: number[]) => {
     setSelectedColor({
-      nestedLayerSeq,
-      shapeSeq: shapeInfo.shapeSeq,
-      shapeItemSeq: shapeInfo.shapeItemSeq,
-      color: selectedColor,
+      layer,
+      shape: shapeInfo.shapeSeq,
+      shapeItem: shapeInfo.shapeItemSeq,
+      color: rgbaToLottieColor(selectedColor),
     });
   };
 
@@ -32,8 +29,8 @@ export const ColorsControl = () => {
       return;
     }
 
-    const { shapeSeq, shapeItemSeq, nestedLayerSeq } = selectedColor;
-    updateColor(nestedLayerSeq, shapeSeq, shapeItemSeq, color);
+    const { shape, shapeItem, layer } = selectedColor;
+    updateColor(layer, shape, shapeItem, color);
   };
 
   return (
@@ -65,7 +62,7 @@ export const ColorsControl = () => {
         {selectedColor && (
           <RgbaColorPicker
             data-testid='rgba-color-picker'
-            color={selectedColor.color}
+            color={lottieColorToRgba(selectedColor.color)}
             onChange={handleColorChange}
           />
         )}

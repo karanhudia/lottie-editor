@@ -29,10 +29,10 @@ export const ShareLottie = () => {
         onClose={() => setOpenNotification(false)}
         variant='solid'
         color='success'
-        sx={(theme) => ({
+        sx={{
           maxWidth: '100%',
           minWidth: 0,
-        })}
+        }}
       >
         Link Copied
       </Snackbar>

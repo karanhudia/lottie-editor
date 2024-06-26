@@ -1,12 +1,13 @@
 import React, { ReactNode } from 'react';
 import { SelectableColorItem } from './SelectableColorItem';
 import { lottieColorToRgba } from '../utils/color';
-import { LayerInfo, SelectedColor, ShapeInfo } from '../types/shared';
+import { LayerInfo, ShapeInfo } from '../types/shared';
 import { RgbaColor } from 'react-colorful';
+import { ColorPayload } from '../graphql/lottie-server/generated';
 
 type ColorItemsProps = {
   allLayers: LayerInfo[];
-  selectedColor: SelectedColor | null;
+  selectedColor: ColorPayload | null;
   handleColorSelect: (
     selectedColor: RgbaColor,
     shapeInfo: ShapeInfo,
@@ -33,7 +34,7 @@ export const ColorItems = ({ allLayers, selectedColor, handleColorSelect }: Colo
       const uniqueId = `nestedLayer-${nestedLayerSeq.join()},shape-${String(shapeInfo.shapeSeq)},shapeItem-${String(shapeInfo.shapeItemSeq)}`;
 
       const selectedId = selectedColor
-        ? `nestedLayer-${selectedColor.nestedLayerSeq.join()},shape-${String(selectedColor.shapeSeq)},shapeItem-${String(selectedColor.shapeItemSeq)}`
+        ? `nestedLayer-${selectedColor.layer.join()},shape-${String(selectedColor.shape)},shapeItem-${String(selectedColor.shapeItem)}`
         : null;
 
       selectableColorItems.push(
