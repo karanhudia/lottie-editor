@@ -4,6 +4,7 @@ import { NetworkStateContext, SaveState, useNetworkState } from './NetworkStateC
 import { useSharedProps } from './SharedPropsContext';
 import { mockSharedContextProps } from '../test/mocks/mockSharedContextProps';
 import mocked = jest.mocked;
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
 // Mock useSharedProps
 jest.mock('./SharedPropsContext', () => ({
@@ -17,10 +18,17 @@ describe('NetworkStateContext', () => {
     mocked(useSharedProps).mockReturnValue(mockSharedContextProps);
   });
 
+  const wrapper = ({ children }: { children: React.ReactNode }) => (
+    <MemoryRouter initialEntries={['/']}>
+      <Routes>
+        <Route path='/' element={<NetworkStateContext />}>
+          <Route index element={children} />
+        </Route>
+      </Routes>
+    </MemoryRouter>
+  );
+
   it('provides default values', () => {
-    const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <NetworkStateContext>{children}</NetworkStateContext>
-    );
     const { result } = renderHook(() => useNetworkState(), { wrapper });
 
     expect(result.current.isSaving).toBe(false);
@@ -30,9 +38,6 @@ describe('NetworkStateContext', () => {
   });
 
   it('updates isSaving state correctly', () => {
-    const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <NetworkStateContext>{children}</NetworkStateContext>
-    );
     const { result } = renderHook(() => useNetworkState(), { wrapper });
 
     act(() => {
@@ -49,7 +54,7 @@ describe('NetworkStateContext', () => {
   });
 
   it('does not throw error when used within NetworkStateContext', () => {
-    const { result } = renderHook(() => useNetworkState(), { wrapper: NetworkStateContext });
+    const { result } = renderHook(() => useNetworkState(), { wrapper });
 
     expect(result.current.isConnected).toBe(false);
   });

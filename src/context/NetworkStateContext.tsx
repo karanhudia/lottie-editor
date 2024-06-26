@@ -4,6 +4,8 @@ import { LottieSocketEvents, UpdateLottieMessage } from '../graphql/lottie-serve
 import { deleteLottieLayer, updateLottieColor, updateLottieSpeed } from '../utils/lottie';
 import { lottieColorToRgba } from '../utils/color';
 import { useSharedProps } from './SharedPropsContext';
+import { Outlet, useParams } from 'react-router-dom';
+import { EditorRouteParams } from '../components/Editor';
 
 export enum SaveState {
   LayerDelete,
@@ -31,7 +33,8 @@ export const socket = io(process.env.REACT_APP_WEBSOCKET_URL ?? DEFAULT_WEBSOCKE
   upgrade: false,
 });
 
-export const NetworkStateContext = ({ children }: { children: React.ReactNode }) => {
+export const NetworkStateContext = () => {
+  const params = useParams<EditorRouteParams>();
   const { lottieJSON, setLottieJSON } = useSharedProps();
   // Queue for saving updates in progress
   const [saveQueue, setSaveQueue] = useState<Map<SaveState, number>>(new Map());
@@ -41,6 +44,11 @@ export const NetworkStateContext = ({ children }: { children: React.ReactNode })
 
   const getChangesFromServer = useCallback(
     (message: UpdateLottieMessage) => {
+      // If the current lottie is different, we don't need to consume this message
+      if (params.editId !== message.uuid) {
+        return;
+      }
+
       if (!lottieJSON) {
         return;
       }
@@ -69,7 +77,7 @@ export const NetworkStateContext = ({ children }: { children: React.ReactNode })
 
       setLottieJSON(updatedLottie);
     },
-    [lottieJSON, setLottieJSON],
+    [lottieJSON, setLottieJSON, params.editId],
   );
 
   const handleAddToSaveQueue = useCallback((state: SaveState) => {
@@ -127,7 +135,11 @@ export const NetworkStateContext = ({ children }: { children: React.ReactNode })
     [isSaving, handleAddToSaveQueue, handleRemoveFromSaveQueue, isSocketConnected],
   );
 
-  return <NetworkState.Provider value={contextValue}>{children}</NetworkState.Provider>;
+  return (
+    <NetworkState.Provider value={contextValue}>
+      <Outlet />
+    </NetworkState.Provider>
+  );
 };
 
 export const useNetworkState = () => {

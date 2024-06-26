@@ -14,14 +14,20 @@ import { client } from './graphql/client';
 function App() {
   const router = createHashRouter([
     {
-      path: '/',
-      element: <HomePage />,
-      errorElement: <Error />,
-    },
-    {
-      path: 'edit/:editId',
-      element: <EditorPage />,
-      errorElement: <Error />,
+      // Passes the NetworkStateContext to the routing elements
+      element: <NetworkStateContext />,
+      children: [
+        {
+          path: '/',
+          element: <HomePage />,
+          errorElement: <Error />,
+        },
+        {
+          path: 'edit/:editId',
+          element: <EditorPage />,
+          errorElement: <Error />,
+        },
+      ],
     },
   ]);
 
@@ -29,11 +35,9 @@ function App() {
     <div className='App'>
       <CssVarsProvider>
         <SharedPropsContext>
-          <NetworkStateContext>
-            <ApolloProvider client={client}>
-              <RouterProvider router={router} />
-            </ApolloProvider>
-          </NetworkStateContext>
+          <ApolloProvider client={client}>
+            <RouterProvider router={router} />
+          </ApolloProvider>
         </SharedPropsContext>
       </CssVarsProvider>
     </div>
