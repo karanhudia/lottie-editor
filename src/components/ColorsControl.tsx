@@ -33,7 +33,6 @@ export const ColorsControl = () => {
 
     const { shape, shapeItem, layer } = selectedColor;
     updateColor(layer, shape, shapeItem, color);
-    setCurrentColor(color);
   };
 
   return (
