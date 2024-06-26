@@ -475,3 +475,502 @@ export const namedOperations = {
     Response: 'Response',
   },
 };
+
+export const anAnimatedProperty = (
+  overrides?: Partial<AnimatedProperty>,
+  _relationshipsToOmit: Set<string> = new Set(),
+): AnimatedProperty => {
+  const relationshipsToOmit: Set<string> = new Set(_relationshipsToOmit);
+  relationshipsToOmit.add('AnimatedProperty');
+  return {
+    a: overrides && overrides.hasOwnProperty('a') ? overrides.a! : 119,
+    ix: overrides && overrides.hasOwnProperty('ix') ? overrides.ix! : 9158,
+    k:
+      overrides && overrides.hasOwnProperty('k')
+        ? overrides.k!
+        : [
+            relationshipsToOmit.has('Keyframe')
+              ? ({} as Keyframe)
+              : aKeyframe({}, relationshipsToOmit),
+          ],
+    l: overrides && overrides.hasOwnProperty('l') ? overrides.l! : 3872,
+  };
+};
+
+export const anAsset = (
+  overrides?: Partial<Asset>,
+  _relationshipsToOmit: Set<string> = new Set(),
+): Asset => {
+  const relationshipsToOmit: Set<string> = new Set(_relationshipsToOmit);
+  relationshipsToOmit.add('Asset');
+  return {
+    e: overrides && overrides.hasOwnProperty('e') ? overrides.e! : 6662,
+    h: overrides && overrides.hasOwnProperty('h') ? overrides.h! : 1463,
+    id: overrides && overrides.hasOwnProperty('id') ? overrides.id! : 'omnis',
+    layers:
+      overrides && overrides.hasOwnProperty('layers')
+        ? overrides.layers!
+        : [relationshipsToOmit.has('Layer') ? ({} as Layer) : aLayer({}, relationshipsToOmit)],
+    p: overrides && overrides.hasOwnProperty('p') ? overrides.p! : 'ducimus',
+    u: overrides && overrides.hasOwnProperty('u') ? overrides.u! : 'qui',
+    w: overrides && overrides.hasOwnProperty('w') ? overrides.w! : 3157,
+  };
+};
+
+export const aColor = (
+  overrides?: Partial<Color>,
+  _relationshipsToOmit: Set<string> = new Set(),
+): Color => {
+  const relationshipsToOmit: Set<string> = new Set(_relationshipsToOmit);
+  relationshipsToOmit.add('Color');
+  return {
+    a: overrides && overrides.hasOwnProperty('a') ? overrides.a! : 3239,
+    ix: overrides && overrides.hasOwnProperty('ix') ? overrides.ix! : 4105,
+    k: overrides && overrides.hasOwnProperty('k') ? overrides.k! : [7061],
+  };
+};
+
+export const aColorPayload = (
+  overrides?: Partial<ColorPayload>,
+  _relationshipsToOmit: Set<string> = new Set(),
+): ColorPayload => {
+  const relationshipsToOmit: Set<string> = new Set(_relationshipsToOmit);
+  relationshipsToOmit.add('ColorPayload');
+  return {
+    color: overrides && overrides.hasOwnProperty('color') ? overrides.color! : [2773],
+    layer: overrides && overrides.hasOwnProperty('layer') ? overrides.layer! : [9261],
+    shape: overrides && overrides.hasOwnProperty('shape') ? overrides.shape! : 8794,
+    shapeItem: overrides && overrides.hasOwnProperty('shapeItem') ? overrides.shapeItem! : 1134,
+  };
+};
+
+export const aCreateLottieMessage = (
+  overrides?: Partial<CreateLottieMessage>,
+  _relationshipsToOmit: Set<string> = new Set(),
+): CreateLottieMessage => {
+  const relationshipsToOmit: Set<string> = new Set(_relationshipsToOmit);
+  relationshipsToOmit.add('CreateLottieMessage');
+  return {
+    payload:
+      overrides && overrides.hasOwnProperty('payload')
+        ? overrides.payload!
+        : relationshipsToOmit.has('CreateLottiePayload')
+          ? ({} as CreateLottiePayload)
+          : aCreateLottiePayload({}, relationshipsToOmit),
+    uuid: overrides && overrides.hasOwnProperty('uuid') ? overrides.uuid! : 'error',
+  };
+};
+
+export const aCreateLottiePayload = (
+  overrides?: Partial<CreateLottiePayload>,
+  _relationshipsToOmit: Set<string> = new Set(),
+): CreateLottiePayload => {
+  const relationshipsToOmit: Set<string> = new Set(_relationshipsToOmit);
+  relationshipsToOmit.add('CreateLottiePayload');
+  return {
+    json: overrides && overrides.hasOwnProperty('json') ? overrides.json! : 'dolorem',
+  };
+};
+
+export const aDeleteLottieLayerMessage = (
+  overrides?: Partial<DeleteLottieLayerMessage>,
+  _relationshipsToOmit: Set<string> = new Set(),
+): DeleteLottieLayerMessage => {
+  const relationshipsToOmit: Set<string> = new Set(_relationshipsToOmit);
+  relationshipsToOmit.add('DeleteLottieLayerMessage');
+  return {
+    payload:
+      overrides && overrides.hasOwnProperty('payload')
+        ? overrides.payload!
+        : relationshipsToOmit.has('LayerPayload')
+          ? ({} as LayerPayload)
+          : aLayerPayload({}, relationshipsToOmit),
+    uuid: overrides && overrides.hasOwnProperty('uuid') ? overrides.uuid! : 'maxime',
+  };
+};
+
+export const anEasing = (
+  overrides?: Partial<Easing>,
+  _relationshipsToOmit: Set<string> = new Set(),
+): Easing => {
+  const relationshipsToOmit: Set<string> = new Set(_relationshipsToOmit);
+  relationshipsToOmit.add('Easing');
+  return {
+    x: overrides && overrides.hasOwnProperty('x') ? overrides.x! : [0.77],
+    y: overrides && overrides.hasOwnProperty('y') ? overrides.y! : [2.03],
+  };
+};
+
+export const aKeyframe = (
+  overrides?: Partial<Keyframe>,
+  _relationshipsToOmit: Set<string> = new Set(),
+): Keyframe => {
+  const relationshipsToOmit: Set<string> = new Set(_relationshipsToOmit);
+  relationshipsToOmit.add('Keyframe');
+  return {
+    i:
+      overrides && overrides.hasOwnProperty('i')
+        ? overrides.i!
+        : relationshipsToOmit.has('Easing')
+          ? ({} as Easing)
+          : anEasing({}, relationshipsToOmit),
+    o:
+      overrides && overrides.hasOwnProperty('o')
+        ? overrides.o!
+        : relationshipsToOmit.has('Easing')
+          ? ({} as Easing)
+          : anEasing({}, relationshipsToOmit),
+    s: overrides && overrides.hasOwnProperty('s') ? overrides.s! : [2.3],
+    t: overrides && overrides.hasOwnProperty('t') ? overrides.t! : 1491,
+  };
+};
+
+export const aLayer = (
+  overrides?: Partial<Layer>,
+  _relationshipsToOmit: Set<string> = new Set(),
+): Layer => {
+  const relationshipsToOmit: Set<string> = new Set(_relationshipsToOmit);
+  relationshipsToOmit.add('Layer');
+  return {
+    ao: overrides && overrides.hasOwnProperty('ao') ? overrides.ao! : 2601,
+    bm: overrides && overrides.hasOwnProperty('bm') ? overrides.bm! : 6981,
+    ct: overrides && overrides.hasOwnProperty('ct') ? overrides.ct! : 4629,
+    ddd: overrides && overrides.hasOwnProperty('ddd') ? overrides.ddd! : 9464,
+    ind: overrides && overrides.hasOwnProperty('ind') ? overrides.ind! : 8580,
+    ip: overrides && overrides.hasOwnProperty('ip') ? overrides.ip! : 9164,
+    ks:
+      overrides && overrides.hasOwnProperty('ks')
+        ? overrides.ks!
+        : relationshipsToOmit.has('Transform')
+          ? ({} as Transform)
+          : aTransform({}, relationshipsToOmit),
+    layers:
+      overrides && overrides.hasOwnProperty('layers')
+        ? overrides.layers!
+        : [relationshipsToOmit.has('Layer') ? ({} as Layer) : aLayer({}, relationshipsToOmit)],
+    nm: overrides && overrides.hasOwnProperty('nm') ? overrides.nm! : 'sed',
+    op: overrides && overrides.hasOwnProperty('op') ? overrides.op! : 6257,
+    shapes:
+      overrides && overrides.hasOwnProperty('shapes')
+        ? overrides.shapes!
+        : [relationshipsToOmit.has('Shape') ? ({} as Shape) : aShape({}, relationshipsToOmit)],
+    sr: overrides && overrides.hasOwnProperty('sr') ? overrides.sr! : 4.24,
+    st: overrides && overrides.hasOwnProperty('st') ? overrides.st! : 7275,
+    ty: overrides && overrides.hasOwnProperty('ty') ? overrides.ty! : 8476,
+  };
+};
+
+export const aLayerPayload = (
+  overrides?: Partial<LayerPayload>,
+  _relationshipsToOmit: Set<string> = new Set(),
+): LayerPayload => {
+  const relationshipsToOmit: Set<string> = new Set(_relationshipsToOmit);
+  relationshipsToOmit.add('LayerPayload');
+  return {
+    layer: overrides && overrides.hasOwnProperty('layer') ? overrides.layer! : [9870],
+  };
+};
+
+export const aLottie = (
+  overrides?: Partial<Lottie>,
+  _relationshipsToOmit: Set<string> = new Set(),
+): Lottie => {
+  const relationshipsToOmit: Set<string> = new Set(_relationshipsToOmit);
+  relationshipsToOmit.add('Lottie');
+  return {
+    createdAt:
+      overrides && overrides.hasOwnProperty('createdAt')
+        ? overrides.createdAt!
+        : '1970-01-13T01:22:26.309Z',
+    json: overrides && overrides.hasOwnProperty('json') ? overrides.json! : 'quasi',
+    updatedAt:
+      overrides && overrides.hasOwnProperty('updatedAt')
+        ? overrides.updatedAt!
+        : '1970-01-04T09:33:08.290Z',
+    uuid: overrides && overrides.hasOwnProperty('uuid') ? overrides.uuid! : 'quos',
+  };
+};
+
+export const aLottieAnimation = (
+  overrides?: Partial<LottieAnimation>,
+  _relationshipsToOmit: Set<string> = new Set(),
+): LottieAnimation => {
+  const relationshipsToOmit: Set<string> = new Set(_relationshipsToOmit);
+  relationshipsToOmit.add('LottieAnimation');
+  return {
+    assets:
+      overrides && overrides.hasOwnProperty('assets')
+        ? overrides.assets!
+        : [relationshipsToOmit.has('Asset') ? ({} as Asset) : anAsset({}, relationshipsToOmit)],
+    ddd: overrides && overrides.hasOwnProperty('ddd') ? overrides.ddd! : 3533,
+    fr: overrides && overrides.hasOwnProperty('fr') ? overrides.fr! : 0.14,
+    h: overrides && overrides.hasOwnProperty('h') ? overrides.h! : 7564,
+    ip: overrides && overrides.hasOwnProperty('ip') ? overrides.ip! : 8066,
+    layers:
+      overrides && overrides.hasOwnProperty('layers')
+        ? overrides.layers!
+        : [relationshipsToOmit.has('Layer') ? ({} as Layer) : aLayer({}, relationshipsToOmit)],
+    nm: overrides && overrides.hasOwnProperty('nm') ? overrides.nm! : 'quo',
+    op: overrides && overrides.hasOwnProperty('op') ? overrides.op! : 3227,
+    v: overrides && overrides.hasOwnProperty('v') ? overrides.v! : 'quia',
+    w: overrides && overrides.hasOwnProperty('w') ? overrides.w! : 1683,
+  };
+};
+
+export const aMutation = (
+  overrides?: Partial<Mutation>,
+  _relationshipsToOmit: Set<string> = new Set(),
+): Mutation => {
+  const relationshipsToOmit: Set<string> = new Set(_relationshipsToOmit);
+  relationshipsToOmit.add('Mutation');
+  return {
+    createLottie:
+      overrides && overrides.hasOwnProperty('createLottie')
+        ? overrides.createLottie!
+        : relationshipsToOmit.has('SocketAcknowledgement')
+          ? ({} as SocketAcknowledgement)
+          : aSocketAcknowledgement({}, relationshipsToOmit),
+  };
+};
+
+export const aProperty = (
+  overrides?: Partial<Property>,
+  _relationshipsToOmit: Set<string> = new Set(),
+): Property => {
+  const relationshipsToOmit: Set<string> = new Set(_relationshipsToOmit);
+  relationshipsToOmit.add('Property');
+  return {
+    a: overrides && overrides.hasOwnProperty('a') ? overrides.a! : 5654,
+    ix: overrides && overrides.hasOwnProperty('ix') ? overrides.ix! : 1194,
+    k: overrides && overrides.hasOwnProperty('k') ? overrides.k! : 'hic',
+  };
+};
+
+export const aQuery = (
+  overrides?: Partial<Query>,
+  _relationshipsToOmit: Set<string> = new Set(),
+): Query => {
+  const relationshipsToOmit: Set<string> = new Set(_relationshipsToOmit);
+  relationshipsToOmit.add('Query');
+  return {
+    lottie:
+      overrides && overrides.hasOwnProperty('lottie')
+        ? overrides.lottie!
+        : relationshipsToOmit.has('Lottie')
+          ? ({} as Lottie)
+          : aLottie({}, relationshipsToOmit),
+  };
+};
+
+export const aScalePayload = (
+  overrides?: Partial<ScalePayload>,
+  _relationshipsToOmit: Set<string> = new Set(),
+): ScalePayload => {
+  const relationshipsToOmit: Set<string> = new Set(_relationshipsToOmit);
+  relationshipsToOmit.add('ScalePayload');
+  return {
+    scale: overrides && overrides.hasOwnProperty('scale') ? overrides.scale! : 9.46,
+  };
+};
+
+export const aShape = (
+  overrides?: Partial<Shape>,
+  _relationshipsToOmit: Set<string> = new Set(),
+): Shape => {
+  const relationshipsToOmit: Set<string> = new Set(_relationshipsToOmit);
+  relationshipsToOmit.add('Shape');
+  return {
+    bm: overrides && overrides.hasOwnProperty('bm') ? overrides.bm! : 9050,
+    cix: overrides && overrides.hasOwnProperty('cix') ? overrides.cix! : 7633,
+    hd: overrides && overrides.hasOwnProperty('hd') ? overrides.hd! : true,
+    it:
+      overrides && overrides.hasOwnProperty('it')
+        ? overrides.it!
+        : [
+            relationshipsToOmit.has('ShapeItem')
+              ? ({} as ShapeItem)
+              : aShapeItem({}, relationshipsToOmit),
+          ],
+    ix: overrides && overrides.hasOwnProperty('ix') ? overrides.ix! : 6960,
+    mn: overrides && overrides.hasOwnProperty('mn') ? overrides.mn! : 'excepturi',
+    nm: overrides && overrides.hasOwnProperty('nm') ? overrides.nm! : 'vel',
+    np: overrides && overrides.hasOwnProperty('np') ? overrides.np! : 8628,
+    ty: overrides && overrides.hasOwnProperty('ty') ? overrides.ty! : 'qui',
+  };
+};
+
+export const aShapeItem = (
+  overrides?: Partial<ShapeItem>,
+  _relationshipsToOmit: Set<string> = new Set(),
+): ShapeItem => {
+  const relationshipsToOmit: Set<string> = new Set(_relationshipsToOmit);
+  relationshipsToOmit.add('ShapeItem');
+  return {
+    c:
+      overrides && overrides.hasOwnProperty('c')
+        ? overrides.c!
+        : relationshipsToOmit.has('Color')
+          ? ({} as Color)
+          : aColor({}, relationshipsToOmit),
+    hd: overrides && overrides.hasOwnProperty('hd') ? overrides.hd! : true,
+    ind: overrides && overrides.hasOwnProperty('ind') ? overrides.ind! : 6233,
+    ix: overrides && overrides.hasOwnProperty('ix') ? overrides.ix! : 4165,
+    ks:
+      overrides && overrides.hasOwnProperty('ks')
+        ? overrides.ks!
+        : relationshipsToOmit.has('ShapeProperty')
+          ? ({} as ShapeProperty)
+          : aShapeProperty({}, relationshipsToOmit),
+    mn: overrides && overrides.hasOwnProperty('mn') ? overrides.mn! : 'qui',
+    nm: overrides && overrides.hasOwnProperty('nm') ? overrides.nm! : 'molestiae',
+    ty: overrides && overrides.hasOwnProperty('ty') ? overrides.ty! : 'mollitia',
+  };
+};
+
+export const aShapeKeyframe = (
+  overrides?: Partial<ShapeKeyframe>,
+  _relationshipsToOmit: Set<string> = new Set(),
+): ShapeKeyframe => {
+  const relationshipsToOmit: Set<string> = new Set(_relationshipsToOmit);
+  relationshipsToOmit.add('ShapeKeyframe');
+  return {
+    c: overrides && overrides.hasOwnProperty('c') ? overrides.c! : true,
+    i: overrides && overrides.hasOwnProperty('i') ? overrides.i! : [[2.47]],
+    o: overrides && overrides.hasOwnProperty('o') ? overrides.o! : [[9.86]],
+    v: overrides && overrides.hasOwnProperty('v') ? overrides.v! : [[2.51]],
+  };
+};
+
+export const aShapeProperty = (
+  overrides?: Partial<ShapeProperty>,
+  _relationshipsToOmit: Set<string> = new Set(),
+): ShapeProperty => {
+  const relationshipsToOmit: Set<string> = new Set(_relationshipsToOmit);
+  relationshipsToOmit.add('ShapeProperty');
+  return {
+    a: overrides && overrides.hasOwnProperty('a') ? overrides.a! : 637,
+    ix: overrides && overrides.hasOwnProperty('ix') ? overrides.ix! : 3546,
+    k:
+      overrides && overrides.hasOwnProperty('k')
+        ? overrides.k!
+        : relationshipsToOmit.has('ShapeKeyframe')
+          ? ({} as ShapeKeyframe)
+          : aShapeKeyframe({}, relationshipsToOmit),
+  };
+};
+
+export const aSocketAcknowledgement = (
+  overrides?: Partial<SocketAcknowledgement>,
+  _relationshipsToOmit: Set<string> = new Set(),
+): SocketAcknowledgement => {
+  const relationshipsToOmit: Set<string> = new Set(_relationshipsToOmit);
+  relationshipsToOmit.add('SocketAcknowledgement');
+  return {
+    code: overrides && overrides.hasOwnProperty('code') ? overrides.code! : 6146,
+    status: overrides && overrides.hasOwnProperty('status') ? overrides.status! : 'distinctio',
+  };
+};
+
+export const aSpeedPayload = (
+  overrides?: Partial<SpeedPayload>,
+  _relationshipsToOmit: Set<string> = new Set(),
+): SpeedPayload => {
+  const relationshipsToOmit: Set<string> = new Set(_relationshipsToOmit);
+  relationshipsToOmit.add('SpeedPayload');
+  return {
+    frameRate: overrides && overrides.hasOwnProperty('frameRate') ? overrides.frameRate! : 6355,
+  };
+};
+
+export const aTransform = (
+  overrides?: Partial<Transform>,
+  _relationshipsToOmit: Set<string> = new Set(),
+): Transform => {
+  const relationshipsToOmit: Set<string> = new Set(_relationshipsToOmit);
+  relationshipsToOmit.add('Transform');
+  return {
+    a:
+      overrides && overrides.hasOwnProperty('a')
+        ? overrides.a!
+        : relationshipsToOmit.has('Property')
+          ? ({} as Property)
+          : aProperty({}, relationshipsToOmit),
+    ix: overrides && overrides.hasOwnProperty('ix') ? overrides.ix! : 9921,
+    l: overrides && overrides.hasOwnProperty('l') ? overrides.l! : 6481,
+    o:
+      overrides && overrides.hasOwnProperty('o')
+        ? overrides.o!
+        : relationshipsToOmit.has('Property')
+          ? ({} as Property)
+          : aProperty({}, relationshipsToOmit),
+    p:
+      overrides && overrides.hasOwnProperty('p')
+        ? overrides.p!
+        : relationshipsToOmit.has('Property')
+          ? ({} as Property)
+          : aProperty({}, relationshipsToOmit),
+    r:
+      overrides && overrides.hasOwnProperty('r')
+        ? overrides.r!
+        : relationshipsToOmit.has('Property')
+          ? ({} as Property)
+          : aProperty({}, relationshipsToOmit),
+    s:
+      overrides && overrides.hasOwnProperty('s')
+        ? overrides.s!
+        : relationshipsToOmit.has('AnimatedProperty')
+          ? ({} as AnimatedProperty)
+          : anAnimatedProperty({}, relationshipsToOmit),
+  };
+};
+
+export const anUpdateLottieColorMessage = (
+  overrides?: Partial<UpdateLottieColorMessage>,
+  _relationshipsToOmit: Set<string> = new Set(),
+): UpdateLottieColorMessage => {
+  const relationshipsToOmit: Set<string> = new Set(_relationshipsToOmit);
+  relationshipsToOmit.add('UpdateLottieColorMessage');
+  return {
+    payload:
+      overrides && overrides.hasOwnProperty('payload')
+        ? overrides.payload!
+        : relationshipsToOmit.has('ColorPayload')
+          ? ({} as ColorPayload)
+          : aColorPayload({}, relationshipsToOmit),
+    uuid: overrides && overrides.hasOwnProperty('uuid') ? overrides.uuid! : 'architecto',
+  };
+};
+
+export const anUpdateLottieScaleMessage = (
+  overrides?: Partial<UpdateLottieScaleMessage>,
+  _relationshipsToOmit: Set<string> = new Set(),
+): UpdateLottieScaleMessage => {
+  const relationshipsToOmit: Set<string> = new Set(_relationshipsToOmit);
+  relationshipsToOmit.add('UpdateLottieScaleMessage');
+  return {
+    payload:
+      overrides && overrides.hasOwnProperty('payload')
+        ? overrides.payload!
+        : relationshipsToOmit.has('ScalePayload')
+          ? ({} as ScalePayload)
+          : aScalePayload({}, relationshipsToOmit),
+    uuid: overrides && overrides.hasOwnProperty('uuid') ? overrides.uuid! : 'aspernatur',
+  };
+};
+
+export const anUpdateLottieSpeedMessage = (
+  overrides?: Partial<UpdateLottieSpeedMessage>,
+  _relationshipsToOmit: Set<string> = new Set(),
+): UpdateLottieSpeedMessage => {
+  const relationshipsToOmit: Set<string> = new Set(_relationshipsToOmit);
+  relationshipsToOmit.add('UpdateLottieSpeedMessage');
+  return {
+    payload:
+      overrides && overrides.hasOwnProperty('payload')
+        ? overrides.payload!
+        : relationshipsToOmit.has('SpeedPayload')
+          ? ({} as SpeedPayload)
+          : aSpeedPayload({}, relationshipsToOmit),
+    uuid: overrides && overrides.hasOwnProperty('uuid') ? overrides.uuid! : 'aliquid',
+  };
+};

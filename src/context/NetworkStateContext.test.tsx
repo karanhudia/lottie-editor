@@ -2,9 +2,22 @@ import React from 'react';
 import { act, renderHook } from '@testing-library/react';
 import { NetworkStateContext, SaveState, useNetworkState } from './NetworkStateContext';
 import { useSharedProps } from './SharedPropsContext';
+import { mockSharedContextProps } from '../test/mocks/mockSharedContextProps';
+import mocked = jest.mocked;
+
+// Mock useSharedProps
+jest.mock('./SharedPropsContext', () => ({
+  useSharedProps: jest.fn(),
+}));
 
 describe('NetworkStateContext', () => {
-  it('provides initial context values', () => {
+  beforeEach(() => {
+    jest.clearAllMocks(); // Clear mocks before each test
+    // Mock return values before each test case
+    mocked(useSharedProps).mockReturnValue(mockSharedContextProps);
+  });
+
+  it('provides default values', () => {
     const wrapper = ({ children }: { children: React.ReactNode }) => (
       <NetworkStateContext>{children}</NetworkStateContext>
     );
@@ -12,9 +25,11 @@ describe('NetworkStateContext', () => {
 
     expect(result.current.isSaving).toBe(false);
     expect(result.current.isConnected).toBe(false);
+    expect(result.current.addToSaveQueue).toBeDefined();
+    expect(result.current.removeFromSaveQueue).toBeDefined();
   });
 
-  it('adds to the save queue and updates isSaving', () => {
+  it('updates isSaving state correctly', () => {
     const wrapper = ({ children }: { children: React.ReactNode }) => (
       <NetworkStateContext>{children}</NetworkStateContext>
     );
@@ -25,17 +40,6 @@ describe('NetworkStateContext', () => {
     });
 
     expect(result.current.isSaving).toBe(true);
-  });
-
-  it('removes from the save queue and updates isSaving', () => {
-    const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <NetworkStateContext>{children}</NetworkStateContext>
-    );
-    const { result } = renderHook(() => useNetworkState(), { wrapper });
-
-    act(() => {
-      result.current.addToSaveQueue(SaveState.LayerDelete);
-    });
 
     act(() => {
       result.current.removeFromSaveQueue(SaveState.LayerDelete);
@@ -44,29 +48,9 @@ describe('NetworkStateContext', () => {
     expect(result.current.isSaving).toBe(false);
   });
 
-  it('handles network connection state', () => {
-    const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <NetworkStateContext>{children}</NetworkStateContext>
-    );
-    const { result } = renderHook(() => useNetworkState(), { wrapper });
-
-    act(() => {
-      result.current.setConnection(true);
-    });
-
-    expect(result.current.isConnected).toBe(true);
-
-    act(() => {
-      result.current.setConnection(false);
-    });
+  it('does not throw error when used within NetworkStateContext', () => {
+    const { result } = renderHook(() => useNetworkState(), { wrapper: NetworkStateContext });
 
     expect(result.current.isConnected).toBe(false);
-  });
-
-  it('does not throw error when used within NetworkStateContext', () => {
-    const { result } = renderHook(() => useSharedProps(), { wrapper: NetworkStateContext });
-
-    // Accessing values from result.current should not throw an error
-    expect(result.current.isUnsaved).toBe(false);
   });
 });

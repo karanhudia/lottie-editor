@@ -18,12 +18,14 @@ const config: CodegenConfig = {
         'typescript-operations',
         'typescript-react-apollo',
         'named-operations-object',
+        'typescript-mock-data',
       ],
       config: {
         skipTypename: false,
         withHooks: true,
         withHOC: true,
         withComponent: false,
+        terminateCircularRelationships: true,
       },
     },
     'src/graphql/lottiefiles/generated.ts': {

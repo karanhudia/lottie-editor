@@ -1,17 +1,10 @@
-import { mockLottieAnimation } from '../test/mocks/mockLottieAnimation';
 import { useLottieAnimation } from './useLottieAnimation';
 import { act, renderHook } from '@testing-library/react';
 import { useSharedProps } from '../context/SharedPropsContext';
 import { deleteLottieLayer, updateLottieColor, updateLottieSpeed } from '../utils/lottie';
-import { useSocket } from './useSocket';
+import { aLottieAnimation } from '../graphql/lottie-server/generated';
+import { mockSharedContextProps } from '../test/mocks/mockSharedContextProps';
 import mocked = jest.mocked;
-
-// Mock and define useSocket hook
-jest.mock('./useSocket', () => ({
-  useSocket: jest.fn().mockReturnValue({
-    updateJSON: jest.fn(),
-  }),
-}));
 
 // Mock and define useSharedProps hook
 jest.mock('../context/SharedPropsContext', () => ({
@@ -33,37 +26,25 @@ jest.mock('uuid', () => ({
 }));
 
 describe('useLottieAnimation', () => {
-  const SharedContextProps = {
-    lottieJSON: mockLottieAnimation,
-    setLottieJSON: jest.fn(),
-    setIsAnimationCreated: jest.fn(),
-  };
-
   beforeEach(() => {
     // Mock return values before each test case
-    mocked(useSharedProps).mockReturnValue(SharedContextProps);
-    mocked(useSocket).mockReturnValue({
-      updateJSON: jest.fn().mockResolvedValue({
-        code: 200,
-        status: 'ok',
-      }),
-    });
+    mocked(useSharedProps).mockReturnValue(mockSharedContextProps);
   });
 
   it('should import Lottie animation', async () => {
     const updateJSONMock = jest.fn().mockResolvedValue({ code: 200 });
 
-    require('./useSocket').useSocket.mockReturnValue({ updateJSON: updateJSONMock });
+    // require('./useSocket').useSocket.mockReturnValue({ updateJSON: updateJSONMock });
 
     const { result } = renderHook(() => useLottieAnimation());
 
     act(() => {
-      result.current.importLottie(mockLottieAnimation);
+      result.current.importLottie(aLottieAnimation());
     });
 
-    expect(SharedContextProps.lottieJSON).toStrictEqual(mockLottieAnimation);
-    expect(SharedContextProps.setLottieJSON).toHaveBeenCalledWith(mockLottieAnimation);
-    expect(SharedContextProps.setIsAnimationCreated).toHaveBeenCalledWith(true);
+    expect(mockSharedContextProps.lottieJSON).toStrictEqual(aLottieAnimation());
+    expect(mockSharedContextProps.setLottieJSON).toHaveBeenCalledWith(aLottieAnimation());
+    expect(mockSharedContextProps.setIsAnimationCreated).toHaveBeenCalledWith(true);
     expect(mockNavigate).toHaveBeenCalledWith('edit/sample-uuid');
   });
 
@@ -75,37 +56,37 @@ describe('useLottieAnimation', () => {
       result.current.updateSpeed(newSpeed);
     });
 
-    expect(SharedContextProps.setLottieJSON).toHaveBeenCalledWith(
-      updateLottieSpeed(mockLottieAnimation, newSpeed),
+    expect(mockSharedContextProps.setLottieJSON).toHaveBeenCalledWith(
+      updateLottieSpeed(aLottieAnimation(), newSpeed),
     );
   });
 
   it('should update color', () => {
     const { result } = renderHook(() => useLottieAnimation());
-    const nestedLayerSeq = [2, 0];
+    const nestedLayerSeq = [0, 0];
     const shapeSeq = 0;
-    const shapeItemSeq = 1;
+    const shapeItemSeq = 0;
     const newColor = { r: 100, g: 110, b: 120, a: 1 };
 
     act(() => {
       result.current.updateColor(nestedLayerSeq, shapeSeq, shapeItemSeq, newColor);
     });
 
-    expect(SharedContextProps.setLottieJSON).toHaveBeenCalledWith(
-      updateLottieColor(mockLottieAnimation, nestedLayerSeq, shapeSeq, shapeItemSeq, newColor),
+    expect(mockSharedContextProps.setLottieJSON).toHaveBeenCalledWith(
+      updateLottieColor(aLottieAnimation(), nestedLayerSeq, shapeSeq, shapeItemSeq, newColor),
     );
   });
 
   it('should delete layer', () => {
     const { result } = renderHook(() => useLottieAnimation());
-    const layerSeq = [2, 0];
+    const layerSeq = [0, 0];
 
     act(() => {
       result.current.deleteLayer(layerSeq);
     });
 
-    expect(SharedContextProps.setLottieJSON).toHaveBeenCalledWith(
-      deleteLottieLayer(mockLottieAnimation, layerSeq),
+    expect(mockSharedContextProps.setLottieJSON).toHaveBeenCalledWith(
+      deleteLottieLayer(aLottieAnimation(), layerSeq),
     );
   });
 });

@@ -1,19 +1,9 @@
-import React, { createRef } from 'react';
+import React from 'react';
 import { act, renderHook } from '@testing-library/react';
 import { SharedPropsContext, useSharedProps } from './SharedPropsContext';
-import { LayerInfo, SelectedColor } from '../types/shared';
-import { mockLottieAnimation } from '../test/mocks/mockLottieAnimation';
-import { getAnimationLayersInfo } from '../utils/lottie';
+import { aColorPayload, aLottieAnimation } from '../graphql/lottie-server/generated';
+import { mockLottiePlayerRef, mockSelectedLayer } from '../test/mocks/mockSharedContextProps';
 import clearAllMocks = jest.clearAllMocks;
-
-const mockLayerInfo: LayerInfo = getAnimationLayersInfo(mockLottieAnimation)[0];
-
-const mockSelectedColor: SelectedColor = {
-  nestedLayerSeq: [0],
-  shapeSeq: 0,
-  shapeItemSeq: 0,
-  color: { r: 255, g: 0, b: 0, a: 1 },
-};
 
 describe('SharedPropsContext', () => {
   beforeEach(() => {
@@ -39,23 +29,21 @@ describe('SharedPropsContext', () => {
       <SharedPropsContext>{children}</SharedPropsContext>
     );
 
-    const mockLottiePlayerRef = createRef();
-
     const { result } = renderHook(() => useSharedProps(), { wrapper });
 
     act(() => {
       result.current.setLottiePlayerRef(mockLottiePlayerRef);
-      result.current.setLottieJSON(mockLottieAnimation);
-      result.current.updateLayer(mockLayerInfo);
-      result.current.setSelectedColor(mockSelectedColor);
+      result.current.setLottieJSON(aLottieAnimation());
+      result.current.updateLayer(mockSelectedLayer);
+      result.current.setSelectedColor(aColorPayload());
       result.current.setIsAnimationCreated(true);
     });
 
-    expect(result.current.lottiePlayerRef).toBe(mockLottiePlayerRef);
-    expect(result.current.lottieJSON).toBe(mockLottieAnimation);
-    expect(result.current.selectedLayer).toBe(mockLayerInfo);
-    expect(result.current.selectedColor).toBe(mockSelectedColor);
-    expect(result.current.isAnimationCreated).toBe(true);
+    expect(result.current.lottiePlayerRef).toStrictEqual(mockLottiePlayerRef);
+    expect(result.current.lottieJSON).toStrictEqual(aLottieAnimation());
+    expect(result.current.selectedLayer).toStrictEqual(mockSelectedLayer);
+    expect(result.current.selectedColor).toStrictEqual(aColorPayload());
+    expect(result.current.isAnimationCreated).toStrictEqual(true);
   });
 
   it('does not throw error when used within SharedPropsContext', () => {
