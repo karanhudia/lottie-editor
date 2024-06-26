@@ -13,7 +13,7 @@ import { Error } from '../pages/Error';
 export type EditorRouteParams = { editId: string };
 
 export const Editor = () => {
-  const { setLottieJSON } = useSharedProps();
+  const { lottieJSON, setLottieJSON } = useSharedProps();
   const params = useParams<EditorRouteParams>();
 
   const handleFetchCompleted = useCallback(
@@ -33,6 +33,7 @@ export const Editor = () => {
     },
     fetchPolicy: 'no-cache',
     onCompleted: handleFetchCompleted,
+    skip: !!lottieJSON,
   });
 
   if (error) {

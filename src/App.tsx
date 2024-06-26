@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import '@fontsource/inter';
 import { CssVarsProvider } from '@mui/joy';
+import { ErrorBoundary } from 'react-error-boundary';
 import { SharedPropsContext } from './context/SharedPropsContext';
 import { NetworkStateContext } from './context/NetworkStateContext';
 import { createHashRouter, RouterProvider } from 'react-router-dom';
@@ -33,13 +34,15 @@ function App() {
 
   return (
     <div className='App'>
-      <CssVarsProvider>
-        <SharedPropsContext>
-          <ApolloProvider client={client}>
-            <RouterProvider router={router} />
-          </ApolloProvider>
-        </SharedPropsContext>
-      </CssVarsProvider>
+      <ErrorBoundary fallback={<Error />}>
+        <CssVarsProvider>
+          <SharedPropsContext>
+            <ApolloProvider client={client}>
+              <RouterProvider router={router} />
+            </ApolloProvider>
+          </SharedPropsContext>
+        </CssVarsProvider>
+      </ErrorBoundary>
     </div>
   );
 }
