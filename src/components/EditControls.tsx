@@ -3,6 +3,7 @@ import { Box, Divider } from '@mui/joy';
 import { ColorsControl } from './ColorsControl';
 import { SliderControls } from './SliderControls';
 import { ExportLottie } from './ExportLottie';
+import { ShareLottie } from './ShareLottie';
 
 export const EditControls = () => {
   return (
@@ -15,10 +16,17 @@ export const EditControls = () => {
         overflow: 'hidden',
       }}
     >
-      <ExportLottie />
+      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        <ShareLottie />
+        <ExportLottie />
+      </Box>
+
       <Divider />
+
       <SliderControls />
+
       <Divider />
+
       <ColorsControl />
     </Box>
   );
