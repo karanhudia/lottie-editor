@@ -1,12 +1,12 @@
-import React, { useContext } from 'react';
+import React, { useCallback } from 'react';
 import { Box, Button } from '@mui/joy';
-import { SharedProps } from '../context/SharedPropsContext';
+import { useSharedProps } from '../context/SharedPropsContext';
 import { Download } from '@mui/icons-material';
 
 export const ExportLottie = () => {
-  const { lottieJSON } = useContext(SharedProps);
+  const { lottieJSON } = useSharedProps();
 
-  const exportJSON = () => {
+  const exportJSON = useCallback(() => {
     const jsonData = new Blob([JSON.stringify(lottieJSON)], { type: 'application/json' });
     const jsonURL = URL.createObjectURL(jsonData);
 
@@ -14,7 +14,8 @@ export const ExportLottie = () => {
     link.href = jsonURL;
     link.download = `${lottieJSON?.nm ?? 'MyEditedLottie'}.json`;
     link.click();
-  };
+    URL.revokeObjectURL(jsonURL); // Clean up the URL object after use
+  }, [lottieJSON]);
 
   return (
     <Box

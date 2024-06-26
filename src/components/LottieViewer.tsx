@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import { SharedProps } from '../context/SharedPropsContext';
+import React from 'react';
+import { useSharedProps } from '../context/SharedPropsContext';
 import { AspectRatio, Skeleton, Stack } from '@mui/joy';
 import { Controls, Player, PlayerEvent } from '@lottiefiles/react-lottie-player';
 import { AnimationItem } from 'lottie-web';
@@ -9,7 +9,7 @@ import { EditorRouteParams } from './Editor';
 
 export const LottieViewer = () => {
   const { isAnimationCreated, setLottiePlayerRef, lottieJSON, setIsAnimationCreated } =
-    useContext(SharedProps);
+    useSharedProps();
   const params = useParams<EditorRouteParams>();
   const [createLottieJsonMutation] = useCreateLottieJsonMutation();
 

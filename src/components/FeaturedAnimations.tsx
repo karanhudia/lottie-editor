@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Box, Grid, Typography } from '@mui/joy';
 import { AnimationOutlined } from '@mui/icons-material';
 import { useFetchFeaturedAnimationsQuery } from '../graphql/lottiefiles/generated';
@@ -9,6 +9,26 @@ export const FeaturedAnimations = () => {
   const { data, loading } = useFetchFeaturedAnimationsQuery({
     client: lottieFilesClient,
   });
+
+  const loadingSkeletons = useMemo(
+    () =>
+      Array.from({ length: 20 }).map((_, index) => (
+        <Grid xl={4} key={index}>
+          <AnimationCard loading={loading} />
+        </Grid>
+      )),
+    [loading],
+  );
+
+  const animationCards = useMemo(
+    () =>
+      data?.featuredPublicAnimations.edges.map((edge) => (
+        <Grid xl={4} key={edge.node.id}>
+          <AnimationCard animation={edge.node} />
+        </Grid>
+      )),
+    [data],
+  );
 
   return (
     <Box
@@ -34,17 +54,7 @@ export const FeaturedAnimations = () => {
           border: '1px solid var(--joy-palette-neutral-100, #F0F4F8)',
         }}
       >
-        {loading || !data?.featuredPublicAnimations.edges
-          ? Array.from({ length: 20 }, () => 0).map((edge, index) => (
-              <Grid xl={4} key={index}>
-                <AnimationCard loading={loading} />
-              </Grid>
-            ))
-          : data.featuredPublicAnimations.edges.map((edge) => (
-              <Grid xl={4} key={edge.node.id}>
-                <AnimationCard animation={edge.node} />
-              </Grid>
-            ))}
+        {loading || !data?.featuredPublicAnimations.edges ? loadingSkeletons : animationCards}
       </Grid>
     </Box>
   );

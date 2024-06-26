@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Player } from '@lottiefiles/react-lottie-player';
 import {
   AspectRatio,
@@ -25,7 +25,7 @@ type AnimationCardProps = {
 export const AnimationCard = ({ animation, loading }: AnimationCardProps) => {
   const { importLottie } = useLottieAnimation();
 
-  const handleAnimationClick = async () => {
+  const handleAnimationClick = useCallback(async () => {
     if (!animation?.jsonUrl) {
       return;
     }
@@ -37,7 +37,7 @@ export const AnimationCard = ({ animation, loading }: AnimationCardProps) => {
     }
 
     importLottie(response);
-  };
+  }, [importLottie, animation?.jsonUrl]);
 
   const LoadedCard = () => (
     <Box sx={{ position: 'relative' }}>

@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useMemo } from 'react';
 import { SelectableColorItem } from './SelectableColorItem';
 import { lottieColorToRgba } from '../utils/color';
 import { LayerInfo, ShapeInfo } from '../types/shared';
@@ -16,40 +16,44 @@ type ColorItemsProps = {
 };
 
 export const ColorItems = ({ allLayers, selectedColor, handleColorSelect }: ColorItemsProps) => {
-  let selectableColorItems: ReactNode[] = [];
+  const selectableColorItems = useMemo(() => {
+    let items: ReactNode[] = [];
 
-  allLayers.forEach(({ shapes, nestedLayerSeq, layers }, index) => {
-    if (layers) {
-      selectableColorItems = selectableColorItems.concat(
-        <ColorItems
-          allLayers={layers}
-          handleColorSelect={handleColorSelect}
-          selectedColor={selectedColor}
-          key={index}
-        />,
-      );
-    }
+    allLayers.forEach(({ shapes, nestedLayerSeq, layers }, index) => {
+      if (layers) {
+        items = items.concat(
+          <ColorItems
+            allLayers={layers}
+            handleColorSelect={handleColorSelect}
+            selectedColor={selectedColor}
+            key={index}
+          />,
+        );
+      }
 
-    shapes.forEach((shapeInfo) => {
-      const uniqueId = `nestedLayer-${nestedLayerSeq.join()},shape-${String(shapeInfo.shapeSeq)},shapeItem-${String(shapeInfo.shapeItemSeq)}`;
+      shapes.forEach((shapeInfo) => {
+        const uniqueId = `nestedLayer-${nestedLayerSeq.join()},shape-${String(shapeInfo.shapeSeq)},shapeItem-${String(shapeInfo.shapeItemSeq)}`;
 
-      const selectedId = selectedColor
-        ? `nestedLayer-${selectedColor.layer.join()},shape-${String(selectedColor.shape)},shapeItem-${String(selectedColor.shapeItem)}`
-        : null;
+        const selectedId = selectedColor
+          ? `nestedLayer-${selectedColor.layer.join()},shape-${String(selectedColor.shape)},shapeItem-${String(selectedColor.shapeItem)}`
+          : null;
 
-      selectableColorItems.push(
-        <SelectableColorItem
-          key={uniqueId}
-          id={uniqueId}
-          selected={selectedId === uniqueId}
-          color={lottieColorToRgba(shapeInfo.color)}
-          onSelect={(selectedColor) => {
-            handleColorSelect(selectedColor, shapeInfo, nestedLayerSeq);
-          }}
-        />,
-      );
+        items.push(
+          <SelectableColorItem
+            key={uniqueId}
+            id={uniqueId}
+            selected={selectedId === uniqueId}
+            color={lottieColorToRgba(shapeInfo.color)}
+            onSelect={(selectedColor) => {
+              handleColorSelect(selectedColor, shapeInfo, nestedLayerSeq);
+            }}
+          />,
+        );
+      });
     });
-  });
 
-  return selectableColorItems;
+    return items;
+  }, [allLayers, selectedColor, handleColorSelect]);
+
+  return <>{selectableColorItems}</>;
 };

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { useSharedProps } from '../context/SharedPropsContext';
 import { Box, RadioGroup, Skeleton, Typography } from '@mui/joy';
 import { RgbaColor, RgbaColorPicker } from 'react-colorful';
@@ -14,26 +14,32 @@ export const ColorsControl = () => {
   const [currentColor, setCurrentColor] = useState<RgbaColor | undefined>();
   const { selectedColor, setSelectedColor, lottieJSON, selectedLayer } = useSharedProps();
 
-  const allLayers = getAnimationLayersInfo(lottieJSON);
+  const allLayers = useMemo(() => getAnimationLayersInfo(lottieJSON), [lottieJSON]);
 
-  const handleColorSelect = (color: RgbaColor, shapeInfo: ShapeInfo, layer: number[]) => {
-    setSelectedColor({
-      layer,
-      shape: shapeInfo.shapeSeq,
-      shapeItem: shapeInfo.shapeItemSeq,
-      color: rgbaToLottieColor(color),
-    });
-    setCurrentColor(color);
-  };
+  const handleColorSelect = useCallback(
+    (color: RgbaColor, shapeInfo: ShapeInfo, layer: number[]) => {
+      setSelectedColor({
+        layer,
+        shape: shapeInfo.shapeSeq,
+        shapeItem: shapeInfo.shapeItemSeq,
+        color: rgbaToLottieColor(color),
+      });
+      setCurrentColor(color);
+    },
+    [setSelectedColor],
+  );
 
-  const handleColorChange = (color: RgbaColor) => {
-    if (!selectedColor) {
-      return;
-    }
+  const handleColorChange = useCallback(
+    (color: RgbaColor) => {
+      if (!selectedColor) {
+        return;
+      }
 
-    const { shape, shapeItem, layer } = selectedColor;
-    updateColor(layer, shape, shapeItem, color);
-  };
+      const { shape, shapeItem, layer } = selectedColor;
+      updateColor(layer, shape, shapeItem, color);
+    },
+    [selectedColor, updateColor],
+  );
 
   return (
     <Box sx={{ overflow: 'auto', pt: '30px' }}>
@@ -49,8 +55,8 @@ export const ColorsControl = () => {
       >
         <RadioGroup sx={{ gap: 1.5, flexWrap: 'wrap', flexDirection: 'row' }}>
           {!lottieJSON ? (
-            Array.from({ length: 20 }).map(() => (
-              <Skeleton animation='wave' variant='circular' width={30} height={30} />
+            Array.from({ length: 20 }).map((_, index) => (
+              <Skeleton key={index} animation='wave' variant='circular' width={30} height={30} />
             ))
           ) : (
             <ColorItems

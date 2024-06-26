@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import {
   IconButton,
   List,
@@ -32,12 +32,33 @@ export const LayerGroup = ({
 
   const { deleteLayer } = useLottieAnimation();
 
+  const toggleIsOpen = useCallback(() => setIsOpen((prev) => !prev), []);
+
+  const nestedLayers = useMemo(
+    () =>
+      isOpen && (
+        <List>
+          {layers?.map((nestedLayer) => (
+            <LayerGroup
+              key={nestedLayer.layerName}
+              layer={nestedLayer}
+              onSelect={onSelect}
+              selected={nestedLayer.layerName === selectedLayer?.layerName}
+              selectedLayer={selectedLayer}
+              nested={false}
+            />
+          ))}
+        </List>
+      ),
+    [isOpen, layers, onSelect, selectedLayer],
+  );
+
   return (
     <ListItem
       startAction={
         nested &&
         layers?.length && (
-          <IconButton variant='plain' size='sm' color='neutral' onClick={() => setIsOpen(!isOpen)}>
+          <IconButton variant='plain' size='sm' color='neutral' onClick={toggleIsOpen}>
             <KeyboardArrowDown sx={{ transform: isOpen ? 'initial' : 'rotate(-90deg)' }} />
           </IconButton>
         )
@@ -58,7 +79,7 @@ export const LayerGroup = ({
         color={selected ? 'primary' : undefined}
         onClick={() => {
           if (nested) {
-            setIsOpen(!isOpen);
+            toggleIsOpen();
           }
           onSelect(layer);
         }}
@@ -75,20 +96,7 @@ export const LayerGroup = ({
           </Typography>
         </ListItemContent>
       </ListItemButton>
-      {isOpen && (
-        <List>
-          {layers?.map((layer) => (
-            <LayerGroup
-              key={layer.layerName}
-              layer={layer}
-              onSelect={onSelect}
-              selected={layer.layerName === selectedLayer?.layerName}
-              selectedLayer={selectedLayer}
-              nested={false}
-            />
-          ))}
-        </List>
-      )}
+      {nestedLayers}
     </ListItem>
   );
 };

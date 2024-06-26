@@ -1,13 +1,13 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { List, ListItem, Skeleton, Typography } from '@mui/joy';
-import { SharedProps } from '../context/SharedPropsContext';
+import { useSharedProps } from '../context/SharedPropsContext';
 import { getAnimationLayersInfo } from '../utils/lottie';
 import { LayerInfo } from '../types/shared';
 import { LayerGroup } from './LayerGroup';
 import { LayersWrapper } from './LayersWrapper';
 
 export const LayersControl = () => {
-  const { lottieJSON, selectedLayer, updateLayer } = useContext(SharedProps);
+  const { lottieJSON, selectedLayer, updateLayer } = useSharedProps();
   const allLayers = getAnimationLayersInfo(lottieJSON);
 
   const handleLayerSelect = (layerInfo: LayerInfo) => {
@@ -41,7 +41,7 @@ export const LayersControl = () => {
         }}
       >
         {!lottieJSON
-          ? Array.from({ length: 15 }, () => 0).map(() => <LayerItemSkeleton />)
+          ? Array.from({ length: 15 }, (_, index) => <LayerItemSkeleton key={index} />)
           : allLayers.map((layerInfo, index) => {
               const isLayerSelected = layerInfo.layerName === selectedLayer?.layerName;
 

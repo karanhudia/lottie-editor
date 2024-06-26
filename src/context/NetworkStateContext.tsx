@@ -72,16 +72,16 @@ export const NetworkStateContext = ({ children }: { children: React.ReactNode })
     [lottieJSON, setLottieJSON],
   );
 
-  const handleAddToSaveQueue = (state: SaveState) => {
+  const handleAddToSaveQueue = useCallback((state: SaveState) => {
     setSaveQueue((prev) => {
       const newSaveQueue = new Map(prev);
       newSaveQueue.set(state, (newSaveQueue.get(state) ?? 0) + 1);
 
       return newSaveQueue;
     });
-  };
+  }, []);
 
-  const handleRemoveFromSaveQueue = (state: SaveState, count?: number) => {
+  const handleRemoveFromSaveQueue = useCallback((state: SaveState, count?: number) => {
     setSaveQueue((prev) => {
       const newSaveQueue = new Map(prev);
 
@@ -89,7 +89,7 @@ export const NetworkStateContext = ({ children }: { children: React.ReactNode })
 
       return newSaveQueue;
     });
-  };
+  }, []);
 
   const onConnect = useCallback(() => {
     setIsSocketConnected(true);
