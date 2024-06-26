@@ -106,21 +106,21 @@ export const AnimationCard = ({ animation, loading }: AnimationCardProps) => {
       variant='plain'
       sx={{
         maxWidth: 180,
-        minWidth: 160,
+        minWidth: 150,
         width: '100%',
         bgcolor: 'initial',
         p: 0,
       }}
     >
       {loading ?? !animation ? (
-        <Box sx={{ height: { lg: 135, xs: 120 } }}>
+        <AspectRatio flex ratio='4/3'>
           <Skeleton sx={{ borderRadius: 'var(--CardCover-radius)' }}>
             <img
               src={'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='}
               alt='Loading Skeleton'
             />
           </Skeleton>
-        </Box>
+        </AspectRatio>
       ) : (
         <LoadedCard />
       )}
