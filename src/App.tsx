@@ -28,13 +28,13 @@ function App() {
   return (
     <div className='App'>
       <CssVarsProvider>
-        <NetworkStateContext>
-          <SharedPropsContext>
+        <SharedPropsContext>
+          <NetworkStateContext>
             <ApolloProvider client={client}>
               <RouterProvider router={router} />
             </ApolloProvider>
-          </SharedPropsContext>
-        </NetworkStateContext>
+          </NetworkStateContext>
+        </SharedPropsContext>
       </CssVarsProvider>
     </div>
   );

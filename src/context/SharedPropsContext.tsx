@@ -7,23 +7,23 @@ import React, {
   useState,
 } from 'react';
 import { AnimationItem } from 'lottie-web';
-import { LottieAnimation } from '../graphql/lottie-server/generated';
-import { LayerInfo, SelectedColor } from '../types/shared';
+import { ColorPayload, LottieAnimation } from '../graphql/lottie-server/generated';
+import { LayerInfo } from '../types/shared';
 
-export const SharedProps = createContext<{
+export type SharedContextProps = {
   lottiePlayerRef: AnimationItem | null;
   setLottiePlayerRef: Dispatch<SetStateAction<AnimationItem | null>>;
   lottieJSON: LottieAnimation | null;
   setLottieJSON: Dispatch<SetStateAction<LottieAnimation | null>>;
   selectedLayer: LayerInfo | null;
   updateLayer: (newLayer: LayerInfo) => void;
-  selectedColor: SelectedColor | null;
-  setSelectedColor: Dispatch<SetStateAction<SelectedColor | null>>;
+  selectedColor: ColorPayload | null;
+  setSelectedColor: Dispatch<SetStateAction<ColorPayload | null>>;
   isAnimationCreated: boolean;
   setIsAnimationCreated: Dispatch<SetStateAction<boolean>>;
-  isUnsaved: boolean;
-  setIsUnsaved: Dispatch<SetStateAction<boolean>>;
-}>({
+};
+
+export const SharedProps = createContext<SharedContextProps>({
   lottiePlayerRef: null,
   setLottiePlayerRef: () => null,
   lottieJSON: null,
@@ -34,8 +34,6 @@ export const SharedProps = createContext<{
   setSelectedColor: () => null,
   isAnimationCreated: false,
   setIsAnimationCreated: () => null,
-  isUnsaved: false,
-  setIsUnsaved: () => null,
 });
 
 export const SharedPropsContext = ({ children }: { children: React.ReactNode }) => {
@@ -49,13 +47,10 @@ export const SharedPropsContext = ({ children }: { children: React.ReactNode }) 
   const [selectedLayer, setSelectedLayer] = useState<LayerInfo | null>(null);
 
   // Selected color helps shows the color picker
-  const [selectedColor, setSelectedColor] = useState<SelectedColor | null>(null);
+  const [selectedColor, setSelectedColor] = useState<ColorPayload | null>(null);
 
   // This is only true when an animation is just imported
   const [isAnimationCreated, setIsAnimationCreated] = useState(false);
-
-  // This is only true when the app has unsaved changes
-  const [isUnsaved, setIsUnsaved] = useState(false);
 
   // TODO: Move to its own hook
   const handleLayerSelect = useCallback(
@@ -79,8 +74,6 @@ export const SharedPropsContext = ({ children }: { children: React.ReactNode }) 
         setSelectedColor,
         isAnimationCreated,
         setIsAnimationCreated,
-        isUnsaved,
-        setIsUnsaved,
       }}
     >
       {children}

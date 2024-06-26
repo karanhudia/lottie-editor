@@ -4,12 +4,16 @@ import { deleteLottieLayer, updateLottieColor, updateLottieSpeed } from '../util
 import { RgbaColor } from 'react-colorful';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useThrottle } from './useThrottle';
-import { useSocket } from './useSocket';
 import { rgbaToLottieColor } from '../utils/color';
 import { v4 as uuidv4 } from 'uuid';
-import { LottieAnimation } from '../graphql/lottie-server/generated';
+import {
+  LottieAnimation,
+  LottieSocketEvents,
+  SocketAcknowledgement,
+  UpdateLottieMessage,
+} from '../graphql/lottie-server/generated';
 import { EditorRouteParams } from '../components/Editor';
-import { SaveState, useNetworkState } from '../context/NetworkStateContext';
+import { SaveState, socket, useNetworkState } from '../context/NetworkStateContext';
 
 type UseLottieAnimationReturn = {
   frameRate?: number;
@@ -29,9 +33,15 @@ export const useLottieAnimation = (): UseLottieAnimationReturn => {
   const params = useParams<EditorRouteParams>();
   const navigate = useNavigate();
 
-  const { updateJSON } = useSocket();
   const { addToSaveQueue, removeFromSaveQueue } = useNetworkState();
   const { lottieJSON, setLottieJSON, setIsAnimationCreated } = useSharedProps();
+
+  const updateJSON = useCallback((message: UpdateLottieMessage): Promise<SocketAcknowledgement> => {
+    return socket.emitWithAck(
+      LottieSocketEvents.UpdateJson,
+      message,
+    ) as Promise<SocketAcknowledgement>;
+  }, []);
 
   const syncLayerChangesWithServer = useCallback(
     async (layer: number[]) => {
