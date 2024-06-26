@@ -28,13 +28,15 @@ export const Error = () => {
         backgroundColor: 'danger.100',
         gap: 2,
         height: '100%',
+
+        px: 2,
       }}
     >
       <Typography
         level='h1'
         color='danger'
         startDecorator={<InfoOutlined />}
-        sx={{ alignItems: 'flex-start', maxWidth: 240, wordBreak: 'break-all' }}
+        sx={{ alignItems: 'flex-start', wordBreak: 'break-all' }}
       >
         {errorMessage}
       </Typography>

@@ -8,6 +8,7 @@ import {
 import { Header } from './Header';
 import { Content } from './Content';
 import { isLottieAnimation } from '../utils/typeGuard';
+import { Error } from '../pages/Error';
 
 export type EditorRouteParams = { editId: string };
 
@@ -26,13 +27,17 @@ export const Editor = () => {
     [setLottieJSON],
   );
 
-  useFetchEditedLottieQuery({
+  const { error } = useFetchEditedLottieQuery({
     variables: {
       editId: params.editId ?? '',
     },
     fetchPolicy: 'no-cache',
     onCompleted: handleFetchCompleted,
   });
+
+  if (error) {
+    return <Error />;
+  }
 
   return (
     <>
