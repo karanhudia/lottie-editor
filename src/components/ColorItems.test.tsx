@@ -1,6 +1,9 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
 import { ColorItems } from './ColorItems';
+import { aColorPayload, LottieAnimation } from '../graphql/lottie-server/generated';
+import { getAnimationLayersInfo } from '../utils/lottie';
+import { mockLottieAnimation } from '../test/mocks/mockLottieAnimation';
 
 // Mock SelectableColorItem component
 jest.mock('./SelectableColorItem', () => ({
@@ -15,28 +18,6 @@ jest.mock('./SelectableColorItem', () => ({
 }));
 
 describe('ColorItems', () => {
-  const allLayersMock = [
-    {
-      shapes: [
-        { shapeSeq: 0, shapeItemSeq: 0, color: '#ff0000' },
-        { shapeSeq: 0, shapeItemSeq: 1, color: '#00ff00' },
-      ],
-      nestedLayerSeq: [0],
-      layers: [
-        {
-          shapes: [{ shapeSeq: 1, shapeItemSeq: 0, color: '#0000ff' }],
-          nestedLayerSeq: [0, 0],
-        },
-      ],
-    },
-  ];
-
-  const selectedColorMock = {
-    nestedLayerSeq: [0],
-    shapeSeq: 0,
-    shapeItemSeq: 0,
-  };
-
   const handleColorSelectMock = jest.fn();
 
   beforeEach(() => {
@@ -46,23 +27,23 @@ describe('ColorItems', () => {
   it('renders SelectableColorItem components for each shape', () => {
     const { getByTestId } = render(
       <ColorItems
-        allLayers={allLayersMock}
-        selectedColor={selectedColorMock}
+        allLayers={getAnimationLayersInfo(mockLottieAnimation as unknown as LottieAnimation)}
+        selectedColor={aColorPayload()}
         handleColorSelect={handleColorSelectMock}
       />,
     );
 
     // Verify that each SelectableColorItem is rendered with the correct id
-    expect(getByTestId('nestedLayer-0,0,shape-1,shapeItem-0')).toBeInTheDocument();
-    expect(getByTestId('nestedLayer-0,shape-0,shapeItem-0')).toBeInTheDocument();
+    expect(getByTestId('nestedLayer-2,0,shape-0,shapeItem-1')).toBeInTheDocument();
+    expect(getByTestId('nestedLayer-2,0,shape-3,shapeItem-1')).toBeInTheDocument();
     expect(getByTestId('nestedLayer-0,shape-0,shapeItem-1')).toBeInTheDocument();
   });
 
   it('calls handleColorSelect with the correct parameters when a SelectableColorItem is clicked', () => {
     const { getByTestId } = render(
       <ColorItems
-        allLayers={allLayersMock}
-        selectedColor={selectedColorMock}
+        allLayers={getAnimationLayersInfo(mockLottieAnimation as unknown as LottieAnimation)}
+        selectedColor={aColorPayload()}
         handleColorSelect={handleColorSelectMock}
       />,
     );
@@ -73,10 +54,8 @@ describe('ColorItems', () => {
     // Verify that handleColorSelect was called with the correct parameters
     expect(handleColorSelectMock).toHaveBeenCalledWith(
       { r: 255, g: 0, b: 0, a: 1 }, // Expected color from the mocked SelectableColorItem onClick
-      allLayersMock[0].shapes[1], // shapeInfo of the clicked item
-      allLayersMock[0].nestedLayerSeq, // nestedLayerSeq of the clicked item
+      { shapeSeq: 0, shapeName: 'Group 1', shapeItemSeq: 1, color: [0, 0.2824, 0.4157] }, // shapeInfo of the clicked item
+      [0], // nestedLayerSeq of the clicked item
     );
   });
-
-  // Add more tests as needed for different scenarios and edge cases
 });
