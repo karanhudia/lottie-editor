@@ -29,7 +29,7 @@ export const SpeedControl = () => {
       ) : (
         <Slider
           aria-label='Always visible'
-          defaultValue={Math.round(frameRate)}
+          value={Math.round(frameRate)}
           step={3}
           min={3}
           max={150}
