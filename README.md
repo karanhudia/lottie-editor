@@ -174,6 +174,7 @@ Follow these steps to set up the project locally:
 
    - [ ] i18next internationalization
    - [ ] Tests for Lottie Player related components (involves canvas testing)
+   - [ ] Testing socket.io-client
    - [ ] Generate codegen related files on CI / CD and `.gitignore` them locally
    - [ ] Integrate logger to read `console.(log, info, error)` (maybe datadog)
    - [ ] Show active / online users editing the animation (websockets rooms) 
