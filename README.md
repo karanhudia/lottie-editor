@@ -5,29 +5,67 @@ It provides an intuitive interface to modify, update, and delete layers and shap
 
 ## Table of Contents
 
-- [Features](#features)
+- [Live](#live)
+- [User Features](#user-features)
+- [Technical Features](#technical-features)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Scripts](#scripts)
 - [Testing](#testing)
 - [Project Structure](#project-structure)
+- [GraphQL and Codegen](#graphql-and-codegen)
+- [Routing](#routing)
+- [Deployment](#deployment)
+- [Open Issues](#open-issues)
 - [Contributing](#contributing)
 - [License](#license)
 
-## Features
-
-- Import Lottie animations from file upload (JSON)
-- Import Lottie animations from top featured animations from LottieFiles
-- Update animation speed
-- Update shape colors
-- Delete layers
-- Real-time synchronization with the server
-- Collaboration with multiple users just by sharing the working url
-- Responsive design
-
 ## Live
 
-   https://karanhudia.github.io/lottie-editor/
+https://karanhudia.github.io/lottie-editor/
+
+## User Features
+
+- Import Lottie animations from file upload (JSON)
+- Import Lottie animations from featured LottieFiles animations
+- View and interact with the animation using player controls
+- Real-time synchronization with the server
+  - Update animation speed
+  - Update shape colors
+  - Delete layers
+- Collaborate with multiple users by sharing URLs
+- Display current network state (updated, saving, or network issues)
+- Show error pages upon encountering errors
+- Fully responsive design across desktops, tablets, and mobile devices
+
+## Technical Features
+
+- Bootstrapped using create-react-app with TypeScript configuration
+- Eslint (latest with flat config) and Prettier integration for consistent code style and error checking
+- Utilization of `react-router-dom` (latest `v6.x`) for navigation
+- Styling with [joy-ui](https://mui.com/joy-ui/getting-started/) by MUI
+- State management via React Context API (`useContext()` hook)
+- Integration of [@lottiefiles/react-lottie-player](https://www.npmjs.com/package/@lottiefiles/react-lottie-player) for animation rendering
+- `graphql-codegen` for generating schema types, React hooks, mock data, and type safety
+- Apollo Client setup with connections to `lottie-server` and `lottiefiles` GraphQL endpoints
+- Websockets integration using `socket.io-client` for real-time JSON updates
+- GraphQL for creating new Lottie animations and fetching featured animations
+- Implementation of `try...catch`, `logging`, and `ErrorBoundaries` for error handling
+- Type Guards to ensure JSON Lottie animation file validity
+- Performance optimizations:
+  - Throttling change events sent to the server
+  - Utilization of `useMemo()` and `useCallback()` for memoization
+  - Custom React hooks for shared logic
+  - Loading skeletons for improved user feedback
+- Testing frameworks including:
+  - End-to-End testing with Playwright
+  - Unit testing with React Testing Library and Jest for `utils`, `api`, `hooks`, and context providers
+- Fully integrated CI/CD pipelines configured for:
+  - Linting checks 
+  - Type checking
+  - Running tests
+  - Generating build artifacts
+  - Deployment to GitHub Pages
 
 ## Installation
 
@@ -118,11 +156,11 @@ Follow these steps to set up the project locally:
    We are using [graphql-codegen](https://the-guild.dev/graphql/codegen) to generate GraphQL types for the schemas used.
    You can find the configuration file for the [codegen here](https://github.com/karanhudia/lottie-editor/blob/main/codegen.ts). 
 
-   The script has to be run everytime you want to fetch new types from the servers. The changes need to be pushed in the commit. 
+   The script ```yarn codegen``` has to be run everytime you want to fetch new types from the servers. Those changes then need to be pushed in the commit. 
 
 ## Routing
 
-   This project is using [Hash Routing](https://reactrouter.com/en/main/router-components/hash-router) from react-router.
+   This project is using [Hash Routing](https://reactrouter.com/en/main/router-components/hash-router) from react-router-dom (`v6.x`).
    So you will see a `#` in your url when editing a lottie.
 
 ## Deployment
@@ -131,6 +169,13 @@ Follow these steps to set up the project locally:
    pipeline to automatically trigger a deployment on this url.
 
    https://karanhudia.github.io/lottie-editor/
+
+## Open Issues
+
+   - [ ] i18next internationalization
+   - [ ] Tests for Lottie Player related components (involves canvas testing)
+   - [ ] Generate codegen related files on CI / CD and `.gitignore` them locally
+   - [ ] Integrate logger to read `console.(log, info, error)` (maybe datadog)
    
 ## Contributing
 
