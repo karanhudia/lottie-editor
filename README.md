@@ -179,6 +179,7 @@ Follow these steps to set up the project locally:
    - [ ] Integrate logger to read `console.(log, info, error)` (maybe datadog)
    - [ ] Show active / online users editing the animation (websockets rooms) 
    - [ ] Show current selected layer by graying out all other layers in the animation
+   - [ ] Allow color change for all kinds of layers (currently fill and stroke supported)
    
 ## Contributing
 
