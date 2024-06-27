@@ -27,10 +27,10 @@ export const SpeedControl = () => {
   }, []);
 
   useEffect(() => {
-    if (frameRate && speed !== frameRate) {
+    if (frameRate) {
       setSpeed(Math.round(frameRate));
     }
-  }, [frameRate, speed]);
+  }, [frameRate]);
 
   return (
     <SpeedControlWrapper>
