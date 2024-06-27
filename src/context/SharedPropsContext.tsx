@@ -13,7 +13,7 @@ export type SharedContextProps = {
   lottieJSON: LottieAnimation | null;
   setLottieJSON: Dispatch<SetStateAction<LottieAnimation | null>>;
   selectedLayer: LayerInfo | null;
-  updateLayer: (newLayer: LayerInfo) => void;
+  updateLayer: (newLayer?: LayerInfo) => void;
   selectedColor: ColorPayload | null;
   setSelectedColor: Dispatch<SetStateAction<ColorPayload | null>>;
   isAnimationCreated: boolean;
@@ -60,8 +60,8 @@ export const SharedPropsContext = ({ children }: { children: React.ReactNode }) 
 
   // TODO: Move to its own hook
   const handleLayerSelect = useCallback(
-    (newLayer: LayerInfo) => {
-      setSelectedLayer(newLayer);
+    (newLayer?: LayerInfo) => {
+      setSelectedLayer(newLayer ?? null);
       setSelectedColor(null);
     },
     [setSelectedLayer, setSelectedColor],

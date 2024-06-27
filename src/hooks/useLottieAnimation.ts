@@ -42,6 +42,7 @@ export const useLottieAnimation = (): UseLottieAnimationReturn => {
     animationVersion,
     updateAnimationVersion,
     setIsAnimationCreated,
+    updateLayer,
   } = useSharedProps();
 
   const checkVersionConflicts = useCallback(
@@ -186,6 +187,7 @@ export const useLottieAnimation = (): UseLottieAnimationReturn => {
       // Reset Animation Status
       updateAnimationVersion(1);
       setVersionConflict(false);
+      updateLayer();
       navigate(`edit/${uuid}`);
     },
     [navigate, setLottieJSON, setIsAnimationCreated, updateAnimationVersion, setVersionConflict],
