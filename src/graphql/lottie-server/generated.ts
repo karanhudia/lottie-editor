@@ -77,6 +77,7 @@ export type DeleteLottieLayerMessage = {
   __typename?: 'DeleteLottieLayerMessage';
   payload: LayerPayload;
   uuid: Scalars['String']['output'];
+  version: Scalars['Int']['output'];
 };
 
 export type Easing = {
@@ -122,6 +123,7 @@ export type Lottie = {
   json: Scalars['JSON']['output'];
   updatedAt: Scalars['Date']['output'];
   uuid: Scalars['String']['output'];
+  version: Scalars['Int']['output'];
 };
 
 export type LottieAnimation = {
@@ -236,10 +238,18 @@ export type Transform = {
   s: AnimatedProperty;
 };
 
+export type UpdateLottieBroadcast = {
+  __typename?: 'UpdateLottieBroadcast';
+  json: Scalars['JSON']['output'];
+  uuid: Scalars['String']['output'];
+  version: Scalars['Int']['output'];
+};
+
 export type UpdateLottieColorMessage = {
   __typename?: 'UpdateLottieColorMessage';
   payload: ColorPayload;
   uuid: Scalars['String']['output'];
+  version: Scalars['Int']['output'];
 };
 
 export type UpdateLottieMessage =
@@ -252,15 +262,17 @@ export type UpdateLottieScaleMessage = {
   __typename?: 'UpdateLottieScaleMessage';
   payload: ScalePayload;
   uuid: Scalars['String']['output'];
+  version: Scalars['Int']['output'];
 };
 
 export type UpdateLottieSpeedMessage = {
   __typename?: 'UpdateLottieSpeedMessage';
   payload: SpeedPayload;
   uuid: Scalars['String']['output'];
+  version: Scalars['Int']['output'];
 };
 
-export type LottieFragment = { __typename?: 'Lottie'; json: any };
+export type LottieFragment = { __typename?: 'Lottie'; json: any; version: number };
 
 export type ResponseFragment = {
   __typename?: 'SocketAcknowledgement';
@@ -284,12 +296,13 @@ export type FetchEditedLottieQueryVariables = Exact<{
 
 export type FetchEditedLottieQuery = {
   __typename?: 'Query';
-  lottie?: { __typename?: 'Lottie'; json: any } | null;
+  lottie?: { __typename?: 'Lottie'; json: any; version: number } | null;
 };
 
 export const LottieFragmentDoc = gql`
   fragment Lottie on Lottie {
     json
+    version
   }
 `;
 export const ResponseFragmentDoc = gql`
@@ -586,6 +599,7 @@ export const aDeleteLottieLayerMessage = (
           ? ({} as LayerPayload)
           : aLayerPayload({}, relationshipsToOmit),
     uuid: overrides && overrides.hasOwnProperty('uuid') ? overrides.uuid! : 'maxime',
+    version: overrides && overrides.hasOwnProperty('version') ? overrides.version! : 2531,
   };
 };
 
@@ -688,6 +702,7 @@ export const aLottie = (
         ? overrides.updatedAt!
         : '1970-01-04T09:33:08.290Z',
     uuid: overrides && overrides.hasOwnProperty('uuid') ? overrides.uuid! : 'quos',
+    version: overrides && overrides.hasOwnProperty('version') ? overrides.version! : 3906,
   };
 };
 
@@ -924,6 +939,19 @@ export const aTransform = (
   };
 };
 
+export const anUpdateLottieBroadcast = (
+  overrides?: Partial<UpdateLottieBroadcast>,
+  _relationshipsToOmit: Set<string> = new Set(),
+): UpdateLottieBroadcast => {
+  const relationshipsToOmit: Set<string> = new Set(_relationshipsToOmit);
+  relationshipsToOmit.add('UpdateLottieBroadcast');
+  return {
+    json: overrides && overrides.hasOwnProperty('json') ? overrides.json! : 'reprehenderit',
+    uuid: overrides && overrides.hasOwnProperty('uuid') ? overrides.uuid! : 'est',
+    version: overrides && overrides.hasOwnProperty('version') ? overrides.version! : 4917,
+  };
+};
+
 export const anUpdateLottieColorMessage = (
   overrides?: Partial<UpdateLottieColorMessage>,
   _relationshipsToOmit: Set<string> = new Set(),
@@ -938,6 +966,7 @@ export const anUpdateLottieColorMessage = (
           ? ({} as ColorPayload)
           : aColorPayload({}, relationshipsToOmit),
     uuid: overrides && overrides.hasOwnProperty('uuid') ? overrides.uuid! : 'architecto',
+    version: overrides && overrides.hasOwnProperty('version') ? overrides.version! : 9752,
   };
 };
 
@@ -955,6 +984,7 @@ export const anUpdateLottieScaleMessage = (
           ? ({} as ScalePayload)
           : aScalePayload({}, relationshipsToOmit),
     uuid: overrides && overrides.hasOwnProperty('uuid') ? overrides.uuid! : 'aspernatur',
+    version: overrides && overrides.hasOwnProperty('version') ? overrides.version! : 4360,
   };
 };
 
@@ -972,5 +1002,6 @@ export const anUpdateLottieSpeedMessage = (
           ? ({} as SpeedPayload)
           : aSpeedPayload({}, relationshipsToOmit),
     uuid: overrides && overrides.hasOwnProperty('uuid') ? overrides.uuid! : 'aliquid',
+    version: overrides && overrides.hasOwnProperty('version') ? overrides.version! : 7566,
   };
 };

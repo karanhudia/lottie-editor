@@ -1,16 +1,16 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { io } from 'socket.io-client';
 import {
+  LottieAnimation,
   LottieSocketEvents,
   namedOperations,
-  UpdateLottieMessage,
+  UpdateLottieBroadcast,
 } from '../graphql/lottie-server/generated';
-import { deleteLottieLayer, updateLottieColor, updateLottieSpeed } from '../utils/lottie';
-import { lottieColorToRgba } from '../utils/color';
 import { useSharedProps } from './SharedPropsContext';
 import { Outlet, useParams } from 'react-router-dom';
 import { EditorRouteParams } from '../components/Editor';
 import { client } from '../graphql/client';
+import { isLottieAnimation } from '../utils/typeGuard';
 
 export enum SaveState {
   LayerDelete,
@@ -23,6 +23,9 @@ export type NetworkStateProps = {
   addToSaveQueue: (state: SaveState) => void;
   removeFromSaveQueue: (state: SaveState, count?: number) => void;
   isConnected: boolean;
+  hasVersionConflict: boolean;
+  setVersionConflict: (state: boolean) => void;
+  synchronizeLottieInformation: (latestLottie: LottieAnimation, latestVersion: number) => void;
 };
 
 export const NetworkState = createContext<NetworkStateProps>({
@@ -30,6 +33,9 @@ export const NetworkState = createContext<NetworkStateProps>({
   addToSaveQueue: () => null,
   removeFromSaveQueue: () => null,
   isConnected: false,
+  hasVersionConflict: false,
+  setVersionConflict: () => null,
+  synchronizeLottieInformation: () => null,
 });
 
 const DEFAULT_WEBSOCKET_URL = 'https://lottie-editor.onrender.com/';
@@ -40,45 +46,47 @@ export const socket = io(process.env.REACT_APP_WEBSOCKET_URL ?? DEFAULT_WEBSOCKE
 
 export const NetworkStateContext = () => {
   const params = useParams<EditorRouteParams>();
-  const { lottieJSON, setLottieJSON } = useSharedProps();
+  const { lottieJSON, setLottieJSON, updateAnimationVersion } = useSharedProps();
   // Queue for saving updates in progress
   const [saveQueue, setSaveQueue] = useState<Map<SaveState, number>>(new Map());
 
   // Maintains the state of websockets connection
   const [isSocketConnected, setIsSocketConnected] = useState(false);
 
+  // Showing user notification for version conflicts
+  const [hasVersionConflict, setHasVersionConflict] = useState(false);
+
+  const synchronizeLottieInformation = useCallback(
+    async (latestLottie: LottieAnimation, latestVersion: number) => {
+      // Set the latest lottie JSON
+      setLottieJSON(latestLottie);
+      // Update the version to latest from network updates (graphql or websockets)
+      updateAnimationVersion(latestVersion);
+      // Remove the version conflict notification with a minor delay
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      setHasVersionConflict(false);
+    },
+    [setLottieJSON, updateAnimationVersion],
+  );
+
   const getChangesFromServer = useCallback(
-    (message: UpdateLottieMessage) => {
+    (message: UpdateLottieBroadcast) => {
+      // TODO: Remove the editId check when rooms are implemented in websockets
       // If the current lottie is different, we don't need to consume this message
       if (params.editId !== message.uuid || !lottieJSON) {
         return;
       }
 
-      const { payload } = message;
-      let updatedLottie = { ...lottieJSON };
-
-      switch (payload.__typename) {
-        case 'ColorPayload':
-          updatedLottie = updateLottieColor(
-            lottieJSON,
-            payload.layer,
-            payload.shape,
-            payload.shapeItem,
-            lottieColorToRgba(payload.color),
-          );
-          break;
-        case 'SpeedPayload':
-          updatedLottie = updateLottieSpeed(lottieJSON, payload.frameRate);
-          break;
-        case 'LayerPayload':
-          updatedLottie = deleteLottieLayer(lottieJSON, payload.layer);
-          break;
+      if (isLottieAnimation(message.json)) {
+        void synchronizeLottieInformation(message.json, message.version);
       }
-
-      setLottieJSON(updatedLottie);
     },
-    [lottieJSON, setLottieJSON, params.editId],
+    [lottieJSON, params.editId, synchronizeLottieInformation],
   );
+
+  const handleSetVersionConflict = useCallback((state: boolean) => {
+    setHasVersionConflict(state);
+  }, []);
 
   const handleAddToSaveQueue = useCallback((state: SaveState) => {
     setSaveQueue((prev) => {
@@ -136,8 +144,19 @@ export const NetworkStateContext = () => {
       addToSaveQueue: handleAddToSaveQueue,
       removeFromSaveQueue: handleRemoveFromSaveQueue,
       isConnected: isSocketConnected,
+      hasVersionConflict,
+      setVersionConflict: handleSetVersionConflict,
+      synchronizeLottieInformation,
     }),
-    [isSaving, handleAddToSaveQueue, handleRemoveFromSaveQueue, isSocketConnected],
+    [
+      isSaving,
+      handleAddToSaveQueue,
+      handleRemoveFromSaveQueue,
+      isSocketConnected,
+      hasVersionConflict,
+      handleSetVersionConflict,
+      synchronizeLottieInformation,
+    ],
   );
 
   return (

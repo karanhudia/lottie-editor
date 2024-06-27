@@ -22,4 +22,6 @@ export const mockSharedContextProps: SharedContextProps = {
   setIsAnimationCreated: jest.fn(),
   isDrawerOpen: false,
   setIsDrawerOpen: jest.fn(),
+  animationVersion: 1,
+  updateAnimationVersion: jest.fn(),
 };

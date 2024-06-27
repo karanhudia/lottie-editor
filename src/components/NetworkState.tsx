@@ -7,18 +7,23 @@ import { useSharedProps } from '../context/SharedPropsContext';
 export const NetworkState = () => {
   const { pathname } = useLocation();
   const { lottieJSON } = useSharedProps();
-  const { isSaving, isConnected } = useNetworkState();
+  const { isSaving, isConnected, hasVersionConflict } = useNetworkState();
 
   if (pathname === '/') {
     return null;
   }
 
   const getMessage = () => {
+    if (hasVersionConflict) {
+      return 'Server conflicts. Try again!';
+    }
     if (!isConnected) {
       return 'Disconnected';
     }
-    return isSaving ? 'Saving...' : 'All updated';
+    return isSaving ? 'Saving...' : 'Synced';
   };
+
+  const showDanger = isSaving || !isConnected || hasVersionConflict;
 
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -28,7 +33,7 @@ export const NetworkState = () => {
         <Typography
           display='inline'
           p={1}
-          color={isSaving || !isConnected ? 'danger' : 'success'}
+          color={showDanger ? 'danger' : 'success'}
           variant='soft'
           level='body-sm'
           fontFamily='Noto Sans'

@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Skeleton, Slider, styled, Typography } from '@mui/joy';
 import { useLottieAnimation } from '../hooks/useLottieAnimation';
 
@@ -11,31 +11,43 @@ const SpeedControlWrapper = styled('div')`
 `;
 
 export const SpeedControl = () => {
+  const [speed, setSpeed] = useState<number | null>(null);
   const { frameRate, updateSpeed } = useLottieAnimation();
 
   const handleSpeedChange = useCallback(
-    (_e: Event, value: number | number[]) => {
+    (_e: React.SyntheticEvent | Event, value: number | number[]) => {
       // TypeCasting since Slider does not accept passing this from the caller
       updateSpeed(value as number);
     },
     [updateSpeed],
   );
 
+  const handleSpeed = useCallback((_e: Event, value: number | number[]) => {
+    setSpeed(value as number);
+  }, []);
+
+  useEffect(() => {
+    if (frameRate && speed !== frameRate) {
+      setSpeed(Math.round(frameRate));
+    }
+  }, [frameRate, speed]);
+
   return (
     <SpeedControlWrapper>
       <Typography color='neutral' level='title-md'>
         Speed
       </Typography>
-      {!frameRate ? (
+      {!speed ? (
         <Skeleton variant='text' level='h2' />
       ) : (
         <Slider
           aria-label='Always visible'
-          value={Math.round(frameRate)}
+          value={speed}
           step={3}
           min={3}
           max={150}
-          onChange={handleSpeedChange}
+          onChange={handleSpeed}
+          onChangeCommitted={handleSpeedChange}
           valueLabelDisplay='auto'
           sx={{
             '--Slider-trackSize': '4px',
