@@ -144,48 +144,38 @@ export const useLottieAnimation = (): UseLottieAnimationReturn => {
     THROTTLE_TIME,
   );
 
-  const syncSpeedChangesWithServer = useCallback(
-    async (frameRate: number) => {
-      try {
-        if (!params.editId) {
-          return;
-        }
-
-        // Update version locally for following updates without acknowledgement from server
-        const localVersion = animationVersion;
-        updateAnimationVersion();
-
-        const response = await updateJSON({
-          uuid: params.editId,
-          payload: {
-            __typename: 'SpeedPayload',
-            frameRate,
-          },
-          version: localVersion,
-        });
-
-        checkVersionConflicts(response);
-
-        if (response.code === 200) {
-          console.info('Speed updated');
-        } else {
-          console.error('Failed to update speed:', response.status);
-        }
-
-        removeFromSaveQueue(SaveState.SpeedUpdate);
-      } catch (error) {
-        console.error('Error updating speed:', error);
+  const syncSpeedChangesWithServer = useThrottle(async (frameRate: number) => {
+    try {
+      if (!params.editId) {
+        return;
       }
-    },
-    [
-      animationVersion,
-      checkVersionConflicts,
-      params.editId,
-      removeFromSaveQueue,
-      updateAnimationVersion,
-      updateJSON,
-    ],
-  );
+
+      // Update version locally for following updates without acknowledgement from server
+      const localVersion = animationVersion;
+      updateAnimationVersion();
+
+      const response = await updateJSON({
+        uuid: params.editId,
+        payload: {
+          __typename: 'SpeedPayload',
+          frameRate,
+        },
+        version: localVersion,
+      });
+
+      checkVersionConflicts(response);
+
+      if (response.code === 200) {
+        console.info('Speed updated');
+      } else {
+        console.error('Failed to update speed:', response.status);
+      }
+
+      removeFromSaveQueue(SaveState.SpeedUpdate);
+    } catch (error) {
+      console.error('Error updating speed:', error);
+    }
+  }, THROTTLE_TIME);
 
   const handleLottieImport = useCallback(
     (json: LottieAnimation) => {
