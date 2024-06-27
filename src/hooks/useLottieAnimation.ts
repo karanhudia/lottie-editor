@@ -199,7 +199,14 @@ export const useLottieAnimation = (): UseLottieAnimationReturn => {
       updateLayer();
       navigate(`edit/${uuid}`);
     },
-    [navigate, setLottieJSON, setIsAnimationCreated, updateAnimationVersion, setVersionConflict],
+    [
+      navigate,
+      setLottieJSON,
+      setIsAnimationCreated,
+      updateAnimationVersion,
+      setVersionConflict,
+      updateLayer,
+    ],
   );
 
   const handleSpeedUpdate = useCallback(
