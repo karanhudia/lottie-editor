@@ -218,7 +218,7 @@ export const useLottieAnimation = (): UseLottieAnimationReturn => {
 
         addToSaveQueue(SaveState.SpeedUpdate);
         setLottieJSON(updateLottieSpeed(lottieJSON, newSpeed));
-        syncSpeedChangesWithServer(newSpeed);
+        void syncSpeedChangesWithServer(newSpeed);
       } catch (error) {
         console.error('Error updating speed:', error);
       }
