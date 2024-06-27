@@ -144,39 +144,48 @@ export const useLottieAnimation = (): UseLottieAnimationReturn => {
     THROTTLE_TIME,
   );
 
-  const syncSpeedChangesWithServer = useThrottle(async (frameRate: number) => {
-    try {
-      if (!params.editId) {
-        return;
+  const syncSpeedChangesWithServer = useCallback(
+    async (frameRate: number) => {
+      try {
+        if (!params.editId) {
+          return;
+        }
+
+        // Update version locally for following updates without acknowledgement from server
+        const localVersion = animationVersion;
+        updateAnimationVersion();
+
+        const response = await updateJSON({
+          uuid: params.editId,
+          payload: {
+            __typename: 'SpeedPayload',
+            frameRate,
+          },
+          version: localVersion,
+        });
+
+        checkVersionConflicts(response);
+
+        if (response.code === 200) {
+          console.info('Speed updated');
+        } else {
+          console.error('Failed to update speed:', response.status);
+        }
+
+        removeFromSaveQueue(SaveState.SpeedUpdate);
+      } catch (error) {
+        console.error('Error updating speed:', error);
       }
-
-      // Update version locally for following updates without acknowledgement from server
-      const localVersion = animationVersion;
-      updateAnimationVersion();
-
-      const response = await updateJSON({
-        uuid: params.editId,
-        payload: {
-          __typename: 'SpeedPayload',
-          frameRate,
-        },
-        version: localVersion,
-      });
-
-      checkVersionConflicts(response);
-
-      if (response.code === 200) {
-        console.info('Speed updated');
-      } else {
-        console.error('Failed to update speed:', response.status);
-      }
-
-      // Since it is throttled, we can set directly to 0
-      removeFromSaveQueue(SaveState.SpeedUpdate, 0);
-    } catch (error) {
-      console.error('Error updating speed:', error);
-    }
-  }, THROTTLE_TIME);
+    },
+    [
+      animationVersion,
+      checkVersionConflicts,
+      params.editId,
+      removeFromSaveQueue,
+      updateAnimationVersion,
+      updateJSON,
+    ],
+  );
 
   const handleLottieImport = useCallback(
     (json: LottieAnimation) => {
