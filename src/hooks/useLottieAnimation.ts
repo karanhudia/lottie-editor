@@ -9,11 +9,14 @@ import { v4 as uuidv4 } from 'uuid';
 import {
   LottieAnimation,
   LottieSocketEvents,
+  namedOperations,
   SocketAcknowledgement,
   UpdateLottieMessage,
 } from '../graphql/lottie-server/generated';
 import { EditorRouteParams } from '../components/Editor';
 import { SaveState, socket, useNetworkState } from '../context/NetworkStateContext';
+import { client } from '../graphql/client';
+import { useUpdateQueue } from './useUpdateQueue';
 
 type UseLottieAnimationReturn = {
   frameRate?: number;
@@ -29,26 +32,27 @@ type UseLottieAnimationReturn = {
   deleteLayer: (layer: number[]) => void;
 };
 
-const THROTTLE_TIME = 200; // 200 milliseconds
+const THROTTLE_TIME = 500; // 500 milliseconds
 
 export const useLottieAnimation = (): UseLottieAnimationReturn => {
   const params = useParams<EditorRouteParams>();
   const navigate = useNavigate();
 
   const { addToSaveQueue, removeFromSaveQueue, setVersionConflict } = useNetworkState();
-  const {
-    lottieJSON,
-    setLottieJSON,
-    animationVersion,
-    updateAnimationVersion,
-    setIsAnimationCreated,
-    updateLayer,
-  } = useSharedProps();
+  const { lottieJSON, setLottieJSON, animationVersion, setIsAnimationCreated, updateLayer } =
+    useSharedProps();
+  const { queueUpdate, updateQueue } = useUpdateQueue();
 
   const checkVersionConflicts = useCallback(
-    (response: SocketAcknowledgement) => {
+    async (response: SocketAcknowledgement) => {
       if (response.code === 409) {
         setVersionConflict(true);
+        // Reset queue and cancel all if a conflict arises
+        updateQueue.current = [];
+        // Fetch the latest version of lottie animation
+        await client.refetchQueries({
+          include: [namedOperations.Query.fetchEditedLottie],
+        });
       }
     },
     [setVersionConflict],
@@ -62,119 +66,129 @@ export const useLottieAnimation = (): UseLottieAnimationReturn => {
   }, []);
 
   const syncLayerChangesWithServer = useCallback(
-    async (layer: number[]) => {
-      try {
-        if (!params.editId) {
-          return;
+    (layer: number[]) => {
+      const task = async () => {
+        try {
+          if (!params.editId) {
+            return;
+          }
+
+          const localVersion = animationVersion.current;
+          animationVersion.current += 1;
+
+          const response = await updateJSON({
+            uuid: params.editId,
+            payload: {
+              __typename: 'LayerPayload',
+              layer,
+            },
+            version: localVersion,
+          });
+
+          await checkVersionConflicts(response);
+
+          if (response.code === 200) {
+            console.info('Layer deleted');
+          } else {
+            console.error('Failed to delete layer:', response.status);
+          }
+
+          removeFromSaveQueue(SaveState.LayerDelete);
+        } catch (error) {
+          console.error('Error deleting layer:', error);
         }
+      };
 
-        // Update version locally for following updates without acknowledgement from server
-        const localVersion = animationVersion;
-        updateAnimationVersion();
-
-        const response = await updateJSON({
-          uuid: params.editId,
-          payload: {
-            __typename: 'LayerPayload',
-            layer,
-          },
-          version: localVersion,
-        });
-
-        checkVersionConflicts(response);
-
-        if (response.code === 200) {
-          console.info('Layer deleted');
-        } else {
-          console.error('Failed to delete layer:', response.status);
-        }
-
-        removeFromSaveQueue(SaveState.LayerDelete);
-      } catch (error) {
-        console.error('Error deleting layer:', error);
-      }
+      queueUpdate(task);
     },
     [
       updateJSON,
       params.editId,
       removeFromSaveQueue,
       animationVersion,
-      updateAnimationVersion,
+      queueUpdate,
       checkVersionConflicts,
     ],
   );
 
   const syncColorChangesWithServer = useThrottle(
-    async (nestedLayerSeq: number[], shapeSeq: number, shapeItemSeq: number, color: number[]) => {
+    (nestedLayerSeq: number[], shapeSeq: number, shapeItemSeq: number, color: number[]) => {
+      const task = async () => {
+        try {
+          if (!params.editId) {
+            return;
+          }
+
+          const localVersion = animationVersion.current;
+          animationVersion.current += 1;
+
+          const response = await updateJSON({
+            uuid: params.editId,
+            payload: {
+              __typename: 'ColorPayload',
+              layer: nestedLayerSeq,
+              shape: shapeSeq,
+              shapeItem: shapeItemSeq,
+              color,
+            },
+            version: localVersion,
+          });
+
+          await checkVersionConflicts(response);
+
+          if (response.code === 200) {
+            console.info('Color updated');
+          } else {
+            console.error('Failed to update color:', response.status);
+          }
+
+          // Since it is throttled, we can set directly to 0
+          removeFromSaveQueue(SaveState.ColorUpdate, 0);
+        } catch (error) {
+          console.error('Error updating color:', error);
+        }
+      };
+
+      queueUpdate(task);
+    },
+    THROTTLE_TIME,
+  );
+
+  const syncSpeedChangesWithServer = useThrottle((frameRate: number) => {
+    const task = async () => {
       try {
         if (!params.editId) {
           return;
         }
 
-        // Update version locally for following updates without acknowledgement from server
-        const localVersion = animationVersion;
-        updateAnimationVersion();
+        const localVersion = animationVersion.current;
+        animationVersion.current += 1;
 
         const response = await updateJSON({
           uuid: params.editId,
           payload: {
-            __typename: 'ColorPayload',
-            layer: nestedLayerSeq,
-            shape: shapeSeq,
-            shapeItem: shapeItemSeq,
-            color,
+            __typename: 'SpeedPayload',
+            frameRate,
           },
           version: localVersion,
         });
 
-        checkVersionConflicts(response);
+        await checkVersionConflicts(response);
 
         if (response.code === 200) {
-          console.info('Color updated');
+          console.info('Speed updated');
         } else {
-          console.error('Failed to update color:', response.status);
+          console.error('Failed to update speed:', response.status);
         }
 
         // Since it is throttled, we can set directly to 0
-        removeFromSaveQueue(SaveState.ColorUpdate, 0);
+        removeFromSaveQueue(SaveState.SpeedUpdate, 0);
       } catch (error) {
-        console.error('Error updating color:', error);
+        console.error('Error updating speed:', error);
       }
-    },
-    THROTTLE_TIME,
-  );
+    };
 
-  const syncSpeedChangesWithServer = useThrottle(async (frameRate: number) => {
-    try {
-      if (!params.editId) {
-        return;
-      }
-
-      // Update version locally for following updates without acknowledgement from server
-      const localVersion = animationVersion;
-      updateAnimationVersion();
-
-      const response = await updateJSON({
-        uuid: params.editId,
-        payload: {
-          __typename: 'SpeedPayload',
-          frameRate,
-        },
-        version: localVersion,
-      });
-
-      checkVersionConflicts(response);
-
-      if (response.code === 200) {
-        console.info('Speed updated');
-      } else {
-        console.error('Failed to update speed:', response.status);
-      }
-
-      removeFromSaveQueue(SaveState.SpeedUpdate);
-    } catch (error) {
-      console.error('Error updating speed:', error);
-    }
+    queueUpdate(task);
   }, THROTTLE_TIME);
 
   const handleLottieImport = useCallback(
@@ -184,7 +198,7 @@ export const useLottieAnimation = (): UseLottieAnimationReturn => {
       setLottieJSON(json);
       setIsAnimationCreated(true);
       // Reset Animation Status
-      updateAnimationVersion(1);
+      animationVersion.current = 1;
       setVersionConflict(false);
       updateLayer();
       navigate(`edit/${uuid}`);
@@ -193,7 +207,7 @@ export const useLottieAnimation = (): UseLottieAnimationReturn => {
       navigate,
       setLottieJSON,
       setIsAnimationCreated,
-      updateAnimationVersion,
+      animationVersion,
       setVersionConflict,
       updateLayer,
     ],
