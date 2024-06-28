@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/lottie-editor/static/css/main.1a1799e0.css",
-    "main.js": "/lottie-editor/static/js/main.f29fbbee.js",
+    "main.js": "/lottie-editor/static/js/main.37483326.js",
     "static/media/inter-latin-ext-400-normal.woff": "/lottie-editor/static/media/inter-latin-ext-400-normal.40b3b0d5e09a90fb6e3e.woff",
     "static/media/inter-latin-ext-400-normal.woff2": "/lottie-editor/static/media/inter-latin-ext-400-normal.0f9e8d4e940df8f6edfe.woff2",
     "static/media/inter-latin-400-normal.woff": "/lottie-editor/static/media/inter-latin-400-normal.08a02fd275ecea6ef662.woff",
@@ -19,10 +19,10 @@
     "index.html": "/lottie-editor/index.html",
     "static/media/lottie.svg": "/lottie-editor/static/media/lottie.e409f89e50b43dfbf35e85ee3a06940b.svg",
     "main.1a1799e0.css.map": "/lottie-editor/static/css/main.1a1799e0.css.map",
-    "main.f29fbbee.js.map": "/lottie-editor/static/js/main.f29fbbee.js.map"
+    "main.37483326.js.map": "/lottie-editor/static/js/main.37483326.js.map"
   },
   "entrypoints": [
     "static/css/main.1a1799e0.css",
-    "static/js/main.f29fbbee.js"
+    "static/js/main.37483326.js"
   ]
 }
