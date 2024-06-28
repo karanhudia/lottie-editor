@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useSharedProps } from '../context/SharedPropsContext';
 import { Box, RadioGroup, Skeleton, Typography } from '@mui/joy';
 import { RgbaColor, RgbaColorPicker } from 'react-colorful';
@@ -14,7 +14,7 @@ export const ColorsControl = () => {
   const [currentColor, setCurrentColor] = useState<RgbaColor | undefined>();
   const { selectedColor, setSelectedColor, lottieJSON, selectedLayer } = useSharedProps();
 
-  const allLayers = useMemo(() => getAnimationLayersInfo(lottieJSON), [lottieJSON]);
+  const allLayers = getAnimationLayersInfo(lottieJSON);
 
   const handleColorSelect = useCallback(
     (color: RgbaColor, shapeInfo: ShapeInfo, layer: number[]) => {
