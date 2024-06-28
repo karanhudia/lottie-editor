@@ -4,13 +4,13 @@ test.describe('editor page', () => {
   test.beforeEach(async ({ page }) => {
     // Go to the starting url before each test.
     await page.goto(
-      'http://localhost:3000/lottie-editor/#/edit/dc53acdd-026e-4574-8185-b974e7e715e7',
+      'http://localhost:3000/lottie-editor/#/edit/2695edef-6e38-4840-a11a-e54e0a380c31',
     );
   });
 
   test('navigation', async ({ page }) => {
     await expect(page).toHaveURL(
-      'http://localhost:3000/lottie-editor/#/edit/dc53acdd-026e-4574-8185-b974e7e715e7',
+      'http://localhost:3000/lottie-editor/#/edit/2695edef-6e38-4840-a11a-e54e0a380c31',
     );
 
     await expect(page).toHaveTitle(/Lottie Editor/);
@@ -18,7 +18,15 @@ test.describe('editor page', () => {
 
   test('nested layers', async ({ page }) => {
     await expect(page.getByText('Layers')).toBeVisible();
-    await expect(page.getByRole('listitem')).toHaveCount(8);
+    await expect(page.getByRole('listitem')).toHaveCount(8); // Layers
+    await expect(page.getByRole('radio')).toHaveCount(6); // Colors
+  });
+
+  test('layer selection and colors', async ({ page }) => {
+    // Select a layer
+    await page.getByRole('button', { name: 'l hand' }).click();
+    // Layer color should be visible
+    await expect(page.getByRole('radio')).toHaveCount(1); // Colors
   });
 
   test('editing controls', async ({ page }) => {
