@@ -89,6 +89,7 @@ export const useLottieAnimation = (): UseLottieAnimationReturn => {
 
           if (response.code === 200) {
             console.info('Layer deleted');
+            updateLayer();
           } else {
             console.error('Failed to delete layer:', response.status);
           }
