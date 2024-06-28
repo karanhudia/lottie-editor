@@ -4,6 +4,7 @@ import React, {
   SetStateAction,
   useCallback,
   useContext,
+  useRef,
   useState,
 } from 'react';
 import { ColorPayload, LottieAnimation } from '../graphql/lottie-server/generated';
@@ -20,8 +21,7 @@ export type SharedContextProps = {
   setIsAnimationCreated: Dispatch<SetStateAction<boolean>>;
   isDrawerOpen: boolean;
   setIsDrawerOpen: Dispatch<SetStateAction<boolean>>;
-  animationVersion: number;
-  updateAnimationVersion: (version?: number) => void;
+  animationVersion: React.MutableRefObject<number>;
 };
 
 export const SharedProps = createContext<SharedContextProps>({
@@ -35,8 +35,9 @@ export const SharedProps = createContext<SharedContextProps>({
   setIsAnimationCreated: () => null,
   isDrawerOpen: false,
   setIsDrawerOpen: () => null,
-  animationVersion: 1,
-  updateAnimationVersion: () => null,
+  animationVersion: {
+    current: 1,
+  },
 });
 
 export const SharedPropsContext = ({ children }: { children: React.ReactNode }) => {
@@ -44,7 +45,7 @@ export const SharedPropsContext = ({ children }: { children: React.ReactNode }) 
   const [lottieJSON, setLottieJSON] = useState<LottieAnimation | null>(null);
 
   // Lottie Animation Current Version compared to server
-  const [animationVersion, setAnimationVersion] = useState(1);
+  const animationVersion = useRef<number>(1);
 
   // Selected layer helps shows relevant colors from that layer
   const [selectedLayer, setSelectedLayer] = useState<LayerInfo | null>(null);
@@ -67,13 +68,6 @@ export const SharedPropsContext = ({ children }: { children: React.ReactNode }) 
     [setSelectedLayer, setSelectedColor],
   );
 
-  const updateAnimationVersion = useCallback(
-    (version?: number) => {
-      setAnimationVersion(version ?? animationVersion + 1);
-    },
-    [animationVersion],
-  );
-
   return (
     <SharedProps.Provider
       value={{
@@ -88,7 +82,6 @@ export const SharedPropsContext = ({ children }: { children: React.ReactNode }) 
         isDrawerOpen,
         setIsDrawerOpen,
         animationVersion,
-        updateAnimationVersion,
       }}
     >
       {children}

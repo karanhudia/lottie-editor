@@ -20,6 +20,7 @@ export enum SaveState {
 
 export type NetworkStateProps = {
   isSaving: boolean;
+  isLayerSaving: boolean;
   addToSaveQueue: (state: SaveState) => void;
   removeFromSaveQueue: (state: SaveState, count?: number) => void;
   isConnected: boolean;
@@ -30,6 +31,7 @@ export type NetworkStateProps = {
 
 export const NetworkState = createContext<NetworkStateProps>({
   isSaving: false,
+  isLayerSaving: false,
   addToSaveQueue: () => null,
   removeFromSaveQueue: () => null,
   isConnected: false,
@@ -46,7 +48,7 @@ export const socket = io(process.env.REACT_APP_WEBSOCKET_URL ?? DEFAULT_WEBSOCKE
 
 export const NetworkStateContext = () => {
   const params = useParams<EditorRouteParams>();
-  const { lottieJSON, setLottieJSON, updateAnimationVersion } = useSharedProps();
+  const { lottieJSON, setLottieJSON, animationVersion } = useSharedProps();
   // Queue for saving updates in progress
   const [saveQueue, setSaveQueue] = useState<Map<SaveState, number>>(new Map());
 
@@ -61,12 +63,12 @@ export const NetworkStateContext = () => {
       // Set the latest lottie JSON
       setLottieJSON(latestLottie);
       // Update the version to latest from network updates (graphql or websockets)
-      updateAnimationVersion(latestVersion);
+      animationVersion.current = latestVersion;
       // Remove the version conflict notification with a minor delay
       await new Promise((resolve) => setTimeout(resolve, 2000));
       setHasVersionConflict(false);
     },
-    [setLottieJSON, updateAnimationVersion],
+    [setLottieJSON, animationVersion],
   );
 
   const getChangesFromServer = useCallback(
@@ -100,7 +102,9 @@ export const NetworkStateContext = () => {
   const handleRemoveFromSaveQueue = useCallback((state: SaveState, count?: number) => {
     setSaveQueue((prev) => {
       const newSaveQueue = new Map(prev);
-      newSaveQueue.set(state, count ?? (newSaveQueue.get(state) ?? 1) - 1);
+      const currentQueue = newSaveQueue.get(state);
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+      newSaveQueue.set(state, count ?? (currentQueue || 1) - 1);
 
       return newSaveQueue;
     });
@@ -138,6 +142,8 @@ export const NetworkStateContext = () => {
     return Array.from(saveQueue.values()).some((value) => value !== 0);
   }, [saveQueue]);
 
+  const isLayerSaving = !!saveQueue.get(SaveState.LayerDelete);
+
   const contextValue = useMemo(
     () => ({
       isSaving,
@@ -147,6 +153,7 @@ export const NetworkStateContext = () => {
       hasVersionConflict,
       setVersionConflict: handleSetVersionConflict,
       synchronizeLottieInformation,
+      isLayerSaving,
     }),
     [
       isSaving,
@@ -156,6 +163,7 @@ export const NetworkStateContext = () => {
       hasVersionConflict,
       handleSetVersionConflict,
       synchronizeLottieInformation,
+      isLayerSaving,
     ],
   );
 
