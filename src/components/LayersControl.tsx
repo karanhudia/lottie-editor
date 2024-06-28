@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback } from 'react';
 import { List, ListItem, Skeleton, Typography } from '@mui/joy';
 import { useSharedProps } from '../context/SharedPropsContext';
 import { getAnimationLayersInfo } from '../utils/lottie';
@@ -14,7 +14,7 @@ const LayerItemSkeleton = () => (
 
 export const LayersControl = () => {
   const { lottieJSON, selectedLayer, updateLayer } = useSharedProps();
-  const allLayers = useMemo(() => getAnimationLayersInfo(lottieJSON), [lottieJSON]);
+  const allLayers = getAnimationLayersInfo(lottieJSON);
 
   const handleLayerSelect = useCallback(
     (layerInfo: LayerInfo) => {
