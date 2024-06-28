@@ -55,7 +55,7 @@ export const useLottieAnimation = (): UseLottieAnimationReturn => {
         });
       }
     },
-    [setVersionConflict],
+    [setVersionConflict, updateQueue],
   );
 
   const updateJSON = useCallback((message: UpdateLottieMessage): Promise<SocketAcknowledgement> => {
