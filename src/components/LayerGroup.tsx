@@ -11,6 +11,7 @@ import {
 import { Delete, KeyboardArrowDown, Layers } from '@mui/icons-material';
 import { LayerInfo } from '../types/shared';
 import { useLottieAnimation } from '../hooks/useLottieAnimation';
+import { useNetworkState } from '../context/NetworkStateContext';
 
 type LayerGroupProps = {
   layer: LayerInfo;
@@ -27,6 +28,7 @@ export const LayerGroup = ({
   nested,
   selectedLayer,
 }: LayerGroupProps) => {
+  const { isLayerSaving } = useNetworkState();
   const [isOpen, setIsOpen] = useState(false);
   const { layerName, layers } = layer;
 
@@ -64,12 +66,13 @@ export const LayerGroup = ({
         )
       }
       endAction={
-        <IconButton aria-label='Delete' size='sm' onClick={() => deleteLayer(layer.nestedLayerSeq)}>
-          <Delete
-            sx={{
-              fill: 'var(--joy-palette-danger-300, #F09898)',
-            }}
-          />
+        <IconButton
+          aria-label='Delete'
+          size='sm'
+          onClick={() => deleteLayer(layer.nestedLayerSeq)}
+          disabled={isLayerSaving}
+        >
+          <Delete />
         </IconButton>
       }
       nested={nested}
