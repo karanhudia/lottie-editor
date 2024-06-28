@@ -103,6 +103,7 @@ export const useLottieAnimation = (): UseLottieAnimationReturn => {
       queueUpdate(task);
     },
     [
+      updateLayer,
       updateJSON,
       params.editId,
       removeFromSaveQueue,
