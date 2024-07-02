@@ -1,16 +1,34 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { io } from 'socket.io-client';
+import { io, Socket } from 'socket.io-client';
 import {
+  CreateLottieMessage,
   LottieAnimation,
   LottieSocketEvents,
   namedOperations,
+  SocketAcknowledgement,
   UpdateLottieBroadcast,
+  UpdateLottieMessage,
 } from '../graphql/lottie-server/generated';
 import { useSharedProps } from './SharedPropsContext';
 import { Outlet, useParams } from 'react-router-dom';
 import { EditorRouteParams } from '../components/Editor';
 import { client } from '../graphql/client';
 import { isLottieAnimation } from '../utils/typeGuard';
+
+type ServerToClientEvents = {
+  [LottieSocketEvents.UpdateJson]: (message: UpdateLottieBroadcast) => void;
+};
+
+type ClientToServerEvents = {
+  [LottieSocketEvents.UpdateJson]: (
+    message: UpdateLottieMessage,
+    callback: (ack: SocketAcknowledgement) => void,
+  ) => void;
+  [LottieSocketEvents.CreateJson]: (
+    message: CreateLottieMessage,
+    callback: (ack: SocketAcknowledgement) => void,
+  ) => void;
+};
 
 export enum SaveState {
   LayerDelete,
@@ -41,10 +59,13 @@ export const NetworkState = createContext<NetworkStateProps>({
 });
 
 const DEFAULT_WEBSOCKET_URL = 'https://lottie-editor.onrender.com/';
-export const socket = io(process.env.REACT_APP_WEBSOCKET_URL ?? DEFAULT_WEBSOCKET_URL, {
-  transports: ['websocket'],
-  upgrade: false,
-});
+export const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(
+  process.env.REACT_APP_WEBSOCKET_URL ?? DEFAULT_WEBSOCKET_URL,
+  {
+    transports: ['websocket'],
+    upgrade: false,
+  },
+);
 
 export const NetworkStateContext = () => {
   const params = useParams<EditorRouteParams>();

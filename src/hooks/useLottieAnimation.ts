@@ -59,10 +59,7 @@ export const useLottieAnimation = (): UseLottieAnimationReturn => {
   );
 
   const updateJSON = useCallback((message: UpdateLottieMessage): Promise<SocketAcknowledgement> => {
-    return socket.emitWithAck(
-      LottieSocketEvents.UpdateJson,
-      message,
-    ) as Promise<SocketAcknowledgement>;
+    return socket.emitWithAck(LottieSocketEvents.UpdateJson, message);
   }, []);
 
   const syncLayerChangesWithServer = useCallback(
