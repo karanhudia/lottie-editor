@@ -41,7 +41,7 @@ export const Editor = () => {
   });
 
   if (error) {
-    return <Error />;
+    return <Error apolloError={error} />;
   }
 
   return (

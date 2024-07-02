@@ -4,9 +4,10 @@ import { AnimationOutlined } from '@mui/icons-material';
 import { useFetchFeaturedAnimationsQuery } from '../graphql/lottiefiles/generated';
 import { AnimationCard } from './AnimationCard';
 import { lottieFilesClient } from '../graphql/lottiefiles/lottieFilesClient';
+import { Error } from '../pages/Error';
 
 export const FeaturedAnimations = () => {
-  const { data, loading } = useFetchFeaturedAnimationsQuery({
+  const { data, loading, error } = useFetchFeaturedAnimationsQuery({
     client: lottieFilesClient,
   });
 
@@ -29,6 +30,10 @@ export const FeaturedAnimations = () => {
       )),
     [data],
   );
+
+  if (error) {
+    return <Error apolloError={error} />;
+  }
 
   return (
     <Box

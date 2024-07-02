@@ -2,12 +2,19 @@ import React from 'react';
 import { isRouteErrorResponse, useRouteError } from 'react-router-dom';
 import { Box, Typography } from '@mui/joy';
 import { InfoOutlined } from '@mui/icons-material';
+import { ApolloError } from '@apollo/client';
 
-export const Error = () => {
+type ErrorProps = {
+  apolloError?: ApolloError;
+};
+
+export const Error = ({ apolloError }: ErrorProps) => {
   const error = useRouteError();
 
   let errorMessage: string;
-  if (isRouteErrorResponse(error)) {
+  if (apolloError) {
+    errorMessage = apolloError.message;
+  } else if (isRouteErrorResponse(error)) {
     errorMessage = error.statusText;
   } else if (typeof error === 'string') {
     errorMessage = error;
